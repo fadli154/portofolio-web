@@ -1175,7 +1175,7 @@ const CircularGallery = ({
       gl.deleteBuffer(vertexBuffer);
       gl.deleteBuffer(indexBuffer);
       gl.deleteVertexArray(vao);
-      gl.getExtension('WEBGL_lose_context')?.loseContext();
+      // gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
   }, []);
 

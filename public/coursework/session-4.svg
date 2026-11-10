@@ -23,7 +23,7 @@
 
   <!-- Title -->
   <g transform="translate(30, 96)">
-    <text x="0" y="0" font-family="system-ui, -apple-system, sans-serif" font-size="19" font-weight="700" fill="#111827" letter-spacing="-0.02em">Perancangan Model Bisnis &</text>
+    <text x="0" y="0" font-family="system-ui, -apple-system, sans-serif" font-size="19" font-weight="700" fill="#111827" letter-spacing="-0.02em">Perancangan Model Bisnis &amp;</text>
     <text x="0" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="19" font-weight="700" fill="#111827" letter-spacing="-0.02em">Strategi Produk</text>
   </g>
 
@@ -34,24 +34,30 @@
     <text x="0" y="36" font-family="system-ui, -apple-system, sans-serif" font-size="12" fill="#6b7280" letter-spacing="-0.01em">struktur layanan digital....</text>
   </g>
 
-  <!-- Center Verification Frame Box -->
-  <g transform="translate(30, 260)">
-    <rect x="0" y="0" width="340" height="180" rx="18" fill="#f3f4f6" stroke="#e5e7eb" stroke-width="1"/>
-    <!-- Camera Icon -->
-    <g transform="translate(156, 46)" stroke="#9ca3af" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-      <circle cx="12" cy="13" r="4"/>
+  <!-- Attendance Photo Box (Mockup / Placeholder with Studio Keffi styling) -->
+  <g transform="translate(30, 222)">
+    <rect x="0" y="0" width="340" height="210" rx="20" fill="#f9fafb" stroke="#f3f4f6" stroke-width="1.5"/>
+    <g transform="translate(170, 90)" text-anchor="middle">
+      <path d="M-14 -6 L-10 -12 L10 -12 L14 -6 L18 -6 A 4 4 0 0 1 22 -2 L22 14 A 4 4 0 0 1 18 18 L-18 18 A 4 4 0 0 1 -22 14 L-22 -2 A 4 4 0 0 1 -18 -6 Z" fill="none" stroke="#9ca3af" stroke-width="1.8" stroke-linejoin="round"/>
+      <circle cx="0" cy="5" r="5" fill="none" stroke="#9ca3af" stroke-width="1.8"/>
+      <text x="0" y="38" font-family="monospace" font-size="11" font-weight="600" fill="#6b7280">Kehadiran Tercatat di Sistem</text>
+      <text x="0" y="54" font-family="monospace" font-size="10" fill="#9ca3af">Minggu 4 · 2026</text>
     </g>
-    <text x="170" y="116" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#374151" text-anchor="middle">Kehadiran Tercatat di Sistem</text>
-    <text x="170" y="136" font-family="monospace" font-size="11" fill="#9ca3af" text-anchor="middle">Minggu 4 · 2026</text>
   </g>
 
-  <!-- Footer Meta Row -->
-  <g transform="translate(30, 480)">
-    <!-- Date -->
-    <text x="0" y="18" font-family="monospace" font-size="12" fill="#6b7280">🗓 Minggu 4 · 2026</text>
-    <!-- Task Status Pill -->
-    <rect x="236" y="0" width="104" height="26" rx="13" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1"/>
-    <text x="288" y="17" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#047857" text-anchor="middle">Tugas: Selesai</text>
+  <!-- Bottom Details Row (Date & Task Status) -->
+  <g transform="translate(30, 468)">
+    <!-- Date / Week -->
+    <g transform="translate(0, 16)">
+      <rect x="0" y="-12" width="16" height="15" rx="3" fill="none" stroke="#6b7280" stroke-width="1.4"/>
+      <line x1="0" y1="-7" x2="16" y2="-7" stroke="#6b7280" stroke-width="1.4"/>
+      <text x="24" y="0" font-family="monospace" font-size="11" font-weight="500" fill="#4b5563">Minggu 4 · 2026</text>
+    </g>
+
+    <!-- Task Pill -->
+    <g transform="translate(230, 0)">
+      <rect x="0" y="0" width="110" height="28" rx="14" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+      <text x="55" y="18" font-family="monospace" font-size="11" font-weight="600" fill="#15803d" text-anchor="middle">Tugas: Selesai</text>
+    </g>
   </g>
 </svg>
