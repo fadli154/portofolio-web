@@ -316,12 +316,34 @@ export function HomeClientSections({
       {/* =====================================================================
           1. STUDIO KEFFI HERO + REACTBITS ANIMATED DISPLAY & 3D BENTO STAGE
          ===================================================================== */}
-      <section className="pt-28 pb-16 md:pt-36 md:pb-24">
-        <div className="keffi-wrap">
-          {/* Hero Top Grid: Left is Text Stack, Right is Pure 3D Lanyard (No Card Container) */}
+      <section className="relative overflow-visible pb-16 pt-28 md:pb-24 md:pt-36">
+        {/* Full-bleed 3D Lanyard Canvas: Extends from the absolute top of the page without clipping */}
+        <div className="pointer-events-none absolute left-0 top-0 z-20 h-[680px] w-full md:h-[760px]">
+          <LanyardWrapper
+            frontImage="/fadli-profile.png"
+            backImage="/fadli-profile.png"
+            imageFit="cover"
+            finish="holographic"
+            cardColor="#ffffff"
+            strapColor="#111111"
+            orientation="portrait"
+            anchor={0.70}
+            strapLength={0.52}
+            size={0.62}
+            gravity={1.1}
+            breeze={0.35}
+            damping={0.55}
+            elasticity={0.45}
+            interactive={true}
+            className="h-full w-full"
+          />
+        </div>
+
+        <div className="keffi-wrap relative z-10">
+          {/* Hero Top Grid: Left is Text Stack, Right is Spatial Stage for 3D Lanyard */}
           <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-10">
             {/* Left Column (7 cols): Kicker, Giant Headline, Description & CTAs */}
-            <div className="lg:col-span-7">
+            <div className="relative z-30 lg:col-span-7">
               {/* Eyebrow Kicker with ReactBits RotatingText */}
               <div className="mb-6 flex flex-wrap items-center gap-4">
                 <span className="sec-kicker">
@@ -410,27 +432,9 @@ export function HomeClientSections({
               </div>
             </div>
 
-            {/* Right Column (5 cols): Pure 3D Interactive Lanyard (No Card Container / Clean Floating WebGL) */}
-            <div className="relative flex flex-col items-center justify-center lg:col-span-5">
-              <div className="relative h-[420px] w-full cursor-grab active:cursor-grabbing sm:h-[480px]">
-                <LanyardWrapper
-                  frontImage="/fadli-profile.png"
-                  backImage="/fadli-profile.png"
-                  imageFit="cover"
-                  finish="holographic"
-                  cardColor="#ffffff"
-                  strapColor="#111111"
-                  orientation="portrait"
-                  size={0.65}
-                  gravity={1.1}
-                  breeze={0.4}
-                  damping={0.55}
-                  elasticity={0.45}
-                  interactive={true}
-                  className="h-full w-full"
-                />
-              </div>
-              <div className="pointer-events-none -mt-2 inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/5 px-3 py-1 font-mono text-[11px] text-[var(--mute)] backdrop-blur-xs dark:border-white/10 dark:bg-white/5">
+            {/* Right Column (5 cols): Spatial Stage for 3D Lanyard (Keeps layout balanced) */}
+            <div className="relative z-10 flex min-h-[320px] flex-col items-center justify-end pb-4 lg:col-span-5 lg:min-h-[420px]">
+              <div className="pointer-events-none select-none inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/5 px-3 py-1 font-mono text-[11px] text-[var(--mute)] backdrop-blur-xs dark:border-white/10 dark:bg-white/5">
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#c4e22e]" />
                 <span>{locale === "id" ? "Tarik / Goyangkan Kartu 3D ✦" : "Grab & Swing 3D Badge ✦"}</span>
               </div>

@@ -770,6 +770,7 @@ const Lanyard = ({
     renderer.toneMappingExposure = 1;
     const canvas = renderer.domElement;
     canvas.className = 'block w-full h-full';
+    canvas.style.pointerEvents = 'none';
     canvas.setAttribute('aria-hidden', 'true');
     container.appendChild(canvas);
 
@@ -924,8 +925,9 @@ const Lanyard = ({
       foilUniforms.foilKey.value.set(-2.5, 4, 6).normalize().transformDirection(camera.matrixWorldInverse);
       foilUniforms.foilFill.value.set(3, -1, 4).normalize().transformDirection(camera.matrixWorldInverse);
       foilUniforms.foilTop.value.set(0.5, 4.5, 8).normalize().transformDirection(camera.matrixWorldInverse);
-      const anchorX = ((ANCHORS[s.anchor] ?? 0.5) - 0.5) * viewWidth;
-      const anchorY = viewHeight / 2 + 0.2;
+      const anchorRatio = typeof s.anchor === 'number' ? s.anchor : (ANCHORS[s.anchor] ?? 0.5);
+      const anchorX = (anchorRatio - 0.5) * viewWidth;
+      const anchorY = viewHeight / 2 + 0.3;
       const cardTop = viewHeight / 2 - viewHeight * mix(0.12, 0.42, clamp(s.strapLength, 0, 1));
       const hangTop = cardTop + (layout.hangY - layout.height / 2);
       sim.anchor.set(anchorX, anchorY, 0);
@@ -1214,8 +1216,12 @@ const Lanyard = ({
         return;
       }
       if (event.pointerType === 'touch') return;
-      hovering = !!pickCard();
-      setCursor(hovering ? 'grab' : '');
+      const hit = !!pickCard();
+      if (hit !== hovering) {
+        hovering = hit;
+        canvas.style.pointerEvents = hovering ? 'auto' : 'none';
+        setCursor(hovering ? 'grab' : '');
+      }
     };
 
     const onPointerUp = event => {
@@ -1224,6 +1230,8 @@ const Lanyard = ({
       if (press && event.type === 'pointerup' && performance.now() - press.time < 450) flip(press.point);
       press = null;
       canvas.releasePointerCapture?.(event.pointerId);
+      hovering = !!pickCard();
+      canvas.style.pointerEvents = hovering ? 'auto' : 'none';
       setCursor(hovering && event.pointerType !== 'touch' ? 'grab' : '');
       start();
     };
@@ -1231,11 +1239,15 @@ const Lanyard = ({
     const onTouchStart = event => {
       if (!settingsRef.current.interactive || event.touches.length !== 1) return;
       toPointer(event.touches[0]);
-      if (pickCard()) event.preventDefault();
+      if (pickCard()) {
+        canvas.style.pointerEvents = 'auto';
+        event.preventDefault();
+      }
     };
 
     canvas.addEventListener('pointerdown', onPointerDown);
     canvas.addEventListener('pointermove', onPointerMove);
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
     canvas.addEventListener('pointerup', onPointerUp);
     canvas.addEventListener('pointercancel', onPointerUp);
     canvas.addEventListener('lostpointercapture', onPointerUp);
@@ -1274,6 +1286,7 @@ const Lanyard = ({
       document.removeEventListener('visibilitychange', onVisibility);
       canvas.removeEventListener('pointerdown', onPointerDown);
       canvas.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointermove', onPointerMove);
       canvas.removeEventListener('pointerup', onPointerUp);
       canvas.removeEventListener('pointercancel', onPointerUp);
       canvas.removeEventListener('lostpointercapture', onPointerUp);
@@ -1288,7 +1301,7 @@ const Lanyard = ({
   }, []);
 
   return (
-    <div ref={containerRef} className={`relative w-full h-full overflow-hidden ${className}`.trim()} style={style} />
+    <div ref={containerRef} className={`relative w-full h-full ${className}`.trim()} style={style} />
   );
 };
 
