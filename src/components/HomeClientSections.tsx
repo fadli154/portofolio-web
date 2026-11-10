@@ -428,13 +428,6 @@ export function HomeClientSections({
                 </Magnet>
               </div>
             </div>
-
-            {/* Right Column (5 cols): Spatial Stage for 3D Lanyard (Keeps layout balanced) */}
-            <div className="relative z-10 flex min-h-[320px] flex-col items-center justify-end pb-4 lg:col-span-5 lg:min-h-[420px]">
-              <div className="pointer-events-none select-none inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/5 px-3 py-1 font-mono text-[11px] text-[var(--mute)] backdrop-blur-xs dark:border-white/10 dark:bg-white/5">
-                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#c4e22e]" />
-              </div>
-            </div>
           </div>
 
           {/* Below: Interactive Developer Terminal (Sole Showcase Element) */}
@@ -791,7 +784,7 @@ export function HomeClientSections({
          ===================================================================== */}
       <section
         id="certificates"
-        className="relative overflow-hidden border-t border-[var(--line)] bg-[#0c0d12] py-24 text-[#f5f5f2] md:py-32"
+        className="relative overflow-hidden border-t border-[var(--line)] bg-[#0c0d12] pt-20 pb-10 text-[#f5f5f2] md:pt-28 md:pb-12"
       >
         <div className="keffi-wrap">
           <div className="sec-head sec-head--dark">
@@ -869,6 +862,7 @@ export function HomeClientSections({
             perspective={1250}
             depth={90}
             speed={30}
+            fade={0.06}
             pauseOnHover={true}
             onTileClick={(item) => {
               const found = dynamicCertificates.find((c) => c.id === item.id);
@@ -880,11 +874,11 @@ export function HomeClientSections({
             }}
           />
 
-          {/* Bottom Inner Gradient Shadow / Fade Mask (user: "di bawah section kasih shadow ke dalem gitu supaya ga terlihat seperti kepotong") */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-44 bg-gradient-to-t from-[#0c0d12] via-[#0c0d12]/85 to-transparent" />
+          {/* Bottom Inner Gradient Shadow - slim and subtle, no heavy black block */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-16 bg-gradient-to-t from-[#0c0d12] via-[#0c0d12]/40 to-transparent" />
 
           {/* Ambient Lighting & Floating Interaction Hint */}
-          <div className="pointer-events-none absolute bottom-6 left-1/2 z-30 -translate-x-1/2 flex items-center gap-2 rounded-full border border-white/10 bg-black/60 px-4 py-1.5 font-mono text-[11px] text-white/80 shadow-lg backdrop-blur-md">
+          <div className="pointer-events-none absolute bottom-4 left-1/2 z-30 -translate-x-1/2 flex items-center gap-2 rounded-full border border-white/10 bg-black/60 px-4 py-1.5 font-mono text-[11px] text-white/80 shadow-lg backdrop-blur-md">
             <span className="h-1.5 w-1.5 rounded-full bg-[#c4e22e] animate-pulse" />
             <span>
               {locale === "id"
@@ -899,7 +893,7 @@ export function HomeClientSections({
           5. PORTAL AKADEMIK KEWIRAUSAHAAN (PERTEMUAN, ABSEN, BUKTI, TUGAS),
              KELOMPOK K-1, EVALUASI SWOT & LIVE GITHUB (#coursework)
          ===================================================================== */}
-      <section id="coursework" className="overflow-hidden py-24 md:py-32">
+      <section id="coursework" className="overflow-hidden pt-14 pb-24 md:pt-16 md:pb-32">
         <div className="keffi-wrap">
           <div className="sec-head">
             <div>
@@ -1003,110 +997,108 @@ export function HomeClientSections({
           <div className="mt-8">
             {/* Clean Editorial Sub-Header (No Card, Seamless Section Integration) */}
             <div className="keffi-wrap">
-                <div className="flex flex-wrap items-end justify-between gap-6 border-b border-[var(--line)] pb-6 dark:border-white/10">
-                  <div>
-                    <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[var(--violet)]">
-                      MATA KULIAH KEWIRAUSAHAAN · LOG ABSENSI &amp; TUGAS TERINTEGRASI SUPABASE
-                    </span>
-                    <p className="mt-1.5 max-w-2xl text-sm text-[var(--mute)] dark:text-gray-400">
-                      {locale === "id"
-                        ? "Setiap pertemuan mencatat status kehadiran, foto bukti hadir, serta rincian tugas mingguan yang dikelola langsung melalui CMS Admin."
-                        : "Each session logs attendance status, attendance proof photo, and weekly task deliverables managed dynamically via the Admin CMS."}
-                    </p>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-3 font-mono text-xs">
-                    <span className="rounded-full bg-emerald-500/15 px-3.5 py-1.5 font-semibold text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300">
-                      {
-                        courseworkSessions.filter(
-                          (s) => (s.attendanceStatus || "Hadir") === "Hadir"
-                        ).length
-                      }{" "}
-                      / {courseworkSessions.length} Hadir
-                    </span>
-                    <span className="rounded-full bg-[var(--violet)]/12 px-3.5 py-1.5 font-semibold text-[var(--violet)] dark:bg-[var(--violet)]/20 dark:text-[#a5b4fc]">
-                      {
-                        courseworkSessions.filter(
-                          (s) => (s.taskStatus || "Selesai") === "Selesai"
-                        ).length
-                      }{" "}
-                      Tugas Selesai
-                    </span>
+              <div className="flex flex-wrap items-end justify-between gap-6 border-b border-[var(--line)] pb-6 dark:border-white/10">
+                <div>
+                  <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[var(--violet)]">
+                    MATA KULIAH KEWIRAUSAHAAN · LOG ABSENSI &amp; TUGAS TERINTEGRASI SUPABASE
+                  </span>
+                  <p className="mt-1.5 max-w-2xl text-sm text-[var(--mute)] dark:text-gray-400">
+                    {locale === "id"
+                      ? "Setiap pertemuan mencatat status kehadiran, foto bukti hadir, serta rincian tugas mingguan yang dikelola langsung melalui CMS Admin."
+                      : "Each session logs attendance status, attendance proof photo, and weekly task deliverables managed dynamically via the Admin CMS."}
+                  </p>
+                </div>
+                <div className="flex flex-wrap items-center gap-3 font-mono text-xs">
+                  <span className="rounded-full bg-emerald-500/15 px-3.5 py-1.5 font-semibold text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300">
+                    {
+                      courseworkSessions.filter(
+                        (s) => (s.attendanceStatus || "Hadir") === "Hadir"
+                      ).length
+                    }{" "}
+                    / {courseworkSessions.length} Hadir
+                  </span>
+                  <span className="rounded-full bg-[var(--violet)]/12 px-3.5 py-1.5 font-semibold text-[var(--violet)] dark:bg-[var(--violet)]/20 dark:text-[#a5b4fc]">
+                    {
+                      courseworkSessions.filter(
+                        (s) => (s.taskStatus || "Selesai") === "Selesai"
+                      ).length
+                    }{" "}
+                    Tugas Selesai
+                  </span>
 
-                    {/* View Mode Switcher Pill */}
-                    <div className="inline-flex items-center rounded-full border border-[var(--line)] bg-[#f5f5f2] p-1 dark:border-white/15 dark:bg-black/40">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          playMechanicalClick(560);
-                          setPertemuanViewMode("carousel");
-                        }}
-                        className={`rounded-full px-3.5 py-1.5 font-mono text-[11px] font-semibold transition-all ${
-                          pertemuanViewMode === "carousel"
-                            ? "bg-white text-[var(--ink)] shadow-xs dark:bg-[#1a1b1e] dark:text-white"
-                            : "text-[var(--mute)] hover:text-[var(--ink)] dark:text-gray-400 dark:hover:text-white"
+                  {/* View Mode Switcher Pill */}
+                  <div className="inline-flex items-center rounded-full border border-[var(--line)] bg-[#f5f5f2] p-1 dark:border-white/15 dark:bg-black/40">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        playMechanicalClick(560);
+                        setPertemuanViewMode("carousel");
+                      }}
+                      className={`rounded-full px-3.5 py-1.5 font-mono text-[11px] font-semibold transition-all ${pertemuanViewMode === "carousel"
+                          ? "bg-white text-[var(--ink)] shadow-xs dark:bg-[#1a1b1e] dark:text-white"
+                          : "text-[var(--mute)] hover:text-[var(--ink)] dark:text-gray-400 dark:hover:text-white"
                         }`}
-                      >
-                        3D Circular Gallery
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          playMechanicalClick(580);
-                          setPertemuanViewMode("grid");
-                        }}
-                        className={`rounded-full px-3.5 py-1.5 font-mono text-[11px] font-semibold transition-all ${
-                          pertemuanViewMode === "grid"
-                            ? "bg-white text-[var(--ink)] shadow-xs dark:bg-[#1a1b1e] dark:text-white"
-                            : "text-[var(--mute)] hover:text-[var(--ink)] dark:text-gray-400 dark:hover:text-white"
+                    >
+                      3D Circular Gallery
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        playMechanicalClick(580);
+                        setPertemuanViewMode("grid");
+                      }}
+                      className={`rounded-full px-3.5 py-1.5 font-mono text-[11px] font-semibold transition-all ${pertemuanViewMode === "grid"
+                          ? "bg-white text-[var(--ink)] shadow-xs dark:bg-[#1a1b1e] dark:text-white"
+                          : "text-[var(--mute)] hover:text-[var(--ink)] dark:text-gray-400 dark:hover:text-white"
                         }`}
-                      >
-                        Grid
-                      </button>
-                    </div>
+                    >
+                      Grid
+                    </button>
                   </div>
                 </div>
               </div>
+            </div>
 
-              {pertemuanViewMode === "carousel" ? (
-                <div className="relative mt-6 h-[600px] w-full overflow-hidden md:h-[680px]">
-                  <CircularGalleryWrapper
-                    items={courseworkGalleryItems}
-                    bend={2.5}
-                    textColor="var(--ink)"
-                    itemSize={1.05}
-                    itemAspect={0.714}
-                    gap={0.3}
-                    borderRadius={0.065}
-                    shadow={0}
-                    fadeEdges={0}
-                    scrollSpeed={2.2}
-                    scrollEase={0.05}
-                    showTitles={false}
-                    snap={true}
-                    autoScroll={0}
-                    openOnClick={false}
-                    onItemClick={(item) => {
-                      const found = courseworkSessions.find(
-                        (s) => s.code === item.text || s.number.toString() === item.text
-                      );
-                      if (found) setSelectedSessionModal(found);
-                    }}
-                    className="h-full w-full"
-                  />
+            {pertemuanViewMode === "carousel" ? (
+              <div className="relative mt-6 h-[600px] w-full overflow-hidden md:h-[680px]">
+                <CircularGalleryWrapper
+                  items={courseworkGalleryItems}
+                  bend={2.5}
+                  textColor="var(--ink)"
+                  itemSize={1.05}
+                  itemAspect={0.714}
+                  gap={0.3}
+                  borderRadius={0.065}
+                  shadow={0}
+                  fadeEdges={0}
+                  scrollSpeed={2.2}
+                  scrollEase={0.05}
+                  showTitles={false}
+                  snap={true}
+                  autoScroll={0}
+                  openOnClick={false}
+                  onItemClick={(item) => {
+                    const found = courseworkSessions.find(
+                      (s) => s.code === item.text || s.number.toString() === item.text
+                    );
+                    if (found) setSelectedSessionModal(found);
+                  }}
+                  className="h-full w-full"
+                />
 
-                  {/* Floating Tactical Interaction Pill */}
-                  <div className="pointer-events-none absolute bottom-6 left-1/2 z-30 -translate-x-1/2 flex items-center gap-2 rounded-full border border-[var(--line)] bg-white/85 px-4 py-1.5 font-mono text-[11px] text-[var(--ink)] shadow-md backdrop-blur-md dark:border-white/15 dark:bg-black/80 dark:text-white">
-                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--violet)]" />
-                    <span>
-                      {locale === "id"
-                        ? "Geser / Putar 3D Silinder · Klik kartu untuk detail absensi & tugas"
-                        : "Drag 3D Cylinder · Click card to inspect attendance & task"}
-                    </span>
-                  </div>
+                {/* Floating Tactical Interaction Pill */}
+                <div className="pointer-events-none absolute bottom-6 left-1/2 z-30 -translate-x-1/2 flex items-center gap-2 rounded-full border border-[var(--line)] bg-white/85 px-4 py-1.5 font-mono text-[11px] text-[var(--ink)] shadow-md backdrop-blur-md dark:border-white/15 dark:bg-black/80 dark:text-white">
+                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--violet)]" />
+                  <span>
+                    {locale === "id"
+                      ? "Geser / Putar 3D Silinder · Klik kartu untuk detail absensi & tugas"
+                      : "Drag 3D Cylinder · Click card to inspect attendance & task"}
+                  </span>
                 </div>
-              ) : (
-                <div className="keffi-wrap mt-8">
-                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              </div>
+            ) : (
+              <div className="keffi-wrap mt-8">
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {courseworkSessions.map((session) => {
                     const status = session.attendanceStatus || "Hadir";
                     const taskStatus = session.taskStatus || "Selesai";
@@ -1232,250 +1224,250 @@ export function HomeClientSections({
                 </div>
               </div>
             )}
-            </div>
-          )}
+          </div>
+        )}
 
-          {/* TAB 2: DIREKTORI 5 ANGGOTA KELOMPOK K-1 INFORMATIKA */}
-          {activeHubTab === "kelompok-k1" && (
-            <div className="keffi-wrap mt-12 space-y-8">
-              <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl bg-[#111213] p-7 text-[#f5f5f2]">
-                <div>
-                  <span className="font-mono text-xs uppercase tracking-widest text-[#c4e22e]">
-                    DIREKTORI KOLABORASI · KELOMPOK K-1 INFORMATIKA
-                  </span>
-                  <h3 className="mt-2 text-2xl font-medium">
-                    5 Anggota Tim &amp; Klasifikasi Profil SWOT
-                  </h3>
-                </div>
-                <a
-                  href={profile.socials.kelompokK1}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="keffi-pill-btn keffi-pill-btn--lime !py-2.5 !px-5"
-                >
-                  <span>Buka Web Utama Kelompok K-1</span>
-                  <ArrowUpRight className="h-4 w-4" />
-                </a>
+        {/* TAB 2: DIREKTORI 5 ANGGOTA KELOMPOK K-1 INFORMATIKA */}
+        {activeHubTab === "kelompok-k1" && (
+          <div className="keffi-wrap mt-12 space-y-8">
+            <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl bg-[#111213] p-7 text-[#f5f5f2]">
+              <div>
+                <span className="font-mono text-xs uppercase tracking-widest text-[#c4e22e]">
+                  DIREKTORI KOLABORASI · KELOMPOK K-1 INFORMATIKA
+                </span>
+                <h3 className="mt-2 text-2xl font-medium">
+                  5 Anggota Tim &amp; Klasifikasi Profil SWOT
+                </h3>
               </div>
+              <a
+                href={profile.socials.kelompokK1}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="keffi-pill-btn keffi-pill-btn--lime !py-2.5 !px-5"
+              >
+                <span>Buka Web Utama Kelompok K-1</span>
+                <ArrowUpRight className="h-4 w-4" />
+              </a>
+            </div>
 
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {TEAM_K1_MEMBERS.map((member) => (
-                  <TiltedCard
-                    key={member.number}
-                    maxTilt={5}
-                    cursorLabel="VISIT PORTO"
-                    className="rounded-[26px]"
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {TEAM_K1_MEMBERS.map((member) => (
+                <TiltedCard
+                  key={member.number}
+                  maxTilt={5}
+                  cursorLabel="VISIT PORTO"
+                  className="rounded-[26px]"
+                >
+                  <SpotlightCard
+                    spotlightColor={
+                      member.isSelf
+                        ? "rgba(196, 226, 46, 0.25)"
+                        : "rgba(91, 49, 200, 0.14)"
+                    }
+                    className={`flex h-full flex-col justify-between rounded-[26px] border p-7 ${member.isSelf
+                      ? "border-[#111213] bg-[#c4e22e] text-[#111213]"
+                      : "border-[var(--line)] bg-white text-[var(--ink)]"
+                      }`}
                   >
-                    <SpotlightCard
-                      spotlightColor={
-                        member.isSelf
-                          ? "rgba(196, 226, 46, 0.25)"
-                          : "rgba(91, 49, 200, 0.14)"
-                      }
-                      className={`flex h-full flex-col justify-between rounded-[26px] border p-7 ${member.isSelf
-                        ? "border-[#111213] bg-[#c4e22e] text-[#111213]"
-                        : "border-[var(--line)] bg-white text-[var(--ink)]"
-                        }`}
-                    >
-                      <div>
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="font-mono text-xs font-bold opacity-70">
-                            ANGGOTA #{member.number}
-                          </span>
-                          <span
-                            className={`rounded-full px-3 py-1 font-mono text-[10px] font-bold uppercase ${member.isSelf
-                              ? "bg-[#111213] text-[#c4e22e]"
-                              : member.roleType === "entrepreneur"
-                                ? "bg-[var(--violet)]/12 text-[var(--violet)]"
-                                : "bg-emerald-500/15 text-emerald-800"
-                              }`}
-                          >
-                            {locale === "id"
-                              ? member.roleBadgeId
-                              : member.roleBadgeEn}
-                          </span>
-                        </div>
-
-                        <h4 className="mt-5 text-2xl font-medium tracking-tight">
-                          {member.name}
-                        </h4>
-                        <p className="mt-2 text-xs opacity-75">
-                          {member.roleType === "entrepreneur"
-                            ? "Profil SWOT: Wirausaha / Entrepreneur (3 Anggota K-1)"
-                            : "Profil SWOT: Intrapreneur / Pegawai Profesional (2 Anggota K-1)"}
-                        </p>
-                      </div>
-
-                      <div className="mt-8 pt-4 border-t border-current/10">
-                        <a
-                          href={member.portfolioUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`inline-flex w-full items-center justify-between rounded-full px-4 py-2.5 text-xs font-semibold transition ${member.isSelf
-                            ? "bg-[#111213] text-[#f5f5f2] hover:bg-[#5b31c8]"
-                            : "bg-[#f5f5f2] text-[var(--ink)] hover:bg-[var(--ink)] hover:text-[var(--cream)]"
+                    <div>
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-mono text-xs font-bold opacity-70">
+                          ANGGOTA #{member.number}
+                        </span>
+                        <span
+                          className={`rounded-full px-3 py-1 font-mono text-[10px] font-bold uppercase ${member.isSelf
+                            ? "bg-[#111213] text-[#c4e22e]"
+                            : member.roleType === "entrepreneur"
+                              ? "bg-[var(--violet)]/12 text-[var(--violet)]"
+                              : "bg-emerald-500/15 text-emerald-800"
                             }`}
                         >
-                          <span>Kunjungi Portofolio Google Sites</span>
-                          <ExternalLink className="h-3.5 w-3.5" />
-                        </a>
+                          {locale === "id"
+                            ? member.roleBadgeId
+                            : member.roleBadgeEn}
+                        </span>
                       </div>
-                    </SpotlightCard>
-                  </TiltedCard>
-                ))}
-              </div>
-            </div>
-          )}
 
-          {/* TAB 3: EVALUASI DIRI & MATRIKS SWOT 20 POIN */}
-          {activeHubTab === "swot" && (
-            <div className="keffi-wrap mt-12 grid grid-cols-1 gap-8 lg:grid-cols-2">
-              {/* 10 Strengths */}
-              <SpotlightCard
-                spotlightColor="rgba(16, 185, 129, 0.14)"
-                className="rounded-[28px] border border-[var(--line)] bg-white p-7 md:p-9"
-              >
-                <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
-                  <span className="font-mono text-xs font-bold uppercase tracking-wider text-emerald-700">
-                    STRENGTHS · 10 KEKUATAN UTAMA (S1–S10)
-                  </span>
-                  <span className="rounded-full bg-emerald-500/15 px-3 py-1 font-mono text-xs font-bold text-emerald-800">
-                    10 Poin
-                  </span>
-                </div>
-                <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  {SWOT_STRENGTHS.map((item) => (
-                    <div
-                      key={item.code}
-                      className="rounded-2xl border border-[var(--line)] bg-[#f5f5f2] p-4"
-                    >
-                      <div className="font-mono text-xs font-bold text-emerald-700">
-                        {item.code} · {locale === "id" ? item.titleId : item.titleEn}
-                      </div>
-                      <p className="mt-1 text-xs leading-relaxed text-[var(--mute)]">
-                        {locale === "id" ? item.descId : item.descEn}
+                      <h4 className="mt-5 text-2xl font-medium tracking-tight">
+                        {member.name}
+                      </h4>
+                      <p className="mt-2 text-xs opacity-75">
+                        {member.roleType === "entrepreneur"
+                          ? "Profil SWOT: Wirausaha / Entrepreneur (3 Anggota K-1)"
+                          : "Profil SWOT: Intrapreneur / Pegawai Profesional (2 Anggota K-1)"}
                       </p>
                     </div>
-                  ))}
-                </div>
-              </SpotlightCard>
 
-              {/* 10 Weaknesses / Self-Improvement */}
-              <SpotlightCard
-                spotlightColor="rgba(91, 49, 200, 0.14)"
-                className="rounded-[28px] border border-[var(--line)] bg-white p-7 md:p-9"
-              >
-                <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
-                  <span className="font-mono text-xs font-bold uppercase tracking-wider text-[var(--violet)]">
-                    WEAKNESSES · 10 EVALUASI &amp; PENGEMBANGAN DIRI (W1–W10)
-                  </span>
-                  <span className="rounded-full bg-[var(--violet)]/12 px-3 py-1 font-mono text-xs font-bold text-[var(--violet)]">
-                    10 Poin
-                  </span>
-                </div>
-                <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  {SWOT_WEAKNESSES.map((item) => (
-                    <div
-                      key={item.code}
-                      className="rounded-2xl border border-[var(--line)] bg-[#f5f5f2] p-4"
-                    >
-                      <div className="font-mono text-xs font-bold text-[var(--violet)]">
-                        {item.code} · {locale === "id" ? item.titleId : item.titleEn}
-                      </div>
-                      <p className="mt-1 text-xs leading-relaxed text-[var(--mute)]">
-                        {locale === "id" ? item.descId : item.descEn}
-                      </p>
+                    <div className="mt-8 pt-4 border-t border-current/10">
+                      <a
+                        href={member.portfolioUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`inline-flex w-full items-center justify-between rounded-full px-4 py-2.5 text-xs font-semibold transition ${member.isSelf
+                          ? "bg-[#111213] text-[#f5f5f2] hover:bg-[#5b31c8]"
+                          : "bg-[#f5f5f2] text-[var(--ink)] hover:bg-[var(--ink)] hover:text-[var(--cream)]"
+                          }`}
+                      >
+                        <span>Kunjungi Portofolio Google Sites</span>
+                        <ExternalLink className="h-3.5 w-3.5" />
+                      </a>
                     </div>
-                  ))}
-                </div>
-              </SpotlightCard>
+                  </SpotlightCard>
+                </TiltedCard>
+              ))}
             </div>
-          )}
+          </div>
+        )}
 
-          {/* TAB 4: LIVE GITHUB @FADLI154 REPOSITORIES */}
-          {activeHubTab === "github" && (
-            <div className="keffi-wrap mt-12 space-y-8">
-              <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl bg-[#111213] p-7 text-[#f5f5f2]">
-                <div className="flex items-center gap-4">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={profile.avatarUrl}
-                    alt={profile.fullName}
-                    width={56}
-                    height={56}
-                    className="h-14 w-14 rounded-2xl border border-white/20 object-cover"
-                  />
-                  <div>
-                    <div className="font-mono text-xs text-[#c4e22e]">
-                      LIVE GITHUB TELEMETRY · @{profile.handle}
-                    </div>
-                    <h3 className="text-xl font-medium">
-                      {ghStats.public_repos} Public Repositories · {ghStats.followers} Followers
-                    </h3>
-                  </div>
-                </div>
-                <a
-                  href={profile.socials.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="keffi-pill-btn keffi-pill-btn--lime !py-2.5 !px-5"
-                >
-                  <span>Buka GitHub @fadli154</span>
-                  <ArrowUpRight className="h-4 w-4" />
-                </a>
+        {/* TAB 3: EVALUASI DIRI & MATRIKS SWOT 20 POIN */}
+        {activeHubTab === "swot" && (
+          <div className="keffi-wrap mt-12 grid grid-cols-1 gap-8 lg:grid-cols-2">
+            {/* 10 Strengths */}
+            <SpotlightCard
+              spotlightColor="rgba(16, 185, 129, 0.14)"
+              className="rounded-[28px] border border-[var(--line)] bg-white p-7 md:p-9"
+            >
+              <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
+                <span className="font-mono text-xs font-bold uppercase tracking-wider text-emerald-700">
+                  STRENGTHS · 10 KEKUATAN UTAMA (S1–S10)
+                </span>
+                <span className="rounded-full bg-emerald-500/15 px-3 py-1 font-mono text-xs font-bold text-emerald-800">
+                  10 Poin
+                </span>
               </div>
-
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                {ghRepos.map((repo) => (
-                  <TiltedCard
-                    key={repo.id}
-                    maxTilt={4}
-                    cursorLabel="GITHUB REPO"
-                    className="rounded-[24px]"
+              <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {SWOT_STRENGTHS.map((item) => (
+                  <div
+                    key={item.code}
+                    className="rounded-2xl border border-[var(--line)] bg-[#f5f5f2] p-4"
                   >
-                    <SpotlightCard className="flex h-full flex-col justify-between rounded-[24px] border border-[var(--line)] bg-white p-6">
-                      <div>
-                        <div className="flex items-center justify-between gap-2 font-mono text-xs text-[var(--violet)]">
-                          <span className="font-semibold">{repo.name}</span>
-                          <span>{repo.language || "Code"}</span>
-                        </div>
-                        <p className="mt-3 text-sm leading-relaxed text-[var(--mute)]">
-                          {repo.description ||
-                            "Repositori proyek perangkat lunak dan eksplorasi akademik Fadli Hifziansyah."}
-                        </p>
-                      </div>
-                      <div className="mt-6 flex items-center justify-between border-t border-[var(--line)] pt-4 font-mono text-xs text-[var(--mute)]">
-                        <div className="flex items-center gap-4">
-                          <span className="inline-flex items-center gap-1">
-                            <Star className="h-3.5 w-3.5 text-amber-500" />
-                            {repo.stargazers_count}
-                          </span>
-                          <span className="inline-flex items-center gap-1">
-                            <GitFork className="h-3.5 w-3.5" />
-                            {repo.forks_count}
-                          </span>
-                        </div>
-                        <a
-                          href={repo.html_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 font-semibold text-[var(--ink)] hover:text-[var(--violet)]"
-                        >
-                          <span>Source</span>
-                          <ArrowUpRight className="h-3.5 w-3.5" />
-                        </a>
-                      </div>
-                    </SpotlightCard>
-                  </TiltedCard>
+                    <div className="font-mono text-xs font-bold text-emerald-700">
+                      {item.code} · {locale === "id" ? item.titleId : item.titleEn}
+                    </div>
+                    <p className="mt-1 text-xs leading-relaxed text-[var(--mute)]">
+                      {locale === "id" ? item.descId : item.descEn}
+                    </p>
+                  </div>
                 ))}
               </div>
-              {ghLoading && (
-                <p className="font-mono text-xs text-[var(--mute)]">
-                  Menyinkronkan repositori langsung dari api.github.com/users/fadli154...
-                </p>
-              )}
+            </SpotlightCard>
+
+            {/* 10 Weaknesses / Self-Improvement */}
+            <SpotlightCard
+              spotlightColor="rgba(91, 49, 200, 0.14)"
+              className="rounded-[28px] border border-[var(--line)] bg-white p-7 md:p-9"
+            >
+              <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
+                <span className="font-mono text-xs font-bold uppercase tracking-wider text-[var(--violet)]">
+                  WEAKNESSES · 10 EVALUASI &amp; PENGEMBANGAN DIRI (W1–W10)
+                </span>
+                <span className="rounded-full bg-[var(--violet)]/12 px-3 py-1 font-mono text-xs font-bold text-[var(--violet)]">
+                  10 Poin
+                </span>
+              </div>
+              <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {SWOT_WEAKNESSES.map((item) => (
+                  <div
+                    key={item.code}
+                    className="rounded-2xl border border-[var(--line)] bg-[#f5f5f2] p-4"
+                  >
+                    <div className="font-mono text-xs font-bold text-[var(--violet)]">
+                      {item.code} · {locale === "id" ? item.titleId : item.titleEn}
+                    </div>
+                    <p className="mt-1 text-xs leading-relaxed text-[var(--mute)]">
+                      {locale === "id" ? item.descId : item.descEn}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </SpotlightCard>
+          </div>
+        )}
+
+        {/* TAB 4: LIVE GITHUB @FADLI154 REPOSITORIES */}
+        {activeHubTab === "github" && (
+          <div className="keffi-wrap mt-12 space-y-8">
+            <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl bg-[#111213] p-7 text-[#f5f5f2]">
+              <div className="flex items-center gap-4">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={profile.avatarUrl}
+                  alt={profile.fullName}
+                  width={56}
+                  height={56}
+                  className="h-14 w-14 rounded-2xl border border-white/20 object-cover"
+                />
+                <div>
+                  <div className="font-mono text-xs text-[#c4e22e]">
+                    LIVE GITHUB TELEMETRY · @{profile.handle}
+                  </div>
+                  <h3 className="text-xl font-medium">
+                    {ghStats.public_repos} Public Repositories · {ghStats.followers} Followers
+                  </h3>
+                </div>
+              </div>
+              <a
+                href={profile.socials.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="keffi-pill-btn keffi-pill-btn--lime !py-2.5 !px-5"
+              >
+                <span>Buka GitHub @fadli154</span>
+                <ArrowUpRight className="h-4 w-4" />
+              </a>
             </div>
-          )}
+
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              {ghRepos.map((repo) => (
+                <TiltedCard
+                  key={repo.id}
+                  maxTilt={4}
+                  cursorLabel="GITHUB REPO"
+                  className="rounded-[24px]"
+                >
+                  <SpotlightCard className="flex h-full flex-col justify-between rounded-[24px] border border-[var(--line)] bg-white p-6">
+                    <div>
+                      <div className="flex items-center justify-between gap-2 font-mono text-xs text-[var(--violet)]">
+                        <span className="font-semibold">{repo.name}</span>
+                        <span>{repo.language || "Code"}</span>
+                      </div>
+                      <p className="mt-3 text-sm leading-relaxed text-[var(--mute)]">
+                        {repo.description ||
+                          "Repositori proyek perangkat lunak dan eksplorasi akademik Fadli Hifziansyah."}
+                      </p>
+                    </div>
+                    <div className="mt-6 flex items-center justify-between border-t border-[var(--line)] pt-4 font-mono text-xs text-[var(--mute)]">
+                      <div className="flex items-center gap-4">
+                        <span className="inline-flex items-center gap-1">
+                          <Star className="h-3.5 w-3.5 text-amber-500" />
+                          {repo.stargazers_count}
+                        </span>
+                        <span className="inline-flex items-center gap-1">
+                          <GitFork className="h-3.5 w-3.5" />
+                          {repo.forks_count}
+                        </span>
+                      </div>
+                      <a
+                        href={repo.html_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 font-semibold text-[var(--ink)] hover:text-[var(--violet)]"
+                      >
+                        <span>Source</span>
+                        <ArrowUpRight className="h-3.5 w-3.5" />
+                      </a>
+                    </div>
+                  </SpotlightCard>
+                </TiltedCard>
+              ))}
+            </div>
+            {ghLoading && (
+              <p className="font-mono text-xs text-[var(--mute)]">
+                Menyinkronkan repositori langsung dari api.github.com/users/fadli154...
+              </p>
+            )}
+          </div>
+        )}
       </section>
 
       {/* =====================================================================

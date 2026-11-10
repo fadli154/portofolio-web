@@ -53,6 +53,26 @@ async function main() {
   await cwSec.screenshot({ path: cwPath });
   console.log('Coursework screenshot saved to', cwPath);
 
+  console.log('Capturing #certificates...');
+  const certSec = page.locator('section#certificates');
+  await certSec.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(2000);
+  const certPath = path.join(__dirname, '../public/qa-certificates-slim.png');
+  await certSec.screenshot({ path: certPath });
+  console.log('Certificates screenshot saved to', certPath);
+
+  console.log('Capturing boundary between #certificates and #coursework...');
+  await page.evaluate(() => {
+    const cert = document.querySelector('section#certificates');
+    if (cert) {
+      window.scrollTo(0, cert.offsetTop + cert.offsetHeight - 450);
+    }
+  });
+  await page.waitForTimeout(1000);
+  const boundaryPath = path.join(__dirname, '../public/qa-boundary.png');
+  await page.screenshot({ path: boundaryPath });
+  console.log('Boundary screenshot saved to', boundaryPath);
+
   await browser.close();
 }
 
