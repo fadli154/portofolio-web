@@ -1053,7 +1053,7 @@ export function HomeClientSections({
          ===================================================================== */}
       <section
         id="certificates"
-        className="border-t border-[var(--line)] bg-[#0c0d12] py-24 text-[#f5f5f2] md:py-32"
+        className="relative overflow-hidden border-t border-[var(--line)] bg-[#0c0d12] py-24 text-[#f5f5f2] md:py-32"
       >
         <div className="keffi-wrap">
           <div className="sec-head sec-head--dark">
@@ -1111,40 +1111,40 @@ export function HomeClientSections({
               </div>
             </div>
           </div>
+        </div>
 
-          {/* 3D PERSPECTIVE DRIFT WALL CONTAINER */}
-          <div className="relative mt-12 h-[520px] w-full overflow-hidden rounded-[32px] border border-white/10 bg-[#07080b] shadow-2xl md:h-[600px]">
-            <DriftWall
-              items={driftWallItems}
-              columns={4}
-              tileWidth={280}
-              tileHeight={195}
-              gap={22}
-              radius={18}
-              tilt={14}
-              turn={-12}
-              perspective={1150}
-              depth={110}
-              speed={34}
-              pauseOnHover={true}
-              onTileClick={(item) => {
-                const found = dynamicCertificates.find((c) => c.id === item.id);
-                if (found) {
-                  setSelectedCertModal(found);
-                } else if (item.raw) {
-                  setSelectedCertModal(item.raw as CertificateItem);
-                }
-              }}
-            />
-            {/* Ambient Lighting & Hint Overlay */}
-            <div className="pointer-events-none absolute bottom-4 left-6 z-10 flex items-center gap-2 rounded-full border border-white/15 bg-black/60 px-4 py-1.5 font-mono text-[11px] text-white/80 backdrop-blur-md">
-              <span className="h-2 w-2 rounded-full bg-[#c4e22e] animate-pulse" />
-              <span>
-                {locale === "id"
-                  ? "Arahkan kursor untuk memiringkan · Klik tile untuk detail sertifikat"
-                  : "Hover to tilt · Click any tile to inspect certificate"}
-              </span>
-            </div>
+        {/* 3D PERSPECTIVE DRIFT WALL - SEAMLESS (NO ENCLOSING CARD, MERGED DIRECTLY INTO SECTION) */}
+        <div className="relative mt-8 h-[540px] w-full overflow-hidden md:h-[620px]">
+          <DriftWall
+            items={driftWallItems}
+            columns={4}
+            tileWidth={290}
+            tileHeight={200}
+            gap={24}
+            radius={18}
+            tilt={13}
+            turn={-10}
+            perspective={1200}
+            depth={110}
+            speed={32}
+            pauseOnHover={true}
+            onTileClick={(item) => {
+              const found = dynamicCertificates.find((c) => c.id === item.id);
+              if (found) {
+                setSelectedCertModal(found);
+              } else if (item.raw) {
+                setSelectedCertModal(item.raw as CertificateItem);
+              }
+            }}
+          />
+          {/* Ambient Lighting & Floating Interaction Hint */}
+          <div className="pointer-events-none absolute bottom-4 left-1/2 z-10 -translate-x-1/2 flex items-center gap-2 rounded-full border border-white/10 bg-black/50 px-4 py-1.5 font-mono text-[11px] text-white/75 backdrop-blur-md">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#c4e22e] animate-pulse" />
+            <span>
+              {locale === "id"
+                ? "Arahkan kursor untuk memiringkan 3D · Klik tile untuk detail sertifikat"
+                : "Hover to tilt 3D · Click tile to inspect certificate"}
+            </span>
           </div>
         </div>
       </section>
