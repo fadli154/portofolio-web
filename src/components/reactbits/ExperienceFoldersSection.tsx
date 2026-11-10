@@ -200,77 +200,81 @@ export function ExperienceFoldersSection({
             VIEW MODE A: 3D CIRCULAR GALLERY (WebGL Curved Cylinder)
             =================================================================== */}
         {viewMode === "circular" && (
-          <div className="mt-10">
-            <div className="relative h-[560px] w-full overflow-hidden rounded-[32px] border border-[var(--line)] bg-[#f5f5f2]/80 md:h-[660px] dark:bg-[#0c0d0e]">
-              {/* Circular Gallery WebGL Component */}
-              <CircularGalleryWrapper
-                items={galleryItems}
-                bend={2.5}
-                textColor="var(--ink)"
-                itemSize={1.05}
-                itemAspect={0.733}
-                gap={0.34}
-                borderRadius={0.065}
-                scrollSpeed={2.2}
-                scrollEase={0.05}
-                showTitles={false}
-                snap={true}
-                autoScroll={0}
-                openOnClick={false}
-                onActiveChange={(idx) => {
-                  const normalized =
-                    ((idx % EXPERIENCE_FOLDERS.length) + EXPERIENCE_FOLDERS.length) %
-                    EXPERIENCE_FOLDERS.length;
-                  setActiveCircularIndex(normalized);
-                }}
-                onItemClick={(item, index) => {
-                  const found =
-                    EXPERIENCE_FOLDERS[index % EXPERIENCE_FOLDERS.length] ||
-                    EXPERIENCE_FOLDERS.find(
-                      (f) =>
-                        f.tab === item.text ||
-                        f.title === item.description ||
-                        f.slug === item.text
-                    );
-                  if (found) {
-                    setSelectedFolder(found);
-                    setActivePaperIndex(0);
-                    playMechanicalClick(720);
-                  }
-                }}
-              />
+          <div className="relative mt-8 h-[580px] w-full overflow-hidden md:h-[680px]">
+            {/* Top Fade Gradient Shadow — seamless integration with section */}
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-24 bg-gradient-to-b from-white via-white/70 to-transparent dark:from-[#0a0a0c] dark:via-[#0a0a0c]/70" />
 
-              {/* Tactical Overlay: Bottom Controls & Folder Quick Launcher */}
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col items-center justify-between gap-3 bg-gradient-to-t from-[#f5f5f2] via-[#f5f5f2]/80 to-transparent p-6 dark:from-[#0c0d0e] dark:via-[#0c0d0e]/80 md:flex-row md:items-end">
-                <div className="pointer-events-auto flex items-center gap-2 rounded-full border border-[var(--line)] bg-white/90 px-4 py-2 font-mono text-xs text-[var(--ink)] shadow-xs backdrop-blur-md dark:bg-black/80">
-                  <span className="h-2 w-2 rounded-full bg-[var(--violet)] animate-pulse" />
+            {/* Circular Gallery WebGL Component */}
+            <CircularGalleryWrapper
+              items={galleryItems}
+              bend={2.5}
+              textColor="var(--ink)"
+              itemSize={1.05}
+              itemAspect={0.733}
+              gap={0.34}
+              borderRadius={0.065}
+              scrollSpeed={2.2}
+              scrollEase={0.05}
+              showTitles={false}
+              snap={true}
+              autoScroll={0}
+              openOnClick={false}
+              onActiveChange={(idx) => {
+                const normalized =
+                  ((idx % EXPERIENCE_FOLDERS.length) + EXPERIENCE_FOLDERS.length) %
+                  EXPERIENCE_FOLDERS.length;
+                setActiveCircularIndex(normalized);
+              }}
+              onItemClick={(item, index) => {
+                const found =
+                  EXPERIENCE_FOLDERS[index % EXPERIENCE_FOLDERS.length] ||
+                  EXPERIENCE_FOLDERS.find(
+                    (f) =>
+                      f.tab === item.text ||
+                      f.title === item.description ||
+                      f.slug === item.text
+                  );
+                if (found) {
+                  setSelectedFolder(found);
+                  setActivePaperIndex(0);
+                  playMechanicalClick(720);
+                }
+              }}
+            />
+
+            {/* Bottom Inner Gradient Shadow */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-36 bg-gradient-to-t from-white via-white/85 to-transparent dark:from-[#0a0a0c] dark:via-[#0a0a0c]/85" />
+
+            {/* Tactical Overlay: Bottom Controls & Folder Quick Launcher */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex flex-col items-center justify-between gap-3 p-6 md:flex-row md:items-end">
+              <div className="pointer-events-auto flex items-center gap-2 rounded-full border border-[var(--line)] bg-white/90 px-4 py-2 font-mono text-xs text-[var(--ink)] shadow-md backdrop-blur-md dark:bg-black/80">
+                <span className="h-2 w-2 rounded-full bg-[var(--violet)] animate-pulse" />
+                <span>
+                  {locale === "id"
+                    ? "Geser kiri / kanan untuk memutar galeri · Klik folder untuk membuka berkas 3D"
+                    : "Drag left / right to spin gallery · Click any folder to inspect 3D papers"}
+                </span>
+              </div>
+
+              <div className="pointer-events-auto flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const target =
+                      EXPERIENCE_FOLDERS[activeCircularIndex] || EXPERIENCE_FOLDERS[0];
+                    setSelectedFolder(target);
+                    setActivePaperIndex(0);
+                    playMechanicalClick(640);
+                  }}
+                  className="inline-flex items-center gap-2 rounded-full bg-[var(--violet)] px-5 py-2.5 font-mono text-xs font-bold text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
+                >
+                  <FolderOpen className="h-4 w-4" />
                   <span>
                     {locale === "id"
-                      ? "Geser kiri / kanan untuk memutar galeri · Klik folder untuk membuka berkas 3D"
-                      : "Drag left / right to spin gallery · Click any folder to inspect 3D papers"}
+                      ? `Buka: ${EXPERIENCE_FOLDERS[activeCircularIndex]?.tab || "Folder"}`
+                      : `Open: ${EXPERIENCE_FOLDERS[activeCircularIndex]?.tab || "Folder"}`}
                   </span>
-                </div>
-
-                <div className="pointer-events-auto flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const target =
-                        EXPERIENCE_FOLDERS[activeCircularIndex] || EXPERIENCE_FOLDERS[0];
-                      setSelectedFolder(target);
-                      setActivePaperIndex(0);
-                      playMechanicalClick(640);
-                    }}
-                    className="inline-flex items-center gap-2 rounded-full bg-[var(--violet)] px-5 py-2.5 font-mono text-xs font-bold text-white shadow-md transition-transform hover:scale-105 active:scale-95"
-                  >
-                    <FolderOpen className="h-4 w-4" />
-                    <span>
-                      {locale === "id"
-                        ? `Buka: ${EXPERIENCE_FOLDERS[activeCircularIndex]?.tab || "Folder"}`
-                        : `Open: ${EXPERIENCE_FOLDERS[activeCircularIndex]?.tab || "Folder"}`}
-                    </span>
-                  </button>
-                </div>
+                </button>
               </div>
             </div>
           </div>

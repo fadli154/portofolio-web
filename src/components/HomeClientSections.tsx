@@ -1062,7 +1062,10 @@ export function HomeClientSections({
               </div>
 
               {pertemuanViewMode === "carousel" ? (
-                <div className="relative h-[620px] w-full overflow-hidden rounded-[32px] border border-[var(--line)] bg-[#f5f5f2]/80 md:h-[680px]">
+                <div className="relative mt-8 h-[600px] w-full overflow-hidden md:h-[680px]">
+                  {/* Top Fade Gradient Shadow — seamless integration with section */}
+                  <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-24 bg-gradient-to-b from-[#f5f5f2] via-[#f5f5f2]/70 to-transparent dark:from-[#0a0a0c] dark:via-[#0a0a0c]/70" />
+
                   <CircularGalleryWrapper
                     items={courseworkGalleryItems}
                     bend={2.5}
@@ -1085,7 +1088,12 @@ export function HomeClientSections({
                     }}
                     className="h-full w-full"
                   />
-                  <div className="pointer-events-none absolute bottom-4 left-1/2 z-10 -translate-x-1/2 flex items-center gap-2 rounded-full border border-black/10 bg-white/85 px-4 py-1.5 font-mono text-[11px] text-[var(--ink)] shadow-xs backdrop-blur-md">
+
+                  {/* Bottom Inner Gradient Shadow — eliminates clipping edge */}
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-36 bg-gradient-to-t from-[#f5f5f2] via-[#f5f5f2]/85 to-transparent dark:from-[#0a0a0c] dark:via-[#0a0a0c]/85" />
+
+                  {/* Floating Tactical Interaction Pill */}
+                  <div className="pointer-events-none absolute bottom-6 left-1/2 z-30 -translate-x-1/2 flex items-center gap-2 rounded-full border border-[var(--line)] bg-white/85 px-4 py-1.5 font-mono text-[11px] text-[var(--ink)] shadow-md backdrop-blur-md dark:bg-black/80">
                     <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--violet)]" />
                     <span>
                       {locale === "id"
