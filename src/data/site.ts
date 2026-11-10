@@ -79,17 +79,24 @@ export interface EducationItem {
   focusId: string;
 }
 
+/** Mirrors `public.certificates` (see supabase/migrations/20261110000006). */
 export interface CertificateItem {
   id: string;
-  code: string;
   title: string;
   issuer: string;
   issueDate: string;
   credentialId: string;
-  category: "Architecture & Cloud" | "AI & Data Systems" | "Frontend & Web" | "Security & Database";
-  verifyUrl: string;
-  summaryEn: string;
+  category: string;
+  /** Tile + lightbox image: Supabase Storage public URL or a /public path. */
+  imageUrl: string;
+  /** Original document (PDF/JPG), optional. */
+  fileUrl: string | null;
+  /** External verification page, optional. */
+  verifyUrl: string | null;
   summaryId: string;
+  summaryEn: string;
+  sortOrder: number;
+  isVisible: boolean;
 }
 
 export interface TechnologyItem {
@@ -433,62 +440,44 @@ export const EDUCATIONS: EducationItem[] = [
   },
 ];
 
+/**
+ * Local fallback used when Supabase is unreachable or empty.
+ * Keep in sync with the seed rows in 20261110000006_certificates_drift_wall.sql.
+ */
 export const CERTIFICATES: CertificateItem[] = [
   {
-    id: "cert-01",
-    code: "KOMINFO-SIMDUK",
-    title: "Pengembangan Aplikasi Web Pendataan Kependudukan (SIMDUK) · Laravel & MySQL",
-    issuer: "Dinas Komunikasi dan Informatika (Kominfo)",
-    issueDate: "2025",
-    credentialId: "KOMINFO-INTERN-SIMDUK-FH",
-    category: "Security & Database",
-    verifyUrl: "https://github.com/fadli154",
-    summaryEn:
-      "Official Web Developer Internship credential covering citizen CRUD architecture, NIK/KK validation, MySQL census aggregation, and multi-level Role-Based Access Control (RBAC).",
+    id: "6f1d2c3a-0001-4a5b-9c01-0e0f00000001",
+    title: "Juara II Literasi Inovasi Teknologi · OASE III PTKIN 2026",
+    issuer: "Kementerian Agama Republik Indonesia",
+    issueDate: "7 November 2026",
+    credentialId: "712/Dt.I.III/PP.01/11/2026",
+    category: "Kompetisi",
+    imageUrl: "/sertif/oase-juara-2-lit.webp",
+    fileUrl: "/sertif/oase-juara-2-lit.pdf",
+    verifyUrl: null,
     summaryId:
-      "Bukti pengalaman magang resmi Web Developer dalam pembangunan arsitektur CRUD warga, validasi NIK/KK, agregasi sensus MySQL, dan otentikasi multi-level (RBAC).",
+      "Juara II cabang Literasi Inovasi Teknologi pada Olimpiade Agama, Sains, dan Riset (OASE) III PTKIN se-Indonesia, UIN Sunan Kalijaga Yogyakarta, 3–7 November 2026. Mewakili UIN Sultan Maulana Hasanuddin Banten.",
+    summaryEn:
+      "Second place, Technology Innovation Literacy, at the 3rd Olympiad of Religion, Science and Research (OASE) for Indonesian Islamic universities, UIN Sunan Kalijaga Yogyakarta, 3–7 November 2026.",
+    sortOrder: 1,
+    isVisible: true,
   },
   {
-    id: "cert-02",
-    code: "SMART-HAJJ-AI",
-    title: "Inovasi AI & Computer Vision: Smart Hajj Inclusive Accessibility System",
-    issuer: "Riset Computer Vision & Deep Learning",
-    issueDate: "2025 - 2026",
-    credentialId: "CV-SMARTHAJJ-SAR-SIGN",
-    category: "AI & Data Systems",
-    verifyUrl: "https://github.com/fadli154",
-    summaryEn:
-      "Real-time Saudi Riyal (SAR) banknote detection and two-way Sign Language translation using Python, OpenCV, MediaPipe 21 Hand Landmarks, and Speech Synthesis.",
+    id: "6f1d2c3a-0002-4a5b-9c01-0e0f00000002",
+    title: "Peserta Lomba Nasional Website UMKM · IT's Day 2025",
+    issuer: "Jakarta Global University",
+    issueDate: "5 Juli 2025",
+    credentialId: "",
+    category: "Kompetisi",
+    imageUrl: "/sertif/itsday-2025-lomba-website-umkm.webp",
+    fileUrl: "/sertif/itsday-2025-lomba-website-umkm.jpg",
+    verifyUrl: null,
     summaryId:
-      "Sistem deteksi pecahan uang kertas Riyal Arab Saudi (SAR) real-time dan penerjemah Bahasa Isyarat dua arah menggunakan Python, OpenCV, MediaPipe 21 Hand Landmarks, dan Speech Synthesis.",
-  },
-  {
-    id: "cert-03",
-    code: "GOVTECH-WEB",
-    title: "Full-Stack Web & GovTech Reporting Portal Architecture",
-    issuer: "Sektor Publik & Instansi Pemerintah",
-    issueDate: "2024 - 2026",
-    credentialId: "GOVTECH-PORTAL-SOP-FH",
-    category: "Frontend & Web",
-    verifyUrl: "https://github.com/fadli154",
+      "Sertifikat penghargaan atas partisipasi dalam Lomba Nasional Website UMKM pada acara IT's Day 2025, Fakultas Teknik dan Ilmu Komputer, Jakarta Global University, Depok.",
     summaryEn:
-      "Design and implementation of digital reporting dashboards, periodic document verification workflows, and cross-division database integration.",
-    summaryId:
-      "Perancangan dan implementasi dasbor pelaporan digital, alur verifikasi berkas berkala berbasis SOP, serta integrasi database antardivisi instansi.",
-  },
-  {
-    id: "cert-04",
-    code: "KWU-K1-INFORMATIKA",
-    title: "Dokumentasi Akademik Kewirausahaan Teknologi & Evaluasi SWOT Kelompok K-1",
-    issuer: "Program Studi Informatika · Kelompok K-1",
-    issueDate: "2025 - 2026",
-    credentialId: "INFORMATIKA-K1-SWOT-6P",
-    category: "Architecture & Cloud",
-    verifyUrl: "https://sites.google.com/view/reynaldi-porto/portofolio",
-    summaryEn:
-      "Complete 6-session entrepreneurship coursework portfolio, 20-point personal SWOT evaluation, and collaborative hub for Group K-1 Informatics.",
-    summaryId:
-      "Dokumentasi lengkap 6 pertemuan mata kuliah Kewirausahaan, evaluasi diri SWOT 20 poin, serta kolaborasi ekosistem portofolio Kelompok K-1 Informatika.",
+      "Certificate of participation in the National UMKM Website Competition at IT's Day 2025, Faculty of Engineering and Computer Science, Jakarta Global University, Depok.",
+    sortOrder: 2,
+    isVisible: true,
   },
 ];
 

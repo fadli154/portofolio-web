@@ -5,12 +5,15 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
+  Award,
   BookOpen,
   Briefcase,
   CheckCircle2,
   ClipboardCheck,
   Database,
+  ExternalLink,
   FileCode2,
+  Image as ImageIcon,
   Inbox,
   Lock,
   LogOut,
@@ -21,26 +24,35 @@ import {
   Upload,
 } from "lucide-react";
 import {
+  CERTIFICATES,
   EXPERIENCES,
   KWU_SESSIONS,
   PROJECTS,
+  type CertificateItem,
   type ExperienceItem,
   type KwuSessionItem,
   type ProjectCaseStudy,
 } from "@/data/site";
 import { playMechanicalClick } from "@/lib/audio/sound-effects";
 import {
+  deleteCertificateItem,
   deleteCourseworkSession,
   deleteExperienceItem,
   deleteProjectItem,
   loadCmsStoreClient,
+  upsertCertificateItem,
   upsertCourseworkSession,
   upsertExperienceItem,
   upsertProjectItem,
 } from "@/lib/data/cms-persistence";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 
-type AdminTab = "coursework" | "experiences" | "projects" | "inbox";
+type AdminTab =
+  | "coursework"
+  | "certificates"
+  | "experiences"
+  | "projects"
+  | "inbox";
 
 interface MockInquiry {
   id: string;
@@ -136,6 +148,24 @@ export function AdminCommandCenterClient({
   );
   const [projUrl, setProjUrl] = useState("https://github.com/fadli154");
 
+  // Certificate Editor Form State
+  const [certificates, setCertificates] =
+    useState<CertificateItem[]>(CERTIFICATES);
+  const [selectedCertId, setSelectedCertId] = useState<string | null>(null);
+  const [certTitle, setCertTitle] = useState("");
+  const [certIssuer, setCertIssuer] = useState("");
+  const [certIssueDate, setCertIssueDate] = useState("2026");
+  const [certCategory, setCertCategory] = useState("Kompetisi");
+  const [certCredentialId, setCertCredentialId] = useState("");
+  const [certImageUrl, setCertImageUrl] = useState("");
+  const [certFileUrl, setCertFileUrl] = useState("");
+  const [certVerifyUrl, setCertVerifyUrl] = useState("");
+  const [certSummaryId, setCertSummaryId] = useState("");
+  const [certSummaryEn, setCertSummaryEn] = useState("");
+  const [certSortOrder, setCertSortOrder] = useState(1);
+  const [certIsVisible, setCertIsVisible] = useState(true);
+  const [certUploading, setCertUploading] = useState(false);
+
   const notify = (msg: string) => {
     playMechanicalClick(740);
     setToast(msg);
@@ -148,12 +178,158 @@ export function AdminCommandCenterClient({
     setSessions(store.courseworkSessions);
     setExperiences(store.experiences);
     setProjects(store.projects);
+    if (store.certificates && store.certificates.length > 0) {
+      setCertificates(store.certificates);
+      populateCertForm(store.certificates[0]);
+    }
 
     const first = store.courseworkSessions[0];
     if (first) {
       populateSessionForm(first);
     }
   }, []);
+
+  const populateCertForm = (c: CertificateItem) => {
+    setSelectedCertId(c.id);
+    setCertTitle(c.title);
+    setCertIssuer(c.issuer);
+    setCertIssueDate(c.issueDate);
+    setCertCategory(c.category || "Kompetisi");
+    setCertCredentialId(c.credentialId || "");
+    setCertImageUrl(c.imageUrl || "");
+    setCertFileUrl(c.fileUrl || "");
+    setCertVerifyUrl(c.verifyUrl || "");
+    setCertSummaryId(c.summaryId || "");
+    setCertSummaryEn(c.summaryEn || "");
+    setCertSortOrder(c.sortOrder || 1);
+    setCertIsVisible(c.isVisible !== false);
+  };
+
+  const handlePrepareNewCert = () => {
+    setSelectedCertId(null);
+    setCertTitle("");
+    setCertIssuer("");
+    setCertIssueDate(new Date().getFullYear().toString());
+    setCertCategory("Kompetisi");
+    setCertCredentialId("");
+    setCertImageUrl("");
+    setCertFileUrl("");
+    setCertVerifyUrl("");
+    setCertSummaryId("");
+    setCertSummaryEn("");
+    setCertSortOrder(certificates.length + 1);
+    setCertIsVisible(true);
+  };
+
+  const handleSaveCert = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!certTitle.trim() || !certIssuer.trim() || !certImageUrl.trim()) {
+      notify("Judul, Penerbit, dan URL Foto/Thumbnail Sertifikat wajib diisi!");
+      return;
+    }
+
+    const item: CertificateItem = {
+      id: selectedCertId || `cert-${Date.now()}`,
+      title: certTitle.trim(),
+      issuer: certIssuer.trim(),
+      issueDate: certIssueDate.trim(),
+      credentialId: certCredentialId.trim(),
+      category: certCategory.trim() || "Kompetisi",
+      imageUrl: certImageUrl.trim(),
+      fileUrl: certFileUrl.trim() || null,
+      verifyUrl: certVerifyUrl.trim() || null,
+      summaryId: certSummaryId.trim(),
+      summaryEn: certSummaryEn.trim() || certSummaryId.trim(),
+      sortOrder: Number(certSortOrder) || 1,
+      isVisible: certIsVisible,
+    };
+
+    const res = await upsertCertificateItem(item);
+    setCertificates(res.store.certificates);
+    setSelectedCertId(item.id);
+    notify(
+      res.syncedToSupabase
+        ? `Sertifikat "${item.title}" tersimpan & disinkronkan ke Supabase!`
+        : `Sertifikat "${item.title}" tersimpan di CMS lokal!`
+    );
+  };
+
+  const handleDeleteCert = async (id: string, title: string) => {
+    if (!confirm(`Hapus sertifikat "${title}"?`)) return;
+    const res = await deleteCertificateItem(id);
+    setCertificates(res.store.certificates);
+    if (selectedCertId === id) {
+      handlePrepareNewCert();
+    }
+    notify(`Sertifikat "${title}" berhasil dihapus.`);
+  };
+
+  const handleUploadCertFile = async (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 8 * 1024 * 1024) {
+      notify("Ukuran file maksimal 8MB.");
+      return;
+    }
+
+    setCertUploading(true);
+    try {
+      const isPdf = file.type === "application/pdf";
+      const cleanName = file.name.toLowerCase().replace(/[^a-z0-9.]/g, "-");
+      const path = `certs/${Date.now()}-${cleanName}`;
+
+      if (isSupabaseConfigured()) {
+        const supabase = createClient();
+        if (supabase) {
+          const { error: upErr } = await supabase.storage
+            .from("certificates")
+            .upload(path, file, { upsert: true, contentType: file.type });
+
+          if (!upErr) {
+            const { data } = supabase.storage
+              .from("certificates")
+              .getPublicUrl(path);
+            if (data?.publicUrl) {
+              if (isPdf) {
+                setCertFileUrl(data.publicUrl);
+                notify(
+                  "Berkas PDF sertifikat berhasil diunggah ke Supabase Storage!"
+                );
+              } else {
+                setCertImageUrl(data.publicUrl);
+                notify(
+                  "Foto sertifikat berhasil diunggah ke Supabase Storage!"
+                );
+              }
+              setCertUploading(false);
+              return;
+            }
+          }
+        }
+      }
+
+      // Offline / Local File preview fallback
+      const reader = new FileReader();
+      reader.onload = (loadEvt) => {
+        const url = loadEvt.target?.result as string;
+        if (isPdf) {
+          setCertFileUrl(url);
+          notify("PDF dimuat secara lokal.");
+        } else {
+          setCertImageUrl(url);
+          notify("Foto sertifikat dimuat secara lokal.");
+        }
+        setCertUploading(false);
+      };
+      reader.readAsDataURL(file);
+    } catch {
+      notify("Gagal mengunggah file sertifikat.");
+      setCertUploading(false);
+    }
+  };
 
   const populateSessionForm = (s: KwuSessionItem) => {
     setSelectedSessionNumber(s.number);
@@ -459,18 +635,23 @@ export function AdminCommandCenterClient({
                 icon: BookOpen,
               },
               {
+                id: "certificates" as const,
+                label: `02 · Sertifikat & Drift Wall (${certificates.length})`,
+                icon: Award,
+              },
+              {
                 id: "experiences" as const,
-                label: `02 · Pengalaman Nyata (${experiences.length})`,
+                label: `03 · Pengalaman Nyata (${experiences.length})`,
                 icon: Briefcase,
               },
               {
                 id: "projects" as const,
-                label: `03 · Studi Kasus Proyek (${projects.length})`,
+                label: `04 · Studi Kasus Proyek (${projects.length})`,
                 icon: FileCode2,
               },
               {
                 id: "inbox" as const,
-                label: `04 · Pesan Masuk & RLS (${inquiries.filter((i) => i.status === "unread").length})`,
+                label: `05 · Pesan Masuk & RLS (${inquiries.filter((i) => i.status === "unread").length})`,
                 icon: Inbox,
               },
             ].map((tab) => {
@@ -805,7 +986,366 @@ export function AdminCommandCenterClient({
           )}
 
           {/* =================================================================
-              TAB 02: PENGALAMAN NYATA (EXPERIENCES DYNAMIC CRUD)
+              TAB 02: SERTIFIKAT & LISENSI DINAMIS (DRIFT WALL & /CERTIFICATES)
+             ================================================================= */}
+          {activeTab === "certificates" && (
+            <div className="space-y-6">
+              {/* Header Banner */}
+              <div className="rounded-[28px] border border-black/10 bg-white p-6 md:p-8">
+                <div className="flex flex-wrap items-center justify-between gap-4 border-b border-black/10 pb-5">
+                  <div>
+                    <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#5b31c8]">
+                      MANAJEMEN SERTIFIKAT · 3D DRIFT WALL &amp; SUPABASE POSTGRESQL
+                    </span>
+                    <h2 className="mt-1 text-2xl font-bold tracking-tight">
+                      Katalog Sertifikasi &amp; Penghargaan ({certificates.length})
+                    </h2>
+                    <p className="mt-1 text-xs text-black/60">
+                      Sertifikat yang Anda simpan di sini otomatis dirender secara real-time pada 3D Drift Wall di Beranda publik dan halaman /certificates.
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        playMechanicalClick(620);
+                        handlePrepareNewCert();
+                      }}
+                      className="inline-flex items-center gap-1.5 rounded-full bg-[#111213] px-4 py-2 font-mono text-xs font-bold text-[#c4e22e] hover:bg-[#5b31c8]"
+                    >
+                      <Plus className="h-4 w-4" />
+                      <span>Tambah Sertifikat Baru</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* List of Existing Certificates */}
+                <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {certificates.map((cert) => {
+                    const isSelected = selectedCertId === cert.id;
+                    return (
+                      <div
+                        key={cert.id}
+                        onClick={() => {
+                          playMechanicalClick(680);
+                          populateCertForm(cert);
+                        }}
+                        className={`cursor-pointer rounded-2xl border p-4 transition ${
+                          isSelected
+                            ? "border-[#5b31c8] bg-[#5b31c8]/5 ring-2 ring-[#5b31c8]/20"
+                            : "border-black/10 bg-[#f5f5f2] hover:border-black/30"
+                        }`}
+                      >
+                        {/* Thumbnail image */}
+                        <div className="relative h-32 w-full overflow-hidden rounded-xl border border-black/10 bg-black/10">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={cert.imageUrl}
+                            alt={cert.title}
+                            className="h-full w-full object-cover"
+                          />
+                          <span className="absolute bottom-2 left-2 rounded-full bg-black/75 px-2 py-0.5 font-mono text-[9px] font-bold text-[#c4e22e]">
+                            {cert.category}
+                          </span>
+                          <span className="absolute top-2 right-2 rounded-full bg-black/75 px-2 py-0.5 font-mono text-[9px] text-white">
+                            Urutan #{cert.sortOrder}
+                          </span>
+                        </div>
+
+                        <div className="mt-3">
+                          <div className="font-mono text-[10px] text-black/50">
+                            {cert.issuer} · {cert.issueDate}
+                          </div>
+                          <h4 className="mt-1 line-clamp-2 text-sm font-bold text-black">
+                            {cert.title}
+                          </h4>
+                        </div>
+
+                        <div className="mt-3 flex items-center justify-between border-t border-black/10 pt-2 font-mono text-[11px]">
+                          <span
+                            className={
+                              cert.isVisible !== false
+                                ? "text-emerald-700 font-semibold"
+                                : "text-zinc-500"
+                            }
+                          >
+                            {cert.isVisible !== false ? "● Publik Aktif" : "○ Disembunyikan"}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteCert(cert.id, cert.title);
+                            }}
+                            className="text-rose-600 hover:underline"
+                          >
+                            Hapus
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Certificate Form Editor */}
+              <form
+                onSubmit={handleSaveCert}
+                className="rounded-[28px] border border-black/10 bg-white p-6 md:p-8 space-y-5"
+              >
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-black/10 pb-4">
+                  <div>
+                    <span className="font-mono text-xs font-bold uppercase text-[#5b31c8]">
+                      {selectedCertId
+                        ? `EDIT SERTIFIKAT: ${certTitle || "Tanpa Judul"}`
+                        : "FORMULIR PENAMBAHAN SERTIFIKAT BARU"}
+                    </span>
+                    <p className="text-xs text-black/60">
+                      Isi data sertifikat, upload foto/PDF, dan simpan untuk langsung diperbarui di database Supabase.
+                    </p>
+                  </div>
+                  {selectedCertId && (
+                    <button
+                      type="button"
+                      onClick={handlePrepareNewCert}
+                      className="font-mono text-xs text-[#5b31c8] hover:underline"
+                    >
+                      Batal Edit / Buat Baru
+                    </button>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <div className="md:col-span-2">
+                    <label className="block font-mono text-[11px] uppercase tracking-wider text-black/70">
+                      Judul Sertifikat / Penghargaan *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={certTitle}
+                      onChange={(e) => setCertTitle(e.target.value)}
+                      placeholder="Contoh: Juara II Literasi Inovasi Teknologi · OASE III PTKIN 2026"
+                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 text-sm focus:border-[#5b31c8] focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-mono text-[11px] uppercase tracking-wider text-black/70">
+                      Penerbit / Penyelenggara *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={certIssuer}
+                      onChange={(e) => setCertIssuer(e.target.value)}
+                      placeholder="Contoh: Kementerian Agama Republik Indonesia"
+                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 text-sm focus:border-[#5b31c8] focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-mono text-[11px] uppercase tracking-wider text-black/70">
+                      Tanggal / Waktu Perolehan *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={certIssueDate}
+                      onChange={(e) => setCertIssueDate(e.target.value)}
+                      placeholder="Contoh: 7 November 2026"
+                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 text-sm focus:border-[#5b31c8] focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-mono text-[11px] uppercase tracking-wider text-black/70">
+                      Kategori Bidang
+                    </label>
+                    <input
+                      type="text"
+                      value={certCategory}
+                      onChange={(e) => setCertCategory(e.target.value)}
+                      placeholder="Contoh: Kompetisi / Frontend & Web / AI & Data"
+                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 text-sm focus:border-[#5b31c8] focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-mono text-[11px] uppercase tracking-wider text-black/70">
+                      Nomor Kredensial / SK (Opsional)
+                    </label>
+                    <input
+                      type="text"
+                      value={certCredentialId}
+                      onChange={(e) => setCertCredentialId(e.target.value)}
+                      placeholder="Contoh: 712/Dt.I.III/PP.01/11/2026"
+                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 text-sm focus:border-[#5b31c8] focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Upload Section */}
+                <div className="rounded-2xl border border-dashed border-black/20 bg-[#f5f5f2] p-5">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div>
+                      <div className="font-mono text-xs font-bold uppercase text-[#5b31c8]">
+                        UNGAH BERKAS SERTIFIKAT (FOTO ATAU PDF)
+                      </div>
+                      <p className="mt-0.5 text-xs text-black/60">
+                        Otomatis disimpan ke bucket Storage Supabase `certificates`. Mendukung file JPG, PNG, WebP, dan PDF hingga 8MB.
+                      </p>
+                    </div>
+
+                    <label className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-[#111213] px-4 py-2 font-mono text-xs font-semibold text-[#c4e22e] hover:bg-[#5b31c8]">
+                      <Upload className="h-4 w-4" />
+                      <span>{certUploading ? "Mengunggah..." : "Pilih Berkas..."}</span>
+                      <input
+                        type="file"
+                        accept="image/*,application/pdf"
+                        disabled={certUploading}
+                        onChange={handleUploadCertFile}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+
+                  {/* Preview uploaded image if available */}
+                  {certImageUrl && (
+                    <div className="mt-4 flex flex-wrap items-center gap-4 border-t border-black/10 pt-4">
+                      <div className="relative h-28 w-44 overflow-hidden rounded-xl border border-black/10 bg-white">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={certImageUrl}
+                          alt="Preview Sertifikat"
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                      <div className="text-xs">
+                        <div className="font-mono font-semibold text-emerald-700">
+                          ✓ Foto Thumbnail Aktif
+                        </div>
+                        <div className="mt-1 max-w-md truncate font-mono text-[11px] text-black/50">
+                          {certImageUrl}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <div>
+                    <label className="block font-mono text-[11px] uppercase tracking-wider text-black/70">
+                      URL Foto / Thumbnail Tile Drift Wall *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={certImageUrl}
+                      onChange={(e) => setCertImageUrl(e.target.value)}
+                      placeholder="https://... atau /sertif/nama-file.webp"
+                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 font-mono text-xs focus:border-[#5b31c8] focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-mono text-[11px] uppercase tracking-wider text-black/70">
+                      URL Berkas Asli / PDF (Opsional)
+                    </label>
+                    <input
+                      type="text"
+                      value={certFileUrl}
+                      onChange={(e) => setCertFileUrl(e.target.value)}
+                      placeholder="https://... atau /sertif/nama-file.pdf"
+                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 font-mono text-xs focus:border-[#5b31c8] focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-mono text-[11px] uppercase tracking-wider text-black/70">
+                      URL Verifikasi Online (Opsional)
+                    </label>
+                    <input
+                      type="url"
+                      value={certVerifyUrl}
+                      onChange={(e) => setCertVerifyUrl(e.target.value)}
+                      placeholder="https://verifikasi-sertifikat.example.com"
+                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 font-mono text-xs focus:border-[#5b31c8] focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block font-mono text-[11px] uppercase tracking-wider text-black/70">
+                        Urutan Tampil (Sort)
+                      </label>
+                      <input
+                        type="number"
+                        min="1"
+                        max="99"
+                        value={certSortOrder}
+                        onChange={(e) => setCertSortOrder(Number(e.target.value))}
+                        className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 text-sm focus:border-[#5b31c8] focus:outline-none"
+                      />
+                    </div>
+                    <div className="flex flex-col justify-end">
+                      <label className="inline-flex cursor-pointer items-center gap-2 rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-3 text-xs font-semibold text-black/80">
+                        <input
+                          type="checkbox"
+                          checked={certIsVisible}
+                          onChange={(e) => setCertIsVisible(e.target.checked)}
+                          className="h-4 w-4 rounded accent-[#5b31c8]"
+                        />
+                        <span>Tampilkan di Publik</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block font-mono text-[11px] uppercase tracking-wider text-black/70">
+                      Deskripsi / Catatan Capaian
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={certSummaryId}
+                      onChange={(e) => setCertSummaryId(e.target.value)}
+                      placeholder="Rincian mengenai perlombaan, cabang yang dijuarai, instansi, atau keahlian yang diakui..."
+                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 text-sm focus:border-[#5b31c8] focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap items-center justify-between gap-4 border-t border-black/10 pt-5">
+                  <button
+                    type="submit"
+                    className="inline-flex items-center gap-2 rounded-full bg-[#111213] px-6 py-3 font-mono text-xs font-bold text-[#c4e22e] shadow-md transition hover:bg-[#5b31c8]"
+                  >
+                    <Save className="h-4 w-4" />
+                    <span>
+                      {selectedCertId
+                        ? "Perbarui Sertifikat di Supabase"
+                        : "Simpan Sertifikat Baru ke Supabase"}
+                    </span>
+                  </button>
+
+                  {selectedCertId && (
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteCert(selectedCertId, certTitle)}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-rose-500/40 px-4 py-2.5 font-mono text-xs font-semibold text-rose-600 hover:bg-rose-50"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                      <span>Hapus Sertifikat</span>
+                    </button>
+                  )}
+                </div>
+              </form>
+            </div>
+          )}
+
+          {/* =================================================================
+              TAB 03: PENGALAMAN NYATA (EXPERIENCES DYNAMIC CRUD)
              ================================================================= */}
           {activeTab === "experiences" && (
             <div className="space-y-6">

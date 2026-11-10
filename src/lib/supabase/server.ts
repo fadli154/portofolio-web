@@ -1,7 +1,24 @@
 import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { createClient } from "@supabase/supabase-js";
 import { cookies } from "next/headers";
 import { isSupabaseConfigured } from "./client";
 
+/**
+ * Cookie-less anon client for public, RLS-filtered reads in Server Components.
+ * It never touches `cookies()`, so pages using it stay statically rendered / ISR.
+ */
+export function createPublicSupabaseClient() {
+  if (!isSupabaseConfigured()) {
+    return null;
+  }
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    { auth: { persistSession: false, autoRefreshToken: false } }
+  );
+}
+
+/** Session-aware client (reads auth cookies). Use only in dynamic routes/actions. */
 export async function createServerSupabaseClient() {
   if (!isSupabaseConfigured()) {
     return null;

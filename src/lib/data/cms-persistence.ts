@@ -1,9 +1,11 @@
 "use client";
 
 import {
+  CERTIFICATES,
   EXPERIENCES,
   KWU_SESSIONS,
   PROJECTS,
+  type CertificateItem,
   type ExperienceItem,
   type KwuSessionItem,
   type ProjectCaseStudy,
@@ -17,6 +19,7 @@ export interface CmsDynamicStore {
   experiences: ExperienceItem[];
   projects: ProjectCaseStudy[];
   courseworkSessions: KwuSessionItem[];
+  certificates: CertificateItem[];
   updatedAt: string;
 }
 
@@ -25,6 +28,7 @@ export function getDefaultCmsStore(): CmsDynamicStore {
     experiences: EXPERIENCES,
     projects: PROJECTS,
     courseworkSessions: KWU_SESSIONS,
+    certificates: CERTIFICATES,
     updatedAt: new Date().toISOString(),
   };
 }
@@ -75,6 +79,10 @@ export function loadCmsStoreClient(): CmsDynamicStore {
         Array.isArray(parsed.projects) && parsed.projects.length > 0
           ? parsed.projects
           : defaults.projects,
+      certificates:
+        Array.isArray(parsed.certificates) && parsed.certificates.length > 0
+          ? [...parsed.certificates].sort((a, b) => a.sortOrder - b.sortOrder)
+          : defaults.certificates,
       courseworkSessions: sessions.sort((a, b) => a.number - b.number),
       updatedAt: parsed.updatedAt || defaults.updatedAt,
     };
@@ -90,6 +98,9 @@ export function saveCmsStoreClient(nextStore: CmsDynamicStore): void {
       ...nextStore,
       courseworkSessions: [...nextStore.courseworkSessions].sort(
         (a, b) => a.number - b.number
+      ),
+      certificates: [...(nextStore.certificates || [])].sort(
+        (a, b) => a.sortOrder - b.sortOrder
       ),
       updatedAt: new Date().toISOString(),
     };
@@ -330,4 +341,86 @@ export async function deleteProjectItem(
   saveCmsStoreClient(nextStore);
   return { syncedToSupabase: false, store: nextStore };
 }
+
+/**
+ * Synchronizes a Certificate item to Supabase (`public.certificates`) and local store.
+ */
+export async function upsertCertificateItem(
+  cert: CertificateItem
+): Promise<{ syncedToSupabase: boolean; store: CmsDynamicStore }> {
+  const current = loadCmsStoreClient();
+  const existsIdx = current.certificates.findIndex((c) => c.id === cert.id);
+  const updatedCerts =
+    existsIdx >= 0
+      ? current.certificates.map((c, i) => (i === existsIdx ? cert : c))
+      : [...current.certificates, cert];
+
+  const nextStore: CmsDynamicStore = {
+    ...current,
+    certificates: updatedCerts.sort((a, b) => a.sortOrder - b.sortOrder),
+    updatedAt: new Date().toISOString(),
+  };
+  saveCmsStoreClient(nextStore);
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = createClient();
+      if (supabase) {
+        const { error } = await supabase.from("certificates").upsert(
+          {
+            id: cert.id,
+            title: cert.title,
+            issuer: cert.issuer,
+            issue_date: cert.issueDate,
+            credential_id: cert.credentialId || "",
+            category: cert.category || "Kompetisi",
+            image_url: cert.imageUrl,
+            file_url: cert.fileUrl,
+            verify_url: cert.verifyUrl,
+            summary_id: cert.summaryId,
+            summary_en: cert.summaryEn || cert.summaryId,
+            sort_order: cert.sortOrder,
+            is_visible: cert.isVisible,
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: "id" }
+        );
+        if (!error) {
+          return { syncedToSupabase: true, store: nextStore };
+        }
+      }
+    } catch {
+      // Fallback
+    }
+  }
+
+  return { syncedToSupabase: false, store: nextStore };
+}
+
+export async function deleteCertificateItem(
+  id: string
+): Promise<{ syncedToSupabase: boolean; store: CmsDynamicStore }> {
+  const current = loadCmsStoreClient();
+  const nextStore: CmsDynamicStore = {
+    ...current,
+    certificates: current.certificates.filter((c) => c.id !== id),
+    updatedAt: new Date().toISOString(),
+  };
+  saveCmsStoreClient(nextStore);
+
+  if (isSupabaseConfigured()) {
+    try {
+      const supabase = createClient();
+      if (supabase) {
+        await supabase.from("certificates").delete().eq("id", id);
+        return { syncedToSupabase: true, store: nextStore };
+      }
+    } catch {
+      // Fallback
+    }
+  }
+
+  return { syncedToSupabase: false, store: nextStore };
+}
+
 

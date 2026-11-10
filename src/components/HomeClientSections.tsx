@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   ArrowUpRight,
+  Award,
   BookOpen,
   Briefcase,
   Check,
@@ -14,10 +15,12 @@ import {
   ExternalLink,
   Eye,
   FileCheck2,
+  FileText,
   FolderGit2,
   GitFork,
   Layers,
   Mail,
+  ShieldCheck,
   Sparkles,
   Star,
   Terminal,
@@ -26,6 +29,7 @@ import {
 } from "lucide-react";
 import { usePortfolioState } from "@/lib/i18n/context";
 import {
+  CERTIFICATES,
   EXPERIENCES,
   KWU_SESSIONS,
   PROJECTS,
@@ -53,6 +57,11 @@ import { TiltedCard } from "@/components/reactbits/TiltedCard";
 import { CountUp } from "@/components/reactbits/CountUp";
 import { Magnet } from "@/components/reactbits/Magnet";
 import { CustomCursor } from "@/components/reactbits/CustomCursor";
+import { DriftWall, type DriftWallItem } from "@/components/reactbits/DriftWall";
+import { TechText } from "@/components/reactbits/TechText";
+import { RotatingText } from "@/components/reactbits/RotatingText";
+import { FlexCarousel, type FlexCarouselItem } from "@/components/reactbits/FlexCarousel";
+import LanyardWrapper from "@/components/reactbits/LanyardWrapper";
 import { KeffiStackFigure } from "@/components/figures/keffi-svc-figures";
 
 interface HomeClientSectionsProps {
@@ -141,6 +150,7 @@ export function HomeClientSections({
   profile,
   projects: initialProjects,
   experiences: initialExperiences,
+  certificates: initialCertificates = [],
 }: HomeClientSectionsProps) {
   const { locale, openInquiryWithScope } = usePortfolioState();
   const [copiedEmail, setCopiedEmail] = useState(false);
@@ -150,8 +160,16 @@ export function HomeClientSections({
     useState<ExperienceItem[]>(initialExperiences.length > 0 ? initialExperiences : EXPERIENCES);
   const [dynamicProjects, setDynamicProjects] =
     useState<ProjectCaseStudy[]>(initialProjects.length > 0 ? initialProjects : PROJECTS);
+  const [dynamicCertificates, setDynamicCertificates] =
+    useState<CertificateItem[]>(
+      initialCertificates.length > 0 ? initialCertificates : CERTIFICATES
+    );
   const [courseworkSessions, setCourseworkSessions] =
     useState<KwuSessionItem[]>(KWU_SESSIONS);
+
+  // Interactive Lightbox / Modal state
+  const [selectedCertModal, setSelectedCertModal] =
+    useState<CertificateItem | null>(null);
 
   // Coursework & Ecosystem interactive sub-view
   const [activeHubTab, setActiveHubTab] = useState<
@@ -159,6 +177,22 @@ export function HomeClientSections({
   >("pertemuan");
   const [selectedSessionModal, setSelectedSessionModal] =
     useState<KwuSessionItem | null>(null);
+  const [pertemuanViewMode, setPertemuanViewMode] = useState<"carousel" | "grid">("carousel");
+
+  const courseworkFlexItems: FlexCarouselItem[] = useMemo(() => {
+    return courseworkSessions.map((session) => ({
+      id: session.number,
+      badge: session.code,
+      title: locale === "id" ? session.titleId : session.titleEn,
+      subtitle: locale === "id" ? session.descId : session.descEn,
+      src: session.attendanceProofUrl || "",
+      status: session.attendanceStatus || "Hadir",
+      taskTitle: session.taskTitle || "",
+      taskStatus: session.taskStatus || "Selesai",
+      date: session.sessionDate || `Minggu ${session.number} · 2026`,
+      raw: session,
+    }));
+  }, [courseworkSessions, locale]);
 
   // Live GitHub API state (@fadli154)
   const [ghStats, setGhStats] = useState<GitHubUserStats>({
@@ -182,6 +216,9 @@ export function HomeClientSections({
       }
       if (store.courseworkSessions?.length > 0) {
         setCourseworkSessions(store.courseworkSessions);
+      }
+      if (store.certificates?.length > 0) {
+        setDynamicCertificates(store.certificates);
       }
     };
 
@@ -244,6 +281,23 @@ export function HomeClientSections({
     };
   }, []);
 
+  const driftWallItems: DriftWallItem[] = useMemo(() => {
+    const visible = dynamicCertificates.filter((c) => c.isVisible !== false);
+    return visible.map((c) => ({
+      id: c.id,
+      image: c.imageUrl,
+      title: c.title,
+      issuer: c.issuer,
+      issueDate: c.issueDate,
+      credentialId: c.credentialId,
+      category: c.category,
+      summary: locale === "id" ? c.summaryId : c.summaryEn,
+      fileUrl: c.fileUrl,
+      verifyUrl: c.verifyUrl,
+      raw: c,
+    }));
+  }, [dynamicCertificates, locale]);
+
   const handleCopyEmail = async () => {
     playMechanicalClick(760);
     try {
@@ -268,32 +322,47 @@ export function HomeClientSections({
           <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
             <span className="sec-kicker">
               <span className="sec-kicker__dot animate-pulse" aria-hidden="true" />
-              <DecryptedText
-                text={
+              <RotatingText
+                texts={
                   locale === "id"
-                    ? "PORTOFOLIO INFORMATIKA · WEB, MOBILE, GOVTECH & VISION AI"
-                    : "INFORMATICS PORTFOLIO · WEB, MOBILE, GOVTECH & VISION AI"
+                    ? [
+                        "PORTOFOLIO INFORMATIKA · WEB, MOBILE, GOVTECH & VISION AI",
+                        "MAGANG RESMI · DINAS KOMINFO (SIMDUK LARAVEL & MYSQL)",
+                        "INOVASI AI UNGGULAN · SMART HAJJ AKSESIBILITAS INKLUSIF",
+                        "PORTAL AKADEMIK · KELOMPOK K-1 KEWIRAUSAHAAN",
+                        "STACK REKAYASA · NEXT.JS 15, FLUTTER & PYTHON OPENCV",
+                      ]
+                    : [
+                        "INFORMATICS PORTFOLIO · WEB, MOBILE, GOVTECH & VISION AI",
+                        "OFFICIAL INTERNSHIP · DINAS KOMINFO (SIMDUK LARAVEL & MYSQL)",
+                        "FLAGSHIP AI · SMART HAJJ INCLUSIVE ACCESSIBILITY",
+                        "ACADEMIC PORTAL · ENTREPRENEURSHIP GROUP K-1",
+                        "ENGINEERING STACK · NEXT.JS 15, FLUTTER & PYTHON OPENCV",
+                      ]
                 }
-                speed={28}
+                rotationInterval={3000}
+                staggerDuration={0.015}
+                mainClassName="font-mono text-xs font-semibold tracking-wider text-[var(--ink)]"
               />
-            </span>
-            <span className="inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/80 px-3.5 py-1.5 font-mono text-xs text-[var(--ink)]">
-              <span className="h-2 w-2 rounded-full bg-emerald-500" />
-              {locale === "id" ? "Mahasiswa Aktif · Kelompok K-1" : "Active Student · Group K-1"}
             </span>
           </div>
 
-          {/* Giant Studio Keffi Display Headline */}
-          <h1 className="hero-giant max-w-[18ch]">
-            <BlurText
-              text={
-                locale === "id"
-                  ? "Fadli Hifziansyah — rekayasa web, mobile & computer vision."
-                  : "Fadli Hifziansyah — web, mobile & computer vision engineering."
-              }
-              delay={52}
-              animateBy="words"
+          {/* Giant Studio Keffi Display Headline with ReactBits TechText */}
+          <h1 className="hero-giant max-w-[20ch]">
+            <TechText
+              text="Fadli Hifziansyah"
+              guides={true}
+              specks={12}
+              clickKick={true}
+              draggable={true}
+              intro="assemble"
+              className="font-medium tracking-tight text-[var(--ink)]"
             />
+            <span className="mt-2 block text-3xl font-normal tracking-tight text-[var(--mute)] md:text-5xl lg:text-6xl">
+              {locale === "id"
+                ? "— rekayasa web, mobile & computer vision."
+                : "— web, mobile & computer vision engineering."}
+            </span>
           </h1>
 
           {/* Sub-Headline & Studio Keffi Avatar Pill Action Row */}
@@ -422,82 +491,95 @@ export function HomeClientSections({
               </TiltedCard>
             </div>
 
-            {/* Right 5 Cols: Studio Keffi Acid Lime & Bone Identity Card */}
+            {/* Right 5 Cols: Studio Keffi 3D Lanyard Interactive Badge */}
             <div className="col-span-12 lg:col-span-5">
-              <TiltedCard maxTilt={5} cursorLabel="PROFILE" className="h-full rounded-[28px]">
-                <SpotlightCard
-                  spotlightColor="rgba(91, 49, 200, 0.18)"
-                  className="flex h-full flex-col justify-between rounded-[28px] bg-[#c4e22e] p-6 text-[#111213] md:p-9"
-                >
-                  <div className="flex items-start justify-between gap-4">
+              <SpotlightCard
+                spotlightColor="rgba(196, 226, 46, 0.18)"
+                className="flex h-full min-h-[500px] flex-col justify-between overflow-hidden rounded-[28px] border border-black/10 bg-[#111213] p-0 text-[#f5f5f2] shadow-2xl"
+              >
+                {/* Top Bar Header */}
+                <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
+                  <span className="inline-flex items-center gap-2 rounded-full bg-[#c4e22e]/15 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-wider text-[#c4e22e]">
+                    <Sparkles className="h-3 w-3 text-[#c4e22e]" />
+                    <span>3D INTERACTIVE ID BADGE</span>
+                  </span>
+                  <span className="font-mono text-[11px] text-white/50">
+                    {locale === "id" ? "Tarik kartu 3D ✦" : "Drag 3D card ✦"}
+                  </span>
+                </div>
+
+                {/* 3D Lanyard Stage */}
+                <div className="relative h-[360px] w-full cursor-grab active:cursor-grabbing">
+                  <LanyardWrapper
+                    frontImage="/fadli-profile.png"
+                    backImage="/fadli-profile.png"
+                    imageFit="cover"
+                    finish="holographic"
+                    cardColor="#ffffff"
+                    strapColor="#c4e22e"
+                    orientation="portrait"
+                    size={0.65}
+                    gravity={1.2}
+                    breeze={0.4}
+                    damping={0.55}
+                    elasticity={0.45}
+                    interactive={true}
+                    className="h-full w-full"
+                  />
+                </div>
+
+                {/* Bottom Meta & Links */}
+                <div className="border-t border-white/10 bg-black/40 px-6 py-4 backdrop-blur-sm">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
-                      <span className="inline-flex items-center gap-2 rounded-full bg-[#111213] px-3.5 py-1 font-mono text-[11px] font-semibold uppercase tracking-wider text-[#f5f5f2]">
-                        <Sparkles className="h-3 w-3 text-[#c4e22e]" />
-                        <span>IDENTITAS PENGEMBANG</span>
-                      </span>
-                      <h2 className="mt-4 text-2xl font-medium tracking-tight md:text-3xl">
+                      <h3 className="text-sm font-medium tracking-tight text-white md:text-base">
                         {profile.fullName}
-                      </h2>
-                      <p className="mt-1 font-mono text-xs text-black/70">
-                        @fadli154 · Informatika Kelompok K-1
+                      </h3>
+                      <p className="font-mono text-[11px] text-white/60">
+                        @{profile.handle} · {locale === "id" ? profile.roleTitleId : profile.roleTitleEn}
                       </p>
                     </div>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={profile.avatarUrl}
-                      alt={profile.fullName}
-                      width={76}
-                      height={76}
-                      className="h-16 w-16 rounded-2xl border-2 border-[#111213] object-cover shadow-md md:h-20 md:w-20"
-                    />
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <a
+                        href={profile.socials.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-white transition hover:bg-[#5b31c8]"
+                      >
+                        <span>LinkedIn</span>
+                        <ArrowUpRight className="h-3 w-3" />
+                      </a>
+                      <a
+                        href={profile.socials.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-white transition hover:bg-[#ff5f56]"
+                      >
+                        <span>Instagram</span>
+                        <ArrowUpRight className="h-3 w-3" />
+                      </a>
+                      <a
+                        href={profile.socials.googleSites}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-white transition hover:bg-[#111213]"
+                      >
+                        <span>Sites</span>
+                        <ArrowUpRight className="h-3 w-3" />
+                      </a>
+                      <a
+                        href={profile.socials.kelompokK1}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 rounded-full bg-[#c4e22e] px-2.5 py-1 text-[11px] font-medium text-[#111213] transition hover:bg-white"
+                      >
+                        <span>Portal K-1</span>
+                        <ArrowUpRight className="h-3 w-3" />
+                      </a>
+                    </div>
                   </div>
-
-                  <p className="my-6 text-sm leading-relaxed text-black/80 md:text-base">
-                    {locale === "id"
-                      ? "Berfokus pada pengembangan sistem web pemerintahan (SIMDUK Kominfo), aplikasi mobile lintas perangkat (Flutter), serta riset Computer Vision inklusif untuk jemaah haji."
-                      : "Focused on public-sector web engineering (SIMDUK Kominfo), cross-platform mobile apps (Flutter), and inclusive Computer Vision AI research."}
-                  </p>
-
-                  <div className="grid grid-cols-2 gap-2.5 border-t border-black/15 pt-5">
-                    <a
-                      href={profile.socials.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center justify-between rounded-full bg-[#111213] px-4 py-2.5 text-xs font-medium text-[#f5f5f2] transition hover:bg-[#5b31c8]"
-                    >
-                      <span>LinkedIn</span>
-                      <ArrowUpRight className="h-3.5 w-3.5" />
-                    </a>
-                    <a
-                      href={profile.socials.instagram}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center justify-between rounded-full bg-[#111213]/10 px-4 py-2.5 text-xs font-medium text-[#111213] transition hover:bg-[#111213] hover:text-[#f5f5f2]"
-                    >
-                      <span>Instagram</span>
-                      <ArrowUpRight className="h-3.5 w-3.5" />
-                    </a>
-                    <a
-                      href={profile.socials.googleSites}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center justify-between rounded-full bg-[#111213]/10 px-4 py-2.5 text-xs font-medium text-[#111213] transition hover:bg-[#111213] hover:text-[#f5f5f2]"
-                    >
-                      <span>Google Sites</span>
-                      <ArrowUpRight className="h-3.5 w-3.5" />
-                    </a>
-                    <a
-                      href={profile.socials.kelompokK1}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center justify-between rounded-full bg-[#5b31c8] px-4 py-2.5 text-xs font-medium text-white transition hover:bg-[#111213]"
-                    >
-                      <span>Portal K-1</span>
-                      <ArrowUpRight className="h-3.5 w-3.5" />
-                    </a>
-                  </div>
-                </SpotlightCard>
-              </TiltedCard>
+                </div>
+              </SpotlightCard>
             </div>
           </div>
         </div>
@@ -637,12 +719,23 @@ export function HomeClientSections({
             <div>
               <span className="sec-kicker">
                 <span className="sec-kicker__dot" />
-                <DecryptedText
-                  text={
+                <RotatingText
+                  texts={
                     locale === "id"
-                      ? "REKAM JEJAK & KARYA UNGGULAN · DINAMIS"
-                      : "SELECTED EXPERIENCE & CASE STUDIES · DYNAMIC"
+                      ? [
+                          "REKAM JEJAK & KARYA UNGGULAN · DINAMIS",
+                          "SIMDUK KOMINFO · WEB DEV INTERN LARAVEL",
+                          "SMART HAJJ · AI VISION AKSESIBILITAS",
+                          "PORTAL GOVTECH · PELAPORAN TERINTEGRASI",
+                        ]
+                      : [
+                          "SELECTED EXPERIENCE & CASE STUDIES · DYNAMIC",
+                          "SIMDUK KOMINFO · WEB DEV INTERN LARAVEL",
+                          "SMART HAJJ · AI VISION ACCESSIBILITY",
+                          "GOVTECH PORTAL · INTEGRATED REPORTING",
+                        ]
                   }
+                  rotationInterval={3200}
                 />
               </span>
               <h2 className="sec-title mt-3">
@@ -896,12 +989,22 @@ export function HomeClientSections({
             <div>
               <span className="sec-kicker !text-white/60">
                 <span className="sec-kicker__dot sec-kicker__dot--lime" />
-                <DecryptedText
-                  text={
+                <RotatingText
+                  texts={
                     locale === "id"
-                      ? "ARSITEKTUR SISTEM & 5 KATEGORI TECH STACK"
-                      : "SYSTEM ARCHITECTURE & 5 TECH STACK PILLARS"
+                      ? [
+                          "ARSITEKTUR SISTEM & 5 KATEGORI TECH STACK",
+                          "EXPLODED-VIEW · INSTRUMEN ANATOMI 3D",
+                          "FRONTEND, BACKEND, MOBILE, AI & DEVOPS",
+                        ]
+                      : [
+                          "SYSTEM ARCHITECTURE & 5 TECH STACK PILLARS",
+                          "EXPLODED-VIEW · 3D ANATOMY RIGS",
+                          "FRONTEND, BACKEND, MOBILE, AI & DEVOPS",
+                        ]
                   }
+                  rotationInterval={3400}
+                  mainClassName="text-white/80"
                 />
               </span>
               <h2 className="sec-title mt-3 text-[#f5f5f2]">
@@ -916,8 +1019,8 @@ export function HomeClientSections({
             </div>
             <p className="max-w-md text-sm leading-relaxed text-white/65">
               {locale === "id"
-                ? "Lima instrumen mekanis isometrik 3D (/anatomy) interaktif di dalam setiap kartu bertumpuk — geser rel secara langsung atau pilih stasiun untuk menginspeksi arsitektur sistem."
-                : "Five interactive 3D isometric mechanical instruments (/anatomy) inside each sticky card — drag the rails directly or select a station to inspect the system architecture."}
+                ? "Lima instrumen mekanis isometrik 3D (/anatomy) dengan arsitektur fisik unik di setiap kartu — tarik vertikal untuk memicu efek exploded-view atau pilih stasiun untuk menginspeksi lapisan internal sistem."
+                : "Five distinct 3D isometric mechanical instruments (/anatomy) with unique physical forms — drag vertically for exploded-view inspection or select a station to analyze the system layers."}
             </p>
           </div>
 
@@ -984,6 +1087,108 @@ export function HomeClientSections({
       </section>
 
       {/* =====================================================================
+          4.5 DRIFT WALL · VERIFIED CREDENTIALS & AWARDS VAULT (#certificates)
+              Placed directly above "PORTAL AKADEMIK KEWIRAUSAHAAN · KELOMPOK K-1"
+         ===================================================================== */}
+      <section
+        id="certificates"
+        className="border-t border-[var(--line)] bg-[#0c0d12] py-24 text-[#f5f5f2] md:py-32"
+      >
+        <div className="keffi-wrap">
+          <div className="sec-head sec-head--dark">
+            <div>
+              <span className="sec-kicker !text-white/60">
+                <span className="sec-kicker__dot sec-kicker__dot--lime" />
+                <RotatingText
+                  texts={
+                    locale === "id"
+                      ? [
+                          "BRANKAS PRESTASI & SERTIFIKASI KOMPETENSI",
+                          "JUARA 1 DESAIN WEBSITE UMKM · IT'S DAY 2025",
+                          "JUARA II INOVASI TEKNOLOGI · OASE PTKI II",
+                          "DRIFT WALL 3D · DOKUMEN RESMI TERVERIFIKASI",
+                        ]
+                      : [
+                          "VERIFIED CREDENTIALS & AWARDS VAULT",
+                          "1ST PLACE UMKM WEB DESIGN · IT'S DAY 2025",
+                          "2ND PLACE TECH INNOVATION · OASE PTKI II",
+                          "3D DRIFT WALL · VERIFIED CREDENTIALS",
+                        ]
+                  }
+                  rotationInterval={3200}
+                  mainClassName="text-white/80"
+                />
+              </span>
+              <h2 className="sec-title mt-3 text-[#f5f5f2]">
+                <BlurText
+                  text={
+                    locale === "id"
+                      ? "Sertifikasi & Lisensi Resmi."
+                      : "Credentials & Proven Competencies."
+                  }
+                />
+              </h2>
+            </div>
+            <div className="flex flex-col items-start gap-4 lg:items-end">
+              <p className="max-w-md text-sm leading-relaxed text-white/65">
+                {locale === "id"
+                  ? "Dinding interaktif 3D Drift Wall menampilkan lisensi dan sertifikat penghargaan yang tersinkronisasi dinamis dari Supabase. Arahkan pointer untuk mengubah perspektif 3D, atau klik pada tile untuk memeriksa dokumen detail."
+                  : "Interactive 3D Drift Wall rendering verified credentials and competition awards synced dynamically from Supabase. Hover to shift perspective, or click any tile to inspect credential details."}
+              </p>
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="rounded-full bg-[#c4e22e] px-3.5 py-1 font-mono text-xs font-bold text-[#111213]">
+                  {dynamicCertificates.filter((c) => c.isVisible !== false).length}{" "}
+                  {locale === "id" ? "Sertifikat Terverifikasi" : "Verified Credentials"}
+                </span>
+                <Link
+                  href="/certificates"
+                  className="keffi-pill-btn keffi-pill-btn--lime !py-1.5 !px-4 !text-xs"
+                >
+                  <span>{locale === "id" ? "Buka Brankas Lengkap" : "Open Full Vault"}</span>
+                  <ArrowUpRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* 3D PERSPECTIVE DRIFT WALL CONTAINER */}
+          <div className="relative mt-12 h-[520px] w-full overflow-hidden rounded-[32px] border border-white/10 bg-[#07080b] shadow-2xl md:h-[600px]">
+            <DriftWall
+              items={driftWallItems}
+              columns={4}
+              tileWidth={280}
+              tileHeight={195}
+              gap={22}
+              radius={18}
+              tilt={14}
+              turn={-12}
+              perspective={1150}
+              depth={110}
+              speed={34}
+              pauseOnHover={true}
+              onTileClick={(item) => {
+                const found = dynamicCertificates.find((c) => c.id === item.id);
+                if (found) {
+                  setSelectedCertModal(found);
+                } else if (item.raw) {
+                  setSelectedCertModal(item.raw as CertificateItem);
+                }
+              }}
+            />
+            {/* Ambient Lighting & Hint Overlay */}
+            <div className="pointer-events-none absolute bottom-4 left-6 z-10 flex items-center gap-2 rounded-full border border-white/15 bg-black/60 px-4 py-1.5 font-mono text-[11px] text-white/80 backdrop-blur-md">
+              <span className="h-2 w-2 rounded-full bg-[#c4e22e] animate-pulse" />
+              <span>
+                {locale === "id"
+                  ? "Arahkan kursor untuk memiringkan · Klik tile untuk detail sertifikat"
+                  : "Hover to tilt · Click any tile to inspect certificate"}
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =====================================================================
           5. PORTAL AKADEMIK KEWIRAUSAHAAN (PERTEMUAN, ABSEN, BUKTI, TUGAS),
              KELOMPOK K-1, EVALUASI SWOT & LIVE GITHUB (#coursework)
          ===================================================================== */}
@@ -993,12 +1198,23 @@ export function HomeClientSections({
             <div>
               <span className="sec-kicker">
                 <span className="sec-kicker__dot" />
-                <DecryptedText
-                  text={
+                <RotatingText
+                  texts={
                     locale === "id"
-                      ? "PORTAL AKADEMIK KEWIRAUSAHAAN · KELOMPOK K-1 · SWOT & GITHUB"
-                      : "ENTREPRENEURSHIP ACADEMIC PORTAL · GROUP K-1 · SWOT & GITHUB"
+                      ? [
+                          "PORTAL AKADEMIK KEWIRAUSAHAAN · KELOMPOK K-1",
+                          "LOG PERTEMUAN MINGGUAN · ABSENSI & BUKTI FOTO",
+                          "ANALISIS SWOT 20 INDIKATOR · REKOMENDASI",
+                          "REPOSITORI GITHUB LIVE @FADLI154",
+                        ]
+                      : [
+                          "ENTREPRENEURSHIP ACADEMIC PORTAL · GROUP K-1",
+                          "WEEKLY SESSIONS LOG · ATTENDANCE & PROOF",
+                          "SWOT MATRIX · 20 STRATEGIC INDICATORS",
+                          "LIVE GITHUB REPOSITORY SYNC @FADLI154",
+                        ]
                   }
+                  rotationInterval={3200}
                 />
               </span>
               <h2 className="sec-title mt-3">
@@ -1089,7 +1305,7 @@ export function HomeClientSections({
                       : "Each session logs attendance status, attendance proof photo, and weekly task deliverables managed dynamically via the Admin CMS."}
                   </p>
                 </div>
-                <div className="flex items-center gap-3 font-mono text-xs">
+                <div className="flex flex-wrap items-center gap-3 font-mono text-xs">
                   <span className="rounded-full bg-emerald-500/15 px-3.5 py-1.5 font-semibold text-emerald-800">
                     {
                       courseworkSessions.filter(
@@ -1106,133 +1322,178 @@ export function HomeClientSections({
                     }{" "}
                     Tugas Selesai
                   </span>
+
+                  {/* View Mode Switcher Pill */}
+                  <div className="flex items-center rounded-full bg-black/5 p-1 border border-black/10">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        playMechanicalClick(560);
+                        setPertemuanViewMode("carousel");
+                      }}
+                      className={`rounded-full px-3 py-1 font-mono text-[11px] font-semibold transition-all ${
+                        pertemuanViewMode === "carousel"
+                          ? "bg-[var(--ink)] text-white shadow-sm"
+                          : "text-[var(--mute)] hover:text-[var(--ink)]"
+                      }`}
+                    >
+                      Carousel Flow
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        playMechanicalClick(580);
+                        setPertemuanViewMode("grid");
+                      }}
+                      className={`rounded-full px-3 py-1 font-mono text-[11px] font-semibold transition-all ${
+                        pertemuanViewMode === "grid"
+                          ? "bg-[var(--ink)] text-white shadow-sm"
+                          : "text-[var(--mute)] hover:text-[var(--ink)]"
+                      }`}
+                    >
+                      Grid
+                    </button>
+                  </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {courseworkSessions.map((session) => {
-                  const status = session.attendanceStatus || "Hadir";
-                  const taskStatus = session.taskStatus || "Selesai";
-                  const statusColor =
-                    status === "Hadir"
-                      ? "bg-emerald-500/15 text-emerald-800 border-emerald-500/30"
-                      : status === "Izin" || status === "Sakit"
-                        ? "bg-amber-500/15 text-amber-800 border-amber-500/30"
-                        : "bg-zinc-500/15 text-zinc-700 border-zinc-400/30";
+              {pertemuanViewMode === "carousel" ? (
+                <div className="relative overflow-hidden rounded-[32px] border border-[var(--line)] bg-[#f5f5f2]/70 p-4 sm:p-6 md:p-8">
+                  <FlexCarousel
+                    items={courseworkFlexItems}
+                    focusOnClick={true}
+                    squeeze={0.25}
+                    captions={true}
+                    captureWheel={true}
+                    onOpenModal={(item) => setSelectedSessionModal(item.raw)}
+                  />
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  {courseworkSessions.map((session) => {
+                    const status = session.attendanceStatus || "Hadir";
+                    const taskStatus = session.taskStatus || "Selesai";
+                    const statusColor =
+                      status === "Hadir"
+                        ? "bg-emerald-500/15 text-emerald-800 border-emerald-500/30"
+                        : status === "Izin" || status === "Sakit"
+                          ? "bg-amber-500/15 text-amber-800 border-amber-500/30"
+                          : "bg-zinc-500/15 text-zinc-700 border-zinc-400/30";
 
-                  return (
-                    <TiltedCard
-                      key={session.number}
-                      maxTilt={4.5}
-                      cursorLabel="DETAIL"
-                      className="h-full rounded-[26px]"
-                    >
-                      <SpotlightCard
-                        spotlightColor="rgba(91, 49, 200, 0.14)"
-                        onClick={() => setSelectedSessionModal(session)}
-                        className="flex h-full cursor-pointer flex-col justify-between rounded-[26px] border border-[var(--line)] bg-white p-6 shadow-sm"
+                    return (
+                      <TiltedCard
+                        key={session.number}
+                        maxTilt={4.5}
+                        cursorLabel="DETAIL"
+                        className="h-full rounded-[26px]"
                       >
-                        <div>
-                          {/* Header Row: Pertemuan Badge + Attendance Status */}
-                          <div className="flex items-center justify-between gap-2">
-                            <span className="rounded-full bg-[var(--ink)] px-3 py-1 font-mono text-[11px] font-semibold text-[var(--cream)]">
-                              {session.code}
-                            </span>
-                            <span
-                              className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-mono text-[11px] font-semibold ${statusColor}`}
-                            >
-                              <CheckCircle2 className="h-3 w-3" />
-                              <span>Absen: {status}</span>
-                            </span>
-                          </div>
-
-                          <h3 className="mt-4 text-xl font-medium tracking-tight text-[var(--ink)]">
-                            {locale === "id" ? session.titleId : session.titleEn}
-                          </h3>
-                          <p className="mt-2 text-xs leading-relaxed text-[var(--mute)]">
-                            {locale === "id" ? session.descId : session.descEn}
-                          </p>
-
-                          {/* Attendance Proof Preview Box */}
-                          <div className="mt-4 overflow-hidden rounded-2xl border border-[var(--line)] bg-[#f5f5f2]">
-                            {session.attendanceProofUrl ? (
-                              <div className="relative h-40 w-full">
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img
-                                  src={session.attendanceProofUrl}
-                                  alt={`Bukti Kehadiran ${session.code}`}
-                                  className="h-full w-full object-cover"
-                                />
-                                <span className="absolute bottom-2 right-2 rounded-full bg-black/75 px-2.5 py-1 font-mono text-[10px] text-[#c4e22e]">
-                                  Bukti Terunggah ✓
-                                </span>
-                              </div>
-                            ) : (
-                              <div className="flex h-28 flex-col items-center justify-center p-4 text-center">
-                                <FileCheck2 className="h-5 w-5 text-[var(--violet)]" />
-                                <span className="mt-1.5 font-mono text-[11px] font-medium text-[var(--ink)]">
-                                  {status === "Hadir"
-                                    ? "Kehadiran Tercatat di Sistem"
-                                    : `Status: ${status}`}
-                                </span>
-                                <span className="text-[11px] text-[var(--mute)]">
-                                  {session.sessionDate || "Semester Aktif · 2026"}
-                                </span>
-                              </div>
-                            )}
-                          </div>
-
-                          {/* Task / Tugas Section inside Card */}
-                          <div className="mt-4 rounded-2xl border border-[var(--line)] bg-[#f5f5f2]/70 p-4">
+                        <SpotlightCard
+                          spotlightColor="rgba(91, 49, 200, 0.14)"
+                          onClick={() => setSelectedSessionModal(session)}
+                          className="flex h-full cursor-pointer flex-col justify-between rounded-[26px] border border-[var(--line)] bg-white p-6 shadow-sm"
+                        >
+                          <div>
+                            {/* Header Row: Pertemuan Badge + Attendance Status */}
                             <div className="flex items-center justify-between gap-2">
-                              <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--violet)]">
-                                TUGAS PERTEMUAN {session.number}
+                              <span className="rounded-full bg-[var(--ink)] px-3 py-1 font-mono text-[11px] font-semibold text-[var(--cream)]">
+                                {session.code}
                               </span>
-                              <span className="rounded-full bg-[#c4e22e] px-2.5 py-0.5 font-mono text-[10px] font-bold text-[#111213]">
-                                {taskStatus}
+                              <span
+                                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-mono text-[11px] font-semibold ${statusColor}`}
+                              >
+                                <CheckCircle2 className="h-3 w-3" />
+                                <span>Absen: {status}</span>
                               </span>
                             </div>
-                            <div className="mt-1.5 text-sm font-semibold text-[var(--ink)]">
-                              {session.taskTitle ||
-                                (locale === "id"
-                                  ? "Dokumentasi & Evaluasi Mingguan"
-                                  : "Weekly Coursework Deliverable")}
+
+                            <h3 className="mt-4 text-xl font-medium tracking-tight text-[var(--ink)]">
+                              {locale === "id" ? session.titleId : session.titleEn}
+                            </h3>
+                            <p className="mt-2 text-xs leading-relaxed text-[var(--mute)]">
+                              {locale === "id" ? session.descId : session.descEn}
+                            </p>
+
+                            {/* Attendance Proof Preview Box */}
+                            <div className="mt-4 overflow-hidden rounded-2xl border border-[var(--line)] bg-[#f5f5f2]">
+                              {session.attendanceProofUrl ? (
+                                <div className="relative h-40 w-full">
+                                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                                  <img
+                                    src={session.attendanceProofUrl}
+                                    alt={`Bukti Kehadiran ${session.code}`}
+                                    className="h-full w-full object-cover"
+                                  />
+                                  <span className="absolute bottom-2 right-2 rounded-full bg-black/75 px-2.5 py-1 font-mono text-[10px] text-[#c4e22e]">
+                                    Bukti Terunggah ✓
+                                  </span>
+                                </div>
+                              ) : (
+                                <div className="flex h-28 flex-col items-center justify-center p-4 text-center">
+                                  <FileCheck2 className="h-5 w-5 text-[var(--violet)]" />
+                                  <span className="mt-1.5 font-mono text-[11px] font-medium text-[var(--ink)]">
+                                    {status === "Hadir"
+                                      ? "Kehadiran Tercatat di Sistem"
+                                      : `Status: ${status}`}
+                                  </span>
+                                  <span className="text-[11px] text-[var(--mute)]">
+                                    {session.sessionDate || "Semester Aktif · 2026"}
+                                  </span>
+                                </div>
+                              )}
                             </div>
-                            {session.taskDescription && (
-                              <p className="mt-1 line-clamp-2 text-xs text-[var(--mute)]">
-                                {session.taskDescription}
-                              </p>
+
+                            {/* Task / Tugas Section inside Card */}
+                            <div className="mt-4 rounded-2xl border border-[var(--line)] bg-[#f5f5f2]/70 p-4">
+                              <div className="flex items-center justify-between gap-2">
+                                <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--violet)]">
+                                  TUGAS PERTEMUAN {session.number}
+                                </span>
+                                <span className="rounded-full bg-[#c4e22e] px-2.5 py-0.5 font-mono text-[10px] font-bold text-[#111213]">
+                                  {taskStatus}
+                                </span>
+                              </div>
+                              <div className="mt-1.5 text-sm font-semibold text-[var(--ink)]">
+                                {session.taskTitle ||
+                                  (locale === "id"
+                                    ? "Dokumentasi & Evaluasi Mingguan"
+                                    : "Weekly Coursework Deliverable")}
+                              </div>
+                              {session.taskDescription && (
+                                <p className="mt-1 line-clamp-2 text-xs text-[var(--mute)]">
+                                  {session.taskDescription}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="mt-5 flex items-center justify-between border-t border-[var(--line)] pt-4 font-mono text-xs">
+                            <span className="inline-flex items-center gap-1.5 font-medium text-[var(--ink)]">
+                              <Eye className="h-3.5 w-3.5 text-[var(--violet)]" />
+                              <span>
+                                {locale === "id"
+                                  ? "Lihat Bukti & Tugas"
+                                  : "Inspect Proof & Task"}
+                              </span>
+                            </span>
+                            {session.taskUrl && (
+                              <a
+                                href={session.taskUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="inline-flex items-center gap-1 font-semibold text-[var(--violet)] hover:underline"
+                              >
+                                <span>Link Tugas</span>
+                                <ArrowUpRight className="h-3.5 w-3.5" />
+                              </a>
                             )}
                           </div>
-                        </div>
-
-                        <div className="mt-5 flex items-center justify-between border-t border-[var(--line)] pt-4 font-mono text-xs">
-                          <span className="inline-flex items-center gap-1.5 font-medium text-[var(--ink)]">
-                            <Eye className="h-3.5 w-3.5 text-[var(--violet)]" />
-                            <span>
-                              {locale === "id"
-                                ? "Lihat Bukti & Tugas"
-                                : "Inspect Proof & Task"}
-                            </span>
-                          </span>
-                          {session.taskUrl && (
-                            <a
-                              href={session.taskUrl}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={(e) => e.stopPropagation()}
-                              className="inline-flex items-center gap-1 font-semibold text-[var(--violet)] hover:underline"
-                            >
-                              <span>Link Tugas</span>
-                              <ArrowUpRight className="h-3.5 w-3.5" />
-                            </a>
-                          )}
-                        </div>
-                      </SpotlightCard>
-                    </TiltedCard>
-                  );
-                })}
-              </div>
+                        </SpotlightCard>
+                      </TiltedCard>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
 
@@ -1492,11 +1753,22 @@ export function HomeClientSections({
             <div className="col-span-12 lg:col-span-8">
               <span className="sec-kicker">
                 <span className="sec-kicker__dot" />
-                <span>
-                  {locale === "id"
-                    ? "KOLABORASI, MAGANG & PROYEK PERANGKAT LUNAK"
-                    : "INTERNSHIP, FREELANCE & RESEARCH COLLABORATION"}
-                </span>
+                <RotatingText
+                  texts={
+                    locale === "id"
+                      ? [
+                          "KOLABORASI, MAGANG & PROYEK PERANGKAT LUNAK",
+                          "KONSULTASI SOLUSI WEB, MOBILE & AI INKLUSIF",
+                          "RESPON CEPAT VIA EMAIL, WHATSAPP & LINKEDIN",
+                        ]
+                      : [
+                          "INTERNSHIP, FREELANCE & RESEARCH COLLABORATION",
+                          "CONSULTING ON WEB, MOBILE & INCLUSIVE AI",
+                          "FAST RESPONSE VIA EMAIL, WHATSAPP & LINKEDIN",
+                        ]
+                  }
+                  rotationInterval={3400}
+                />
               </span>
               <h2 className="hero-giant mt-4">
                 <BlurText
@@ -1649,6 +1921,106 @@ export function HomeClientSections({
                   <ArrowUpRight className="h-3.5 w-3.5" />
                 </a>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Lightbox Modal for Selected Certificate from Drift Wall */}
+      {selectedCertModal && (
+        <div
+          className="fixed inset-0 z-[95] flex items-center justify-center bg-black/80 p-4 backdrop-blur-md"
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setSelectedCertModal(null)}
+        >
+          <div
+            className="max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-[32px] border border-white/15 bg-[#14161c] p-6 text-[#f5f5f2] shadow-2xl md:p-8"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-white/10 pb-4">
+              <div className="flex items-center gap-2.5">
+                <span className="rounded-full bg-[#c4e22e] px-3.5 py-1 font-mono text-xs font-bold text-[#111213]">
+                  {selectedCertModal.category}
+                </span>
+                <span className="font-mono text-xs text-white/60">
+                  {selectedCertModal.issueDate}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setSelectedCertModal(null)}
+                className="rounded-full border border-white/15 p-2 text-white/70 hover:bg-white/10 hover:text-white"
+                aria-label="Tutup modal"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            {/* Certificate Preview Image */}
+            <div className="mt-6 overflow-hidden rounded-2xl border border-white/10 bg-[#07080b]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={selectedCertModal.imageUrl}
+                alt={selectedCertModal.title}
+                className="max-h-[460px] w-full object-contain"
+              />
+            </div>
+
+            <div className="mt-6 space-y-4">
+              <div>
+                <h3 className="text-2xl font-medium tracking-tight text-white md:text-3xl">
+                  {selectedCertModal.title}
+                </h3>
+                <p className="mt-1 font-mono text-xs text-[#c4e22e]">
+                  Penerbit: {selectedCertModal.issuer}
+                </p>
+              </div>
+
+              {(selectedCertModal.summaryId || selectedCertModal.summaryEn) && (
+                <p className="text-sm leading-relaxed text-white/75">
+                  {locale === "id"
+                    ? selectedCertModal.summaryId
+                    : selectedCertModal.summaryEn}
+                </p>
+              )}
+
+              {selectedCertModal.credentialId && (
+                <div className="flex items-center gap-2 font-mono text-xs text-white/60">
+                  <ShieldCheck className="h-4 w-4 text-[#c4e22e]" />
+                  <span>No. Kredensial: {selectedCertModal.credentialId}</span>
+                </div>
+              )}
+
+              <div className="flex flex-wrap items-center gap-3 pt-3 border-t border-white/10 font-mono text-xs">
+                {selectedCertModal.fileUrl && (
+                  <a
+                    href={selectedCertModal.fileUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="keffi-pill-btn keffi-pill-btn--lime !py-2 !px-5"
+                  >
+                    <FileText className="h-4 w-4" />
+                    <span>
+                      {selectedCertModal.fileUrl.endsWith(".pdf")
+                        ? "Buka Berkas PDF Resmi"
+                        : "Buka Dokumen Asli"}
+                    </span>
+                    <ArrowUpRight className="h-3.5 w-3.5" />
+                  </a>
+                )}
+                {selectedCertModal.verifyUrl && (
+                  <a
+                    href={selectedCertModal.verifyUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2 text-white/85 transition hover:border-[#c4e22e] hover:text-[#c4e22e]"
+                  >
+                    <ExternalLink className="h-4 w-4" />
+                    <span>Verifikasi Kredensial</span>
+                  </a>
+                )}
+              </div>
             </div>
           </div>
         </div>
