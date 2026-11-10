@@ -127,12 +127,12 @@ export function ExperienceFoldersSection({
   const currentFolderForDeck = EXPERIENCE_FOLDERS[activeDeckIndex];
 
   return (
-    <section id="work" className="bg-white py-20 md:py-28 dark:bg-[#0a0a0c]">
+    <section id="work" className="scroll-mt-24 bg-white py-20 md:py-28 dark:bg-[#0a0a0c]">
       <div className="keffi-wrap">
         {/* Section Header */}
-        <div className="sec-head">
+        <div className="sec-head dark:border-white/10">
           <div>
-            <span className="sec-kicker">
+            <span className="sec-kicker text-[var(--mute)] dark:text-gray-400">
               <span className="sec-kicker__dot" />
               <BlurText
                 text={
@@ -142,7 +142,7 @@ export function ExperienceFoldersSection({
                 }
               />
             </span>
-            <h2 className="sec-title mt-3">
+            <h2 className="sec-title mt-3 text-[var(--ink)] dark:text-[#f5f5f2]">
               <BlurText
                 text={
                   locale === "id"
@@ -155,7 +155,7 @@ export function ExperienceFoldersSection({
 
           {/* Controls: View Mode Switcher & Archive Link */}
           <div className="flex flex-wrap items-center gap-3">
-            <div className="inline-flex items-center rounded-full border border-[var(--line)] bg-[#f5f5f2] p-1 dark:bg-black/40">
+            <div className="inline-flex items-center rounded-full border border-[var(--line)] bg-[#f5f5f2] p-1 dark:border-white/15 dark:bg-black/60">
               <button
                 type="button"
                 onClick={() => {
@@ -164,8 +164,8 @@ export function ExperienceFoldersSection({
                 }}
                 className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-mono text-xs font-semibold transition-all ${
                   viewMode === "circular"
-                    ? "bg-white text-[var(--ink)] shadow-xs dark:bg-[#1a1b1e] dark:text-white"
-                    : "text-[var(--mute)] hover:text-[var(--ink)]"
+                    ? "bg-white text-[var(--ink)] shadow-xs dark:bg-[#1f2024] dark:text-white"
+                    : "text-[var(--mute)] hover:text-[var(--ink)] dark:text-gray-400 dark:hover:text-white"
                 }`}
               >
                 <span>🎡</span>
@@ -180,8 +180,8 @@ export function ExperienceFoldersSection({
                 }}
                 className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-mono text-xs font-semibold transition-all ${
                   viewMode === "deck"
-                    ? "bg-white text-[var(--ink)] shadow-xs dark:bg-[#1a1b1e] dark:text-white"
-                    : "text-[var(--mute)] hover:text-[var(--ink)]"
+                    ? "bg-white text-[var(--ink)] shadow-xs dark:bg-[#1f2024] dark:text-white"
+                    : "text-[var(--mute)] hover:text-[var(--ink)] dark:text-gray-400 dark:hover:text-white"
                 }`}
               >
                 <span>📂</span>
@@ -189,7 +189,7 @@ export function ExperienceFoldersSection({
               </button>
             </div>
 
-            <Link href="/projects" className="keffi-pill-outline">
+            <Link href="/projects" className="keffi-pill-outline dark:border-white/20 dark:text-white dark:hover:bg-white/10">
               <span>{locale === "id" ? "Lihat Arsip Lengkap" : "View Full Archive"}</span>
               <ArrowUpRight className="h-4 w-4" />
             </Link>
@@ -207,14 +207,15 @@ export function ExperienceFoldersSection({
             {/* Circular Gallery WebGL Component */}
             <CircularGalleryWrapper
               items={galleryItems}
-              bend={2.5}
+              bend={2.2}
               textColor="var(--ink)"
-              itemSize={1.05}
-              itemAspect={0.733}
-              gap={0.34}
-              borderRadius={0.065}
+              itemSize={1.14}
+              itemAspect={1.436}
+              gap={0.24}
+              borderRadius={0}
+              shadow={0}
               scrollSpeed={2.2}
-              scrollEase={0.05}
+              scrollEase={0.06}
               showTitles={false}
               snap={true}
               autoScroll={0}
@@ -247,7 +248,7 @@ export function ExperienceFoldersSection({
 
             {/* Tactical Overlay: Bottom Controls & Folder Quick Launcher */}
             <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex flex-col items-center justify-between gap-3 p-6 md:flex-row md:items-end">
-              <div className="pointer-events-auto flex items-center gap-2 rounded-full border border-[var(--line)] bg-white/90 px-4 py-2 font-mono text-xs text-[var(--ink)] shadow-md backdrop-blur-md dark:bg-black/80">
+              <div className="pointer-events-auto flex items-center gap-2 rounded-full border border-[var(--line)] bg-white/90 px-4 py-2 font-mono text-xs text-[var(--ink)] shadow-md backdrop-blur-md dark:border-white/15 dark:bg-black/80 dark:text-white">
                 <span className="h-2 w-2 rounded-full bg-[var(--violet)] animate-pulse" />
                 <span>
                   {locale === "id"
@@ -284,9 +285,9 @@ export function ExperienceFoldersSection({
             VIEW MODE B: DIRECT INTERACTIVE 3D FOLDER DECK
             =================================================================== */}
         {viewMode === "deck" && (
-          <div className="mt-10 overflow-hidden rounded-[32px] border border-[var(--line)] bg-[#f5f5f2]/80 p-6 md:p-10 dark:bg-[#0c0d0e]">
+          <div className="mt-10 overflow-hidden rounded-[32px] border border-[var(--line)] bg-[#f5f5f2]/80 p-6 md:p-10 dark:border-white/10 dark:bg-[#121316]">
             {/* Folder Tabs Navigation */}
-            <div className="flex flex-wrap items-center gap-2 border-b border-[var(--line)] pb-5">
+            <div className="flex flex-wrap items-center gap-2 border-b border-[var(--line)] pb-5 dark:border-white/10">
               {EXPERIENCE_FOLDERS.map((f, idx) => (
                 <button
                   key={f.id}
@@ -299,7 +300,7 @@ export function ExperienceFoldersSection({
                   className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 font-mono text-xs font-semibold transition-all ${
                     activeDeckIndex === idx
                       ? "bg-[var(--violet)] text-white shadow-xs"
-                      : "border border-[var(--line)] bg-white text-[var(--ink)] hover:bg-gray-100 dark:bg-[#16171a] dark:hover:bg-[#202226]"
+                      : "border border-[var(--line)] bg-white text-[var(--ink)] hover:bg-gray-100 dark:border-white/10 dark:bg-[#1a1b1e] dark:text-gray-300 dark:hover:bg-[#25272c]"
                   }`}
                 >
                   <span className="opacity-70">0{idx + 1}</span>
@@ -311,14 +312,14 @@ export function ExperienceFoldersSection({
             {/* Direct Folder Stage & Editorial Split */}
             <div className="mt-8 grid grid-cols-1 items-center gap-10 lg:grid-cols-12">
               {/* Left Column: Interactive 3D Folder */}
-              <div className="flex min-h-[460px] items-center justify-center rounded-2xl bg-white/40 p-6 dark:bg-black/20 lg:col-span-6">
+              <div className="flex min-h-[460px] items-center justify-center rounded-2xl bg-white/40 p-6 dark:bg-black/40 lg:col-span-6">
                 <Folder
                   key={currentFolderForDeck.id}
                   label={currentFolderForDeck.tab}
                   color={currentFolderForDeck.color}
                   mode="flap"
                   variant="solid"
-                  size={1.3}
+                  size={1.4}
                   defaultOpen={true}
                   draggable={true}
                   zoomOnClick={true}
@@ -334,31 +335,31 @@ export function ExperienceFoldersSection({
 
               {/* Right Column: Case Study Breakdown & Documentation */}
               <div className="space-y-6 lg:col-span-6">
-                <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
-                  <span className="rounded-full bg-[var(--violet)]/12 px-3 py-1 font-mono text-xs font-bold uppercase text-[var(--violet)]">
+                <div className="flex items-center justify-between border-b border-[var(--line)] pb-3 dark:border-white/10">
+                  <span className="rounded-full bg-[var(--violet)]/15 px-3 py-1 font-mono text-xs font-bold uppercase text-[var(--violet)] dark:bg-[var(--violet)]/25 dark:text-[#a5b4fc]">
                     {currentFolderForDeck.badge}
                   </span>
-                  <span className="font-mono text-xs text-[var(--mute)]">
+                  <span className="font-mono text-xs text-[var(--mute)] dark:text-gray-400">
                     {currentFolderForDeck.year}
                   </span>
                 </div>
 
                 <div>
-                  <h3 className="text-2xl font-bold tracking-tight text-[var(--ink)] md:text-3xl">
+                  <h3 className="text-2xl font-bold tracking-tight text-[var(--ink)] md:text-3xl dark:text-white">
                     {currentFolderForDeck.title}
                   </h3>
-                  <p className="mt-1 font-mono text-sm text-[var(--mute)]">
+                  <p className="mt-1 font-mono text-sm text-[var(--mute)] dark:text-gray-400">
                     {currentFolderForDeck.subtitle}
                   </p>
                 </div>
 
-                <p className="text-sm leading-relaxed text-[var(--ink)] md:text-base">
+                <p className="text-sm leading-relaxed text-[var(--ink)] md:text-base dark:text-gray-300">
                   {currentFolderForDeck.summary}
                 </p>
 
                 {/* Paper Selector Tabs */}
-                <div className="space-y-3 rounded-2xl border border-[var(--line)] bg-white p-5 dark:bg-[#16171a]">
-                  <div className="flex items-center justify-between font-mono text-xs font-semibold text-[var(--mute)]">
+                <div className="space-y-3 rounded-2xl border border-[var(--line)] bg-white p-5 dark:border-white/10 dark:bg-[#16171a]">
+                  <div className="flex items-center justify-between font-mono text-xs font-semibold text-[var(--mute)] dark:text-gray-400">
                     <span>LEMBAR DOKUMEN DALAM FOLDER:</span>
                     <span>
                       0{activePaperIndex + 1} / 0{currentFolderForDeck.papers.length}
@@ -376,8 +377,8 @@ export function ExperienceFoldersSection({
                         }}
                         className={`flex flex-col items-start rounded-xl p-3 text-left transition-all ${
                           activePaperIndex === pIdx
-                            ? "border border-[var(--violet)] bg-[var(--violet)]/10 text-[var(--violet)]"
-                            : "border border-[var(--line)] bg-[#f5f5f2] text-[var(--ink)] hover:border-gray-400 dark:bg-black/30"
+                            ? "border border-[var(--violet)] bg-[var(--violet)]/10 text-[var(--violet)] dark:border-[var(--violet)] dark:bg-[var(--violet)]/25 dark:text-white"
+                            : "border border-[var(--line)] bg-[#f5f5f2] text-[var(--ink)] hover:border-gray-400 dark:border-white/10 dark:bg-black/30 dark:text-gray-300 dark:hover:border-white/30"
                         }`}
                       >
                         <span className="font-mono text-[10px] font-bold">
@@ -391,22 +392,22 @@ export function ExperienceFoldersSection({
                   </div>
 
                   {/* Active Document Body */}
-                  <div className="mt-4 border-t border-[var(--line)] pt-3">
-                    <div className="font-bold text-sm text-[var(--ink)]">
+                  <div className="mt-4 border-t border-[var(--line)] pt-3 dark:border-white/10">
+                    <div className="font-bold text-sm text-[var(--ink)] dark:text-white">
                       {currentFolderForDeck.papers[activePaperIndex]?.title}
                     </div>
-                    <p className="mt-1 text-xs leading-relaxed text-[var(--mute)]">
+                    <p className="mt-1 text-xs leading-relaxed text-[var(--mute)] dark:text-gray-400">
                       {currentFolderForDeck.papers[activePaperIndex]?.desc}
                     </p>
                   </div>
                 </div>
 
                 {/* Tech Stack */}
-                <div className="flex flex-wrap gap-2 border-t border-[var(--line)] pt-4">
+                <div className="flex flex-wrap gap-2 border-t border-[var(--line)] pt-4 dark:border-white/10">
                   {currentFolderForDeck.stack.map((tech) => (
                     <span
                       key={tech}
-                      className="rounded-full border border-[var(--line)] bg-white px-3 py-1 font-mono text-xs font-medium text-[var(--ink)] dark:bg-[#16171a]"
+                      className="rounded-full border border-[var(--line)] bg-white px-3 py-1 font-mono text-xs font-medium text-[var(--ink)] dark:border-white/15 dark:bg-[#1a1b1e] dark:text-gray-200"
                     >
                       {tech}
                     </span>

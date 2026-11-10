@@ -32,9 +32,9 @@ export const EXPERIENCE_FOLDERS: ExperienceFolderData[] = [
     "subtitle": "Dinas Komunikasi & Informatika",
     "badge": "MAGANG RESMI",
     "year": "2025",
-    "color": "#18191c",
-    "tabColor": "#222327",
-    "accentColor": "#c4e22e",
+    "color": "#2563eb",
+    "tabColor": "#1d4ed8",
+    "accentColor": "#93c5fd",
     "textColor": "#ffffff",
     "summary": "Digitalisasi administrasi kependudukan daerah via SIMDUK berbasis Laravel & MySQL.",
     "papers": [
@@ -61,7 +61,7 @@ export const EXPERIENCE_FOLDERS: ExperienceFolderData[] = [
       "Bootstrap",
       "REST API"
     ],
-    "image": "/experience-folders/simduk-kominfo.svg"
+    "image": "/experience-folders/simduk-kominfo.png"
   },
   {
     "id": "exp-02",
@@ -71,9 +71,9 @@ export const EXPERIENCE_FOLDERS: ExperienceFolderData[] = [
     "subtitle": "Sistem Aksesibilitas Inklusif",
     "badge": "AI & COMPUTER VISION",
     "year": "2025 - 2026",
-    "color": "#3b1c85",
-    "tabColor": "#4c28a8",
-    "accentColor": "#c4e22e",
+    "color": "#6366f1",
+    "tabColor": "#4f46e5",
+    "accentColor": "#c7d2fe",
     "textColor": "#ffffff",
     "summary": "Platform Computer Vision deteksi pecahan uang SAR & isyarat dua arah jemaah disabilitas.",
     "papers": [
@@ -100,7 +100,7 @@ export const EXPERIENCE_FOLDERS: ExperienceFolderData[] = [
       "Deep Learning",
       "Flutter"
     ],
-    "image": "/experience-folders/smart-hajj-ai.svg"
+    "image": "/experience-folders/smart-hajj-ai.png"
   },
   {
     "id": "exp-03",
@@ -110,8 +110,8 @@ export const EXPERIENCE_FOLDERS: ExperienceFolderData[] = [
     "subtitle": "Kementerian Agama RI (Nasional)",
     "badge": "PRESTASI NASIONAL",
     "year": "2024",
-    "color": "#064e3b",
-    "tabColor": "#065f46",
+    "color": "#059669",
+    "tabColor": "#047857",
     "accentColor": "#6ee7b7",
     "textColor": "#ffffff",
     "summary": "Penghargaan resmi Juara II Nasional Karya Literasi & Inovasi Teknologi OASE III PTKI se-Indonesia.",
@@ -138,7 +138,7 @@ export const EXPERIENCE_FOLDERS: ExperienceFolderData[] = [
       "GovTech",
       "Python"
     ],
-    "image": "/experience-folders/oase-award.svg"
+    "image": "/experience-folders/oase-award.png"
   },
   {
     "id": "exp-04",
@@ -148,9 +148,9 @@ export const EXPERIENCE_FOLDERS: ExperienceFolderData[] = [
     "subtitle": "Ekosistem Kolaboratif Informatika",
     "badge": "TIM AKADEMIK",
     "year": "2026",
-    "color": "#0f172a",
-    "tabColor": "#1e293b",
-    "accentColor": "#38bdf8",
+    "color": "#0284c7",
+    "tabColor": "#0369a1",
+    "accentColor": "#7dd3fc",
     "textColor": "#ffffff",
     "summary": "Rancang bangun portal perkuliahan 6 pertemuan, pelacakan tugas, absensi, & sinkronisasi Supabase.",
     "papers": [
@@ -176,7 +176,7 @@ export const EXPERIENCE_FOLDERS: ExperienceFolderData[] = [
       "Tailwind",
       "Supabase"
     ],
-    "image": "/experience-folders/kelompok-k1.svg"
+    "image": "/experience-folders/kelompok-k1.png"
   },
   {
     "id": "exp-05",
@@ -186,9 +186,9 @@ export const EXPERIENCE_FOLDERS: ExperienceFolderData[] = [
     "subtitle": "GovTech Sensus & Ekspor",
     "badge": "DATABASE GOVTECH",
     "year": "2025",
-    "color": "#281c1c",
-    "tabColor": "#3a2727",
-    "accentColor": "#fca5a5",
+    "color": "#d97706",
+    "tabColor": "#b45309",
+    "accentColor": "#fde68a",
     "textColor": "#ffffff",
     "summary": "Agregasi demografi kelurahan, rekap RT/RW, dan otomasi pelaporan kependudukan tingkat daerah.",
     "papers": [
@@ -214,7 +214,7 @@ export const EXPERIENCE_FOLDERS: ExperienceFolderData[] = [
       "REST API",
       "GovTech"
     ],
-    "image": "/experience-folders/govtech-reporting.svg"
+    "image": "/experience-folders/govtech-reporting.png"
   },
   {
     "id": "exp-06",
@@ -224,9 +224,9 @@ export const EXPERIENCE_FOLDERS: ExperienceFolderData[] = [
     "subtitle": "Pelacakan Isyarat 21-Titik",
     "badge": "RESEARCH & APPLIED CV",
     "year": "2025",
-    "color": "#1e1b4b",
-    "tabColor": "#2e276b",
-    "accentColor": "#a5b4fc",
+    "color": "#8b5cf6",
+    "tabColor": "#7c3aed",
+    "accentColor": "#ddd6fe",
     "textColor": "#ffffff",
     "summary": "Engine visi komputer pelacakan sendi tangan real-time dengan toleransi rotasi tinggi untuk mobile.",
     "papers": [
@@ -252,6 +252,6 @@ export const EXPERIENCE_FOLDERS: ExperienceFolderData[] = [
       "TensorFlow Lite",
       "Python"
     ],
-    "image": "/experience-folders/vision-gesture-engine.svg"
+    "image": "/experience-folders/vision-gesture-engine.png"
   }
 ];

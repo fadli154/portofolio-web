@@ -237,13 +237,13 @@ void main() {
   vec2 uv = vLocal / uSize + 0.5;
   float aspect = uSize.x / uSize.y;
   vec2 crop = aspect > uImageAspect ? vec2(1.0, uImageAspect / aspect) : vec2(aspect / uImageAspect, 1.0);
-  vec3 image = texture(uTexture, (uv - 0.5) * crop + 0.5).rgb;
-  vec3 color = mix(uPlaceholder, image, uReady);
+  vec4 texColor = texture(uTexture, (uv - 0.5) * crop + 0.5);
+  vec3 color = mix(uPlaceholder, texColor.rgb, uReady);
   float luma = dot(color, vec3(0.2126, 0.7152, 0.0722));
   color = mix(color, vec3(luma), uGray) * (1.0 - uDim);
-  float body = cover * mix(0.08, 1.0, uReady);
+  float body = cover * texColor.a * mix(0.08, 1.0, uReady);
   float band = abs(d - uRingGap - uRingWidth * 0.5) - uRingWidth * 0.5;
-  float ring = clamp(0.5 - band / pixel, 0.0, 1.0) * uRing;
+  float ring = clamp(0.5 - band / pixel, 0.0, 1.0) * uRing * texColor.a;
   vec4 card = vec4(color * body, body);
   vec4 outline = vec4(uRingColor * ring, ring);
   outColor = (card + outline * (1.0 - card.a)) * uAlpha * edgeFade();
