@@ -132,16 +132,14 @@ export function ExperienceFoldersSection({
         {/* Section Header */}
         <div className="sec-head dark:border-white/10">
           <div>
-            <span className="sec-kicker text-[var(--mute)] dark:text-gray-400">
-              <span className="sec-kicker__dot" />
-              <BlurText
-                text={
-                  locale === "id"
-                    ? "REKAM JEJAK & KARYA UNGGULAN · 3D FOLDER CIRCULAR GALLERY"
-                    : "SELECTED WORK & REAL EXPERIENCE · 3D FOLDER CIRCULAR GALLERY"
-                }
-              />
-            </span>
+            <div className="flex items-center gap-2 font-mono text-xs font-semibold tracking-wider text-gray-800 dark:text-gray-200">
+              <span className="h-2 w-2 rounded-full bg-[var(--violet)] dark:bg-[#c4e22e]" />
+              <span>
+                {locale === "id"
+                  ? "REKAM JEJAK & KARYA UNGGULAN · 3D FOLDER CIRCULAR GALLERY"
+                  : "SELECTED WORK & REAL EXPERIENCE · 3D FOLDER CIRCULAR GALLERY"}
+              </span>
+            </div>
             <h2 className="sec-title mt-3 text-[var(--ink)] dark:text-[#f5f5f2]">
               <BlurText
                 text={
@@ -202,7 +200,7 @@ export function ExperienceFoldersSection({
         {viewMode === "circular" && (
           <div className="relative mt-8 h-[580px] w-full overflow-hidden md:h-[680px]">
             {/* Top Fade Gradient Shadow — seamless integration with section */}
-            <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-24 bg-gradient-to-b from-white via-white/70 to-transparent dark:from-[#0a0a0c] dark:via-[#0a0a0c]/70" />
+            <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-14 bg-gradient-to-b from-white via-white/50 to-transparent dark:from-[#0a0a0c] dark:via-[#0a0a0c]/50" />
 
             {/* Circular Gallery WebGL Component */}
             <CircularGalleryWrapper
@@ -214,6 +212,7 @@ export function ExperienceFoldersSection({
               gap={0.24}
               borderRadius={0}
               shadow={0}
+              fadeEdges={0}
               scrollSpeed={2.2}
               scrollEase={0.06}
               showTitles={false}
@@ -243,8 +242,8 @@ export function ExperienceFoldersSection({
               }}
             />
 
-            {/* Bottom Inner Gradient Shadow */}
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-36 bg-gradient-to-t from-white via-white/85 to-transparent dark:from-[#0a0a0c] dark:via-[#0a0a0c]/85" />
+            {/* Bottom Inner Gradient Shadow — slim seamless fade */}
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-20 bg-gradient-to-t from-white via-white/70 to-transparent dark:from-[#0a0a0c] dark:via-[#0a0a0c]/70" />
 
             {/* Tactical Overlay: Bottom Controls & Folder Quick Launcher */}
             <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex flex-col items-center justify-between gap-3 p-6 md:flex-row md:items-end">
