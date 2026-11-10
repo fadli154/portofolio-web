@@ -199,9 +199,6 @@ export function ExperienceFoldersSection({
             =================================================================== */}
         {viewMode === "circular" && (
           <div className="relative mt-8 h-[580px] w-full overflow-hidden md:h-[680px]">
-            {/* Top Fade Gradient Shadow — seamless integration with section */}
-            <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-14 bg-gradient-to-b from-white via-white/50 to-transparent dark:from-[#0a0a0c] dark:via-[#0a0a0c]/50" />
-
             {/* Circular Gallery WebGL Component */}
             <CircularGalleryWrapper
               items={galleryItems}
@@ -241,9 +238,6 @@ export function ExperienceFoldersSection({
                 }
               }}
             />
-
-            {/* Bottom Inner Gradient Shadow — slim seamless fade */}
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-20 bg-gradient-to-t from-white via-white/70 to-transparent dark:from-[#0a0a0c] dark:via-[#0a0a0c]/70" />
 
             {/* Tactical Overlay: Bottom Controls & Folder Quick Launcher */}
             <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex flex-col items-center justify-between gap-3 p-6 md:flex-row md:items-end">

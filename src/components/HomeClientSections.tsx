@@ -1068,9 +1068,6 @@ export function HomeClientSections({
 
               {pertemuanViewMode === "carousel" ? (
                 <div className="relative mt-6 h-[600px] w-full overflow-hidden md:h-[680px]">
-                  {/* Top Fade Gradient Shadow — seamless integration with section */}
-                  <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-24 bg-gradient-to-b from-[#f5f5f2] via-[#f5f5f2]/70 to-transparent dark:from-[#0a0a0c] dark:via-[#0a0a0c]/70" />
-
                   <CircularGalleryWrapper
                     items={courseworkGalleryItems}
                     bend={2.5}
@@ -1079,6 +1076,8 @@ export function HomeClientSections({
                     itemAspect={0.714}
                     gap={0.3}
                     borderRadius={0.065}
+                    shadow={0}
+                    fadeEdges={0}
                     scrollSpeed={2.2}
                     scrollEase={0.05}
                     showTitles={false}
@@ -1093,9 +1092,6 @@ export function HomeClientSections({
                     }}
                     className="h-full w-full"
                   />
-
-                  {/* Bottom Inner Gradient Shadow — eliminates clipping edge */}
-                  <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-36 bg-gradient-to-t from-[#f5f5f2] via-[#f5f5f2]/85 to-transparent dark:from-[#0a0a0c] dark:via-[#0a0a0c]/85" />
 
                   {/* Floating Tactical Interaction Pill */}
                   <div className="pointer-events-none absolute bottom-6 left-1/2 z-30 -translate-x-1/2 flex items-center gap-2 rounded-full border border-[var(--line)] bg-white/85 px-4 py-1.5 font-mono text-[11px] text-[var(--ink)] shadow-md backdrop-blur-md dark:border-white/15 dark:bg-black/80 dark:text-white">

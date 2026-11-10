@@ -45,6 +45,14 @@ async function main() {
   await workSec.screenshot({ path: screenshotLightPath });
   console.log('Work light screenshot saved to', screenshotLightPath);
 
+  console.log('Capturing #coursework in light mode...');
+  const cwSec = page.locator('section#coursework');
+  await cwSec.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(2000);
+  const cwPath = path.join(__dirname, '../public/qa-coursework-clean.png');
+  await cwSec.screenshot({ path: cwPath });
+  console.log('Coursework screenshot saved to', cwPath);
+
   await browser.close();
 }
 
