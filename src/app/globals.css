@@ -797,7 +797,7 @@ button:hover .arrow-icon {
 }
 
 .animate-rotate-in {
-  animation: rotateInChar 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  animation: rotateInChar 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
 
 @keyframes techAssemble {
