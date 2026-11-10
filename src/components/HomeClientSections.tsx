@@ -495,7 +495,7 @@ export function HomeClientSections({
             <div className="col-span-12 lg:col-span-5">
               <SpotlightCard
                 spotlightColor="rgba(196, 226, 46, 0.18)"
-                className="flex h-full min-h-[500px] flex-col justify-between overflow-hidden rounded-[28px] border border-black/10 bg-[#111213] p-0 text-[#f5f5f2] shadow-2xl"
+                className="flex h-full flex-col justify-between overflow-hidden rounded-[28px] border border-black/10 bg-[#111213] p-0 text-[#f5f5f2] shadow-2xl"
               >
                 {/* Top Bar Header */}
                 <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
@@ -509,7 +509,7 @@ export function HomeClientSections({
                 </div>
 
                 {/* 3D Lanyard Stage */}
-                <div className="relative h-[360px] w-full cursor-grab active:cursor-grabbing">
+                <div className="relative flex-1 min-h-[300px] w-full cursor-grab active:cursor-grabbing">
                   <LanyardWrapper
                     frontImage="/fadli-profile.png"
                     backImage="/fadli-profile.png"
@@ -518,7 +518,7 @@ export function HomeClientSections({
                     cardColor="#ffffff"
                     strapColor="#c4e22e"
                     orientation="portrait"
-                    size={0.65}
+                    size={0.6}
                     gravity={1.2}
                     breeze={0.4}
                     damping={0.55}
