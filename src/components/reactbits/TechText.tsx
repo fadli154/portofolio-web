@@ -41,7 +41,7 @@ export function TechText({
   introDuration = 1.6,
   guides = true,
   sweep = true,
-  speed = 1.0,
+  speed = 0.1,
   accentColor = "#c4e22e",
 }: TechTextProps) {
   const containerRef = useRef<HTMLSpanElement>(null);
@@ -232,19 +232,17 @@ export function TechText({
               transform: `translate3d(${offset.x}px, ${offset.y}px, 0)`,
               cursor: draggable ? (isDragging ? "grabbing" : "grab") : "default",
             }}
-            className={`group relative inline-flex items-center justify-center transition-colors duration-150 ${
-              intro === "assemble" && !introFinished
-                ? "animate-tech-assemble"
-                : ""
-            }`}
+            className={`group relative inline-flex items-center justify-center transition-colors duration-150 ${intro === "assemble" && !introFinished
+              ? "animate-tech-assemble"
+              : ""
+              }`}
           >
             {/* Base Letter Glyph */}
             <span
-              className={`relative z-10 transition-colors duration-150 ${
-                isHighlighted
-                  ? "text-[#c4e22e] [text-shadow:0_0_12px_rgba(196,226,46,0.5)]"
-                  : ""
-              }`}
+              className={`relative z-10 transition-colors duration-150 ${isHighlighted
+                ? "text-[#c4e22e] [text-shadow:0_0_12px_rgba(196,226,46,0.5)]"
+                : ""
+                }`}
             >
               {char}
             </span>

@@ -999,70 +999,75 @@ export function HomeClientSections({
 
           {/* TAB 1: DYNAMIC PERTEMUAN, ABSEN, BUKTI KEHADIRAN & TUGAS */}
           {activeHubTab === "pertemuan" && (
-            <div className="mt-12">
-              <div className="mb-8 flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-[var(--line)] bg-white p-6">
-                <div>
-                  <div className="font-mono text-xs font-semibold uppercase tracking-wider text-[var(--violet)]">
-                    MATA KULIAH KEWIRAUSAHAAN · LOG ABSENSI &amp; TUGAS TERINTEGRASI SUPABASE
+            <div className="mt-8">
+              {/* Clean Editorial Sub-Header (No Card, Seamless Section Integration) */}
+              <div className="keffi-wrap">
+                <div className="flex flex-wrap items-end justify-between gap-6 border-b border-[var(--line)] pb-6 dark:border-white/10">
+                  <div>
+                    <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[var(--violet)]">
+                      MATA KULIAH KEWIRAUSAHAAN · LOG ABSENSI &amp; TUGAS TERINTEGRASI SUPABASE
+                    </span>
+                    <p className="mt-1.5 max-w-2xl text-sm text-[var(--mute)] dark:text-gray-400">
+                      {locale === "id"
+                        ? "Setiap pertemuan mencatat status kehadiran, foto bukti hadir, serta rincian tugas mingguan yang dikelola langsung melalui CMS Admin."
+                        : "Each session logs attendance status, attendance proof photo, and weekly task deliverables managed dynamically via the Admin CMS."}
+                    </p>
                   </div>
-                  <p className="mt-1 text-sm text-[var(--mute)]">
-                    {locale === "id"
-                      ? "Setiap pertemuan mencatat status kehadiran, foto bukti hadir, serta rincian tugas mingguan yang dikelola langsung oleh Fadli melalui CMS Admin."
-                      : "Each session logs attendance status, attendance proof photo, and weekly task deliverables managed dynamically via the Admin CMS."}
-                  </p>
-                </div>
-                <div className="flex flex-wrap items-center gap-3 font-mono text-xs">
-                  <span className="rounded-full bg-emerald-500/15 px-3.5 py-1.5 font-semibold text-emerald-800">
-                    {
-                      courseworkSessions.filter(
-                        (s) => (s.attendanceStatus || "Hadir") === "Hadir"
-                      ).length
-                    }{" "}
-                    / {courseworkSessions.length} Hadir
-                  </span>
-                  <span className="rounded-full bg-[var(--violet)]/12 px-3.5 py-1.5 font-semibold text-[var(--violet)]">
-                    {
-                      courseworkSessions.filter(
-                        (s) => (s.taskStatus || "Selesai") === "Selesai"
-                      ).length
-                    }{" "}
-                    Tugas Selesai
-                  </span>
+                  <div className="flex flex-wrap items-center gap-3 font-mono text-xs">
+                    <span className="rounded-full bg-emerald-500/15 px-3.5 py-1.5 font-semibold text-emerald-800 dark:bg-emerald-500/20 dark:text-emerald-300">
+                      {
+                        courseworkSessions.filter(
+                          (s) => (s.attendanceStatus || "Hadir") === "Hadir"
+                        ).length
+                      }{" "}
+                      / {courseworkSessions.length} Hadir
+                    </span>
+                    <span className="rounded-full bg-[var(--violet)]/12 px-3.5 py-1.5 font-semibold text-[var(--violet)] dark:bg-[var(--violet)]/20 dark:text-[#a5b4fc]">
+                      {
+                        courseworkSessions.filter(
+                          (s) => (s.taskStatus || "Selesai") === "Selesai"
+                        ).length
+                      }{" "}
+                      Tugas Selesai
+                    </span>
 
-                  {/* View Mode Switcher Pill */}
-                  <div className="flex items-center rounded-full bg-black/5 p-1 border border-black/10">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        playMechanicalClick(560);
-                        setPertemuanViewMode("carousel");
-                      }}
-                      className={`rounded-full px-3 py-1 font-mono text-[11px] font-semibold transition-all ${pertemuanViewMode === "carousel"
-                        ? "bg-[var(--ink)] text-white shadow-sm"
-                        : "text-[var(--mute)] hover:text-[var(--ink)]"
+                    {/* View Mode Switcher Pill */}
+                    <div className="inline-flex items-center rounded-full border border-[var(--line)] bg-[#f5f5f2] p-1 dark:border-white/15 dark:bg-black/40">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          playMechanicalClick(560);
+                          setPertemuanViewMode("carousel");
+                        }}
+                        className={`rounded-full px-3.5 py-1.5 font-mono text-[11px] font-semibold transition-all ${
+                          pertemuanViewMode === "carousel"
+                            ? "bg-white text-[var(--ink)] shadow-xs dark:bg-[#1a1b1e] dark:text-white"
+                            : "text-[var(--mute)] hover:text-[var(--ink)] dark:text-gray-400 dark:hover:text-white"
                         }`}
-                    >
-                      3D Circular Gallery
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        playMechanicalClick(580);
-                        setPertemuanViewMode("grid");
-                      }}
-                      className={`rounded-full px-3 py-1 font-mono text-[11px] font-semibold transition-all ${pertemuanViewMode === "grid"
-                        ? "bg-[var(--ink)] text-white shadow-sm"
-                        : "text-[var(--mute)] hover:text-[var(--ink)]"
+                      >
+                        3D Circular Gallery
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          playMechanicalClick(580);
+                          setPertemuanViewMode("grid");
+                        }}
+                        className={`rounded-full px-3.5 py-1.5 font-mono text-[11px] font-semibold transition-all ${
+                          pertemuanViewMode === "grid"
+                            ? "bg-white text-[var(--ink)] shadow-xs dark:bg-[#1a1b1e] dark:text-white"
+                            : "text-[var(--mute)] hover:text-[var(--ink)] dark:text-gray-400 dark:hover:text-white"
                         }`}
-                    >
-                      Grid
-                    </button>
+                      >
+                        Grid
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
 
               {pertemuanViewMode === "carousel" ? (
-                <div className="relative mt-8 h-[600px] w-full overflow-hidden md:h-[680px]">
+                <div className="relative mt-6 h-[600px] w-full overflow-hidden md:h-[680px]">
                   {/* Top Fade Gradient Shadow — seamless integration with section */}
                   <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-24 bg-gradient-to-b from-[#f5f5f2] via-[#f5f5f2]/70 to-transparent dark:from-[#0a0a0c] dark:via-[#0a0a0c]/70" />
 
@@ -1093,7 +1098,7 @@ export function HomeClientSections({
                   <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-36 bg-gradient-to-t from-[#f5f5f2] via-[#f5f5f2]/85 to-transparent dark:from-[#0a0a0c] dark:via-[#0a0a0c]/85" />
 
                   {/* Floating Tactical Interaction Pill */}
-                  <div className="pointer-events-none absolute bottom-6 left-1/2 z-30 -translate-x-1/2 flex items-center gap-2 rounded-full border border-[var(--line)] bg-white/85 px-4 py-1.5 font-mono text-[11px] text-[var(--ink)] shadow-md backdrop-blur-md dark:bg-black/80">
+                  <div className="pointer-events-none absolute bottom-6 left-1/2 z-30 -translate-x-1/2 flex items-center gap-2 rounded-full border border-[var(--line)] bg-white/85 px-4 py-1.5 font-mono text-[11px] text-[var(--ink)] shadow-md backdrop-blur-md dark:border-white/15 dark:bg-black/80 dark:text-white">
                     <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--violet)]" />
                     <span>
                       {locale === "id"
@@ -1103,7 +1108,8 @@ export function HomeClientSections({
                   </div>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <div className="keffi-wrap mt-8">
+                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {courseworkSessions.map((session) => {
                     const status = session.attendanceStatus || "Hadir";
                     const taskStatus = session.taskStatus || "Selesai";
@@ -1227,7 +1233,8 @@ export function HomeClientSections({
                     );
                   })}
                 </div>
-              )}
+              </div>
+            )}
             </div>
           )}
 
