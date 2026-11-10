@@ -127,7 +127,7 @@ export function ExperienceFoldersSection({
   const currentFolderForDeck = EXPERIENCE_FOLDERS[activeDeckIndex];
 
   return (
-    <section id="work" className="scroll-mt-24 bg-white py-20 md:py-28 dark:bg-[#0a0a0c]">
+    <section id="work" className="scroll-mt-24 overflow-hidden bg-white py-20 md:py-28 dark:bg-[#0a0a0c]">
       <div className="keffi-wrap">
         {/* Section Header */}
         <div className="sec-head dark:border-white/10">
@@ -193,54 +193,56 @@ export function ExperienceFoldersSection({
             </Link>
           </div>
         </div>
+      </div>
 
-        {/* ===================================================================
-            VIEW MODE A: 3D CIRCULAR GALLERY (WebGL Curved Cylinder)
-            =================================================================== */}
-        {viewMode === "circular" && (
-          <div className="relative mt-8 h-[580px] w-full overflow-hidden md:h-[680px]">
-            {/* Circular Gallery WebGL Component */}
-            <CircularGalleryWrapper
-              items={galleryItems}
-              bend={2.2}
-              textColor="var(--ink)"
-              itemSize={1.14}
-              itemAspect={1.436}
-              gap={0.24}
-              borderRadius={0}
-              shadow={0}
-              fadeEdges={0}
-              scrollSpeed={2.2}
-              scrollEase={0.06}
-              showTitles={false}
-              snap={true}
-              autoScroll={0}
-              openOnClick={false}
-              onActiveChange={(idx) => {
-                const normalized =
-                  ((idx % EXPERIENCE_FOLDERS.length) + EXPERIENCE_FOLDERS.length) %
-                  EXPERIENCE_FOLDERS.length;
-                setActiveCircularIndex(normalized);
-              }}
-              onItemClick={(item, index) => {
-                const found =
-                  EXPERIENCE_FOLDERS[index % EXPERIENCE_FOLDERS.length] ||
-                  EXPERIENCE_FOLDERS.find(
-                    (f) =>
-                      f.tab === item.text ||
-                      f.title === item.description ||
-                      f.slug === item.text
-                  );
-                if (found) {
-                  setSelectedFolder(found);
-                  setActivePaperIndex(0);
-                  playMechanicalClick(720);
-                }
-              }}
-            />
+      {/* ===================================================================
+          VIEW MODE A: 3D CIRCULAR GALLERY (WebGL Curved Cylinder) - FULL BLEED
+          =================================================================== */}
+      {viewMode === "circular" && (
+        <div className="relative mt-8 h-[580px] w-full overflow-hidden md:h-[680px]">
+          {/* Circular Gallery WebGL Component */}
+          <CircularGalleryWrapper
+            items={galleryItems}
+            bend={2.2}
+            textColor="var(--ink)"
+            itemSize={1.14}
+            itemAspect={1.436}
+            gap={0.24}
+            borderRadius={0}
+            shadow={0}
+            fadeEdges={0}
+            scrollSpeed={2.2}
+            scrollEase={0.06}
+            showTitles={false}
+            snap={true}
+            autoScroll={0}
+            openOnClick={false}
+            onActiveChange={(idx) => {
+              const normalized =
+                ((idx % EXPERIENCE_FOLDERS.length) + EXPERIENCE_FOLDERS.length) %
+                EXPERIENCE_FOLDERS.length;
+              setActiveCircularIndex(normalized);
+            }}
+            onItemClick={(item, index) => {
+              const found =
+                EXPERIENCE_FOLDERS[index % EXPERIENCE_FOLDERS.length] ||
+                EXPERIENCE_FOLDERS.find(
+                  (f) =>
+                    f.tab === item.text ||
+                    f.title === item.description ||
+                    f.slug === item.text
+                );
+              if (found) {
+                setSelectedFolder(found);
+                setActivePaperIndex(0);
+                playMechanicalClick(720);
+              }
+            }}
+          />
 
-            {/* Tactical Overlay: Bottom Controls & Folder Quick Launcher */}
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 flex flex-col items-center justify-between gap-3 p-6 md:flex-row md:items-end">
+          {/* Tactical Overlay: Bottom Controls & Folder Quick Launcher */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30">
+            <div className="keffi-wrap flex flex-col items-center justify-between gap-3 p-6 md:flex-row md:items-end">
               <div className="pointer-events-auto flex items-center gap-2 rounded-full border border-[var(--line)] bg-white/90 px-4 py-2 font-mono text-xs text-[var(--ink)] shadow-md backdrop-blur-md dark:border-white/15 dark:bg-black/80 dark:text-white">
                 <span className="h-2 w-2 rounded-full bg-[var(--violet)] animate-pulse" />
                 <span>
@@ -272,12 +274,14 @@ export function ExperienceFoldersSection({
               </div>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* ===================================================================
-            VIEW MODE B: DIRECT INTERACTIVE 3D FOLDER DECK
-            =================================================================== */}
-        {viewMode === "deck" && (
+      {/* ===================================================================
+          VIEW MODE B: DIRECT INTERACTIVE 3D FOLDER DECK
+          =================================================================== */}
+      {viewMode === "deck" && (
+        <div className="keffi-wrap">
           <div className="mt-10 overflow-hidden rounded-[32px] border border-[var(--line)] bg-[#f5f5f2]/80 p-6 md:p-10 dark:border-white/10 dark:bg-[#121316]">
             {/* Folder Tabs Navigation */}
             <div className="flex flex-wrap items-center gap-2 border-b border-[var(--line)] pb-5 dark:border-white/10">
@@ -409,7 +413,8 @@ export function ExperienceFoldersSection({
               </div>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
         {/* ===================================================================
             MODAL INSPECTION STAGE (Triggered on click from Circular Gallery)
@@ -607,7 +612,6 @@ export function ExperienceFoldersSection({
             </div>
           </div>
         )}
-      </div>
     </section>
   );
 }

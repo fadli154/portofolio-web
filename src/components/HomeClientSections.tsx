@@ -899,7 +899,7 @@ export function HomeClientSections({
           5. PORTAL AKADEMIK KEWIRAUSAHAAN (PERTEMUAN, ABSEN, BUKTI, TUGAS),
              KELOMPOK K-1, EVALUASI SWOT & LIVE GITHUB (#coursework)
          ===================================================================== */}
-      <section id="coursework" className="py-24 md:py-32">
+      <section id="coursework" className="overflow-hidden py-24 md:py-32">
         <div className="keffi-wrap">
           <div className="sec-head">
             <div>
@@ -996,12 +996,13 @@ export function HomeClientSections({
               })}
             </div>
           </div>
+        </div>
 
-          {/* TAB 1: DYNAMIC PERTEMUAN, ABSEN, BUKTI KEHADIRAN & TUGAS */}
-          {activeHubTab === "pertemuan" && (
-            <div className="mt-8">
-              {/* Clean Editorial Sub-Header (No Card, Seamless Section Integration) */}
-              <div className="keffi-wrap">
+        {/* TAB 1: DYNAMIC PERTEMUAN, ABSEN, BUKTI KEHADIRAN & TUGAS */}
+        {activeHubTab === "pertemuan" && (
+          <div className="mt-8">
+            {/* Clean Editorial Sub-Header (No Card, Seamless Section Integration) */}
+            <div className="keffi-wrap">
                 <div className="flex flex-wrap items-end justify-between gap-6 border-b border-[var(--line)] pb-6 dark:border-white/10">
                   <div>
                     <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[var(--violet)]">
@@ -1236,7 +1237,7 @@ export function HomeClientSections({
 
           {/* TAB 2: DIREKTORI 5 ANGGOTA KELOMPOK K-1 INFORMATIKA */}
           {activeHubTab === "kelompok-k1" && (
-            <div className="mt-12 space-y-8">
+            <div className="keffi-wrap mt-12 space-y-8">
               <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl bg-[#111213] p-7 text-[#f5f5f2]">
                 <div>
                   <span className="font-mono text-xs uppercase tracking-widest text-[#c4e22e]">
@@ -1328,7 +1329,7 @@ export function HomeClientSections({
 
           {/* TAB 3: EVALUASI DIRI & MATRIKS SWOT 20 POIN */}
           {activeHubTab === "swot" && (
-            <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-2">
+            <div className="keffi-wrap mt-12 grid grid-cols-1 gap-8 lg:grid-cols-2">
               {/* 10 Strengths */}
               <SpotlightCard
                 spotlightColor="rgba(16, 185, 129, 0.14)"
@@ -1393,7 +1394,7 @@ export function HomeClientSections({
 
           {/* TAB 4: LIVE GITHUB @FADLI154 REPOSITORIES */}
           {activeHubTab === "github" && (
-            <div className="mt-12 space-y-8">
+            <div className="keffi-wrap mt-12 space-y-8">
               <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl bg-[#111213] p-7 text-[#f5f5f2]">
                 <div className="flex items-center gap-4">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1475,7 +1476,6 @@ export function HomeClientSections({
               )}
             </div>
           )}
-        </div>
       </section>
 
       {/* =====================================================================
