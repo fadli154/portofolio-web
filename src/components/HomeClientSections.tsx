@@ -546,32 +546,32 @@ export function HomeClientSections({
         </div>
       </section>
 
-      {/* 3D ReactBits CurvedLoop Infinite Marquee Ribbon */}
-      <div className="relative w-full overflow-hidden border-y border-[var(--line)] bg-[#f5f5f2]/70 py-2.5 backdrop-blur-xs dark:bg-black/40">
+      {/* 3D ReactBits CurvedLoop Infinite Marquee Ribbon — Pure Transparent Kinetic Typography */}
+      <div className="relative w-full overflow-hidden py-6 md:py-10 select-none bg-transparent">
         <CurvedLoop
           marqueeText={[
-            "FADLI HIFZIANSYAH (@FADLI154)",
-            "DINAS KOMINFO · SIMDUK LARAVEL & MYSQL",
-            "SMART HAJJ VISION AI · SAR & SIGN LANGUAGE",
-            "MAHASISWA INFORMATIKA · KELOMPOK K-1",
-            "REACT · NEXT.JS 15 · FLUTTER · OPENCV",
-            "SUPABASE POSTGRESQL · DYNAMIC CMS",
+            "FADLI HIFZIANSYAH",
+            "WEB · MOBILE · VISION AI",
+            "DINAS KOMINFO · SIMDUK",
+            "SMART HAJJ ACCESSIBILITY",
+            "INFORMATIKA KELOMPOK K-1",
+            "NEXT.JS 15 · FLUTTER · OPENCV",
           ]}
-          speed={1.6}
-          curveAmount={110}
-          shape="wave"
-          fontSize={13}
-          fontWeight={600}
-          letterSpacing={2.2}
+          speed={2}
+          curveAmount={200}
+          shape="arc"
+          fontSize={34}
+          fontWeight={800}
+          letterSpacing={2.5}
           color="var(--ink)"
-          separator="●"
+          separator="✦"
           separatorColor="var(--violet)"
-          edgeFade={0.08}
+          edgeFade={0.06}
           interactive={true}
-          pauseOnHover={true}
-          scrollBoost={0.35}
-          className="font-mono uppercase tracking-widest text-xs"
-          containerClassName="relative flex items-center justify-center w-full overflow-hidden select-none py-1.5"
+          pauseOnHover={false}
+          scrollBoost={0.25}
+          className="font-sans font-extrabold uppercase tracking-wider"
+          containerClassName="relative flex items-center justify-center w-full overflow-visible select-none"
         />
       </div>
 

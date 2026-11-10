@@ -59,7 +59,7 @@ interface Geometry {
 }
 
 const VIEW_WIDTH = 1440;
-const VIEW_HEIGHT = 90;
+const VIEW_HEIGHT = 220;
 const MAX_FLING = 4000;
 const WAVE_LENGTH = 960;
 const RING_RADIUS = 2.2;
@@ -122,8 +122,8 @@ const getGeometry = (shape: CurvedLoopShape, curveAmount: number, fontSize: numb
   const flat = { viewBox: `0 0 ${VIEW_WIDTH} ${VIEW_HEIGHT}`, radius: 0, repeats: 0, span: 1 };
   const baseline = VIEW_HEIGHT / 2 + fontSize * 0.35;
   if (shape === 'line') return { ...flat, d: `M-100,${baseline} L${VIEW_WIDTH + 100},${baseline}` };
-  if (shape === 'wave') return { ...flat, d: wavePath(curveAmount * 0.22, baseline) };
-  return { ...flat, d: `M-100,${baseline} Q${VIEW_WIDTH / 2},${baseline + curveAmount * 0.32} ${VIEW_WIDTH + 100},${baseline}` };
+  if (shape === 'wave') return { ...flat, d: wavePath(curveAmount * 0.25, baseline) };
+  return { ...flat, d: `M-100,40 Q500,${40 + curveAmount} 1540,40` };
 };
 
 export const CurvedLoop: FC<CurvedLoopProps> = ({
