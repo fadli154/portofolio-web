@@ -21,6 +21,7 @@ export interface LanyardProps {
   breeze?: number;
   interactive?: boolean;
   intro?: boolean;
+  baseHeight?: number;
   className?: string;
   style?: React.CSSProperties;
 }

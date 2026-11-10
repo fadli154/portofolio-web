@@ -720,6 +720,7 @@ const Lanyard = ({
   breeze = 0.5,
   interactive = true,
   intro = true,
+  baseHeight = 760,
   className = '',
   style
 }) => {
@@ -747,7 +748,8 @@ const Lanyard = ({
     elasticity,
     breeze,
     interactive,
-    intro
+    intro,
+    baseHeight
   };
 
   useEffect(() => {
@@ -913,22 +915,37 @@ const Lanyard = ({
     const frameView = () => {
       const s = settingsRef.current;
       const aspect = view.width / view.height;
-      let viewHeight = layout.height / clamp(s.size, 0.15, 0.9);
+      let baseViewHeight = layout.height / clamp(s.size, 0.15, 0.9);
       const minimumWidth = layout.width / 0.72;
-      if (viewHeight * aspect < minimumWidth) viewHeight = minimumWidth / aspect;
-      const viewWidth = viewHeight * aspect;
+
+      const refHeight = s.baseHeight && view.height > s.baseHeight ? s.baseHeight : view.height;
+      const refAspect = view.width / refHeight;
+      if (baseViewHeight * refAspect < minimumWidth) {
+        baseViewHeight = minimumWidth / refAspect;
+      }
+
+      const isExpandedDown = view.height > refHeight;
+      const totalViewHeight = isExpandedDown ? baseViewHeight * (view.height / refHeight) : baseViewHeight;
+      const viewWidth = totalViewHeight * aspect;
+
       camera.aspect = aspect;
-      camera.position.set(0, 0, viewHeight / 2 / Math.tan((FOV * Math.PI) / 360));
-      camera.lookAt(0, 0, 0);
+      const yTop = baseViewHeight / 2;
+      const yBottom = isExpandedDown ? yTop - totalViewHeight : -baseViewHeight / 2;
+      const centerY = (yTop + yBottom) / 2;
+
+      camera.position.set(0, centerY, totalViewHeight / 2 / Math.tan((FOV * Math.PI) / 360));
+      camera.lookAt(0, centerY, 0);
       camera.updateProjectionMatrix();
       camera.updateMatrixWorld();
+
       foilUniforms.foilKey.value.set(-2.5, 4, 6).normalize().transformDirection(camera.matrixWorldInverse);
       foilUniforms.foilFill.value.set(3, -1, 4).normalize().transformDirection(camera.matrixWorldInverse);
       foilUniforms.foilTop.value.set(0.5, 4.5, 8).normalize().transformDirection(camera.matrixWorldInverse);
+
       const anchorRatio = typeof s.anchor === 'number' ? s.anchor : (ANCHORS[s.anchor] ?? 0.5);
       const anchorX = (anchorRatio - 0.5) * viewWidth;
-      const anchorY = viewHeight / 2 + 0.3;
-      const cardTop = viewHeight / 2 - viewHeight * mix(0.12, 0.42, clamp(s.strapLength, 0, 1));
+      const anchorY = yTop + 0.3;
+      const cardTop = yTop - baseViewHeight * mix(0.12, 0.42, clamp(s.strapLength, 0, 1));
       const hangTop = cardTop + (layout.hangY - layout.height / 2);
       sim.anchor.set(anchorX, anchorY, 0);
       configureSimulation(sim, layout, anchorY - hangTop);
@@ -954,7 +971,7 @@ const Lanyard = ({
         ring.position.set(0, layout.ringY, 0);
         applied.framingKey = '';
       }
-      const framingKey = `${layoutKey}|${s.size}|${s.anchor}|${s.strapLength}|${view.width}|${view.height}`;
+      const framingKey = `${layoutKey}|${s.size}|${s.anchor}|${s.strapLength}|${view.width}|${view.height}|${s.baseHeight}`;
       if (framingKey !== applied.framingKey) {
         frameView();
         if (!placed) {

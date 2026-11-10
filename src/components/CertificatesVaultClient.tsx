@@ -103,11 +103,10 @@ export function CertificatesVaultClient({
                       playMechanicalClick(650);
                       setSelectedCategory(cat);
                     }}
-                    className={`rounded-full border px-4 py-2 font-mono text-xs font-semibold transition ${
-                      active
-                        ? "border-[#c4e22e] bg-[#c4e22e] text-[#111213]"
-                        : "border-white/15 bg-white/5 text-white/70 hover:border-white/30 hover:text-white"
-                    }`}
+                    className={`rounded-full border px-4 py-2 font-mono text-xs font-semibold transition ${active
+                      ? "border-[#c4e22e] bg-[#c4e22e] text-[#111213]"
+                      : "border-white/15 bg-white/5 text-white/70 hover:border-white/30 hover:text-white"
+                      }`}
                   >
                     {cat}
                   </button>
@@ -222,7 +221,7 @@ export function CertificatesVaultClient({
           onClick={() => setSelectedCert(null)}
         >
           <div
-            className="max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-[32px] border border-white/15 bg-[#171920] p-6 text-[#f5f5f2] shadow-2xl md:p-8"
+            className="max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-[32px] border border-white/15 bg-[#171920] p-6 text-[#f5f5f2] shadow-md md:p-8"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-white/10 pb-4">

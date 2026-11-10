@@ -60,7 +60,7 @@ import { CustomCursor } from "@/components/reactbits/CustomCursor";
 import { DriftWall, type DriftWallItem } from "@/components/reactbits/DriftWall";
 import { TechText } from "@/components/reactbits/TechText";
 import { RotatingText } from "@/components/reactbits/RotatingText";
-import { FlexCarousel, type FlexCarouselItem } from "@/components/reactbits/FlexCarousel";
+import CircularGalleryWrapper, { type GalleryItem } from "@/components/reactbits/CircularGalleryWrapper";
 import LanyardWrapper from "@/components/reactbits/LanyardWrapper";
 import { KeffiStackFigure } from "@/components/figures/keffi-svc-figures";
 
@@ -179,17 +179,12 @@ export function HomeClientSections({
     useState<KwuSessionItem | null>(null);
   const [pertemuanViewMode, setPertemuanViewMode] = useState<"carousel" | "grid">("carousel");
 
-  const courseworkFlexItems: FlexCarouselItem[] = useMemo(() => {
+  const courseworkGalleryItems: (GalleryItem & { raw: KwuSessionItem })[] = useMemo(() => {
     return courseworkSessions.map((session) => ({
-      id: session.number,
-      badge: session.code,
-      title: locale === "id" ? session.titleId : session.titleEn,
-      subtitle: locale === "id" ? session.descId : session.descEn,
-      src: session.attendanceProofUrl || "",
-      status: session.attendanceStatus || "Hadir",
-      taskTitle: session.taskTitle || "",
-      taskStatus: session.taskStatus || "Selesai",
-      date: session.sessionDate || `Minggu ${session.number} · 2026`,
+      image: session.attendanceProofUrl || `/coursework/session-${session.number}.svg`,
+      text: session.code,
+      description: locale === "id" ? session.titleId : session.titleEn,
+      alt: locale === "id" ? session.titleId : session.titleEn,
       raw: session,
     }));
   }, [courseworkSessions, locale]);
@@ -317,8 +312,8 @@ export function HomeClientSections({
           1. STUDIO KEFFI HERO + REACTBITS ANIMATED DISPLAY & 3D BENTO STAGE
          ===================================================================== */}
       <section className="relative overflow-visible pb-16 pt-28 md:pb-24 md:pt-36">
-        {/* Full-bleed 3D Lanyard Canvas: Extends from the absolute top of the page without clipping */}
-        <div className="pointer-events-none absolute left-0 top-0 z-20 h-[680px] w-full md:h-[760px]">
+        {/* Full-bleed 3D Lanyard Canvas: Extends through the entire hero stage and terminal without bottom clipping */}
+        <div className="pointer-events-none absolute left-0 top-0 z-20 h-[1200px] w-full md:h-[1350px]">
           <LanyardWrapper
             frontImage="/fadli-profile.png"
             backImage="/fadli-profile.png"
@@ -335,6 +330,7 @@ export function HomeClientSections({
             damping={0.55}
             elasticity={0.45}
             interactive={true}
+            baseHeight={760}
             className="h-full w-full"
           />
         </div>
@@ -347,24 +343,23 @@ export function HomeClientSections({
               {/* Eyebrow Kicker with ReactBits RotatingText */}
               <div className="mb-6 flex flex-wrap items-center gap-4">
                 <span className="sec-kicker">
-                  <span className="sec-kicker__dot animate-pulse" aria-hidden="true" />
                   <RotatingText
                     texts={
                       locale === "id"
                         ? [
-                            "PORTOFOLIO INFORMATIKA · WEB, MOBILE, GOVTECH & VISION AI",
-                            "MAGANG RESMI · DINAS KOMINFO (SIMDUK LARAVEL & MYSQL)",
-                            "INOVASI AI UNGGULAN · SMART HAJJ AKSESIBILITAS INKLUSIF",
-                            "PORTAL AKADEMIK · KELOMPOK K-1 KEWIRAUSAHAAN",
-                            "STACK REKAYASA · NEXT.JS 15, FLUTTER & PYTHON OPENCV",
-                          ]
+                          "PORTOFOLIO INFORMATIKA · WEB, MOBILE, GOVTECH & VISION AI",
+                          "MAGANG RESMI · DINAS KOMINFO (SIMDUK LARAVEL & MYSQL)",
+                          "INOVASI AI UNGGULAN · SMART HAJJ AKSESIBILITAS INKLUSIF",
+                          "PORTAL AKADEMIK · KELOMPOK K-1 KEWIRAUSAHAAN",
+                          "STACK REKAYASA · NEXT.JS 15, FLUTTER & PYTHON OPENCV",
+                        ]
                         : [
-                            "INFORMATICS PORTFOLIO · WEB, MOBILE, GOVTECH & VISION AI",
-                            "OFFICIAL INTERNSHIP · DINAS KOMINFO (SIMDUK LARAVEL & MYSQL)",
-                            "FLAGSHIP AI · SMART HAJJ INCLUSIVE ACCESSIBILITY",
-                            "ACADEMIC PORTAL · ENTREPRENEURSHIP GROUP K-1",
-                            "ENGINEERING STACK · NEXT.JS 15, FLUTTER & PYTHON OPENCV",
-                          ]
+                          "INFORMATICS PORTFOLIO · WEB, MOBILE, GOVTECH & VISION AI",
+                          "OFFICIAL INTERNSHIP · DINAS KOMINFO (SIMDUK LARAVEL & MYSQL)",
+                          "FLAGSHIP AI · SMART HAJJ INCLUSIVE ACCESSIBILITY",
+                          "ACADEMIC PORTAL · ENTREPRENEURSHIP GROUP K-1",
+                          "ENGINEERING STACK · NEXT.JS 15, FLUTTER & PYTHON OPENCV",
+                        ]
                     }
                     rotationInterval={3000}
                     staggerDuration={0.015}
@@ -436,7 +431,6 @@ export function HomeClientSections({
             <div className="relative z-10 flex min-h-[320px] flex-col items-center justify-end pb-4 lg:col-span-5 lg:min-h-[420px]">
               <div className="pointer-events-none select-none inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/5 px-3 py-1 font-mono text-[11px] text-[var(--mute)] backdrop-blur-xs dark:border-white/10 dark:bg-white/5">
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#c4e22e]" />
-                <span>{locale === "id" ? "Tarik / Goyangkan Kartu 3D ✦" : "Grab & Swing 3D Badge ✦"}</span>
               </div>
             </div>
           </div>
@@ -688,17 +682,17 @@ export function HomeClientSections({
                   texts={
                     locale === "id"
                       ? [
-                          "REKAM JEJAK & KARYA UNGGULAN · DINAMIS",
-                          "SIMDUK KOMINFO · WEB DEV INTERN LARAVEL",
-                          "SMART HAJJ · AI VISION AKSESIBILITAS",
-                          "PORTAL GOVTECH · PELAPORAN TERINTEGRASI",
-                        ]
+                        "REKAM JEJAK & KARYA UNGGULAN · DINAMIS",
+                        "SIMDUK KOMINFO · WEB DEV INTERN LARAVEL",
+                        "SMART HAJJ · AI VISION AKSESIBILITAS",
+                        "PORTAL GOVTECH · PELAPORAN TERINTEGRASI",
+                      ]
                       : [
-                          "SELECTED EXPERIENCE & CASE STUDIES · DYNAMIC",
-                          "SIMDUK KOMINFO · WEB DEV INTERN LARAVEL",
-                          "SMART HAJJ · AI VISION ACCESSIBILITY",
-                          "GOVTECH PORTAL · INTEGRATED REPORTING",
-                        ]
+                        "SELECTED EXPERIENCE & CASE STUDIES · DYNAMIC",
+                        "SIMDUK KOMINFO · WEB DEV INTERN LARAVEL",
+                        "SMART HAJJ · AI VISION ACCESSIBILITY",
+                        "GOVTECH PORTAL · INTEGRATED REPORTING",
+                      ]
                   }
                   rotationInterval={3200}
                 />
@@ -958,15 +952,15 @@ export function HomeClientSections({
                   texts={
                     locale === "id"
                       ? [
-                          "ARSITEKTUR SISTEM & 5 KATEGORI TECH STACK",
-                          "EXPLODED-VIEW · INSTRUMEN ANATOMI 3D",
-                          "FRONTEND, BACKEND, MOBILE, AI & DEVOPS",
-                        ]
+                        "ARSITEKTUR SISTEM & 5 KATEGORI TECH STACK",
+                        "EXPLODED-VIEW · INSTRUMEN ANATOMI 3D",
+                        "FRONTEND, BACKEND, MOBILE, AI & DEVOPS",
+                      ]
                       : [
-                          "SYSTEM ARCHITECTURE & 5 TECH STACK PILLARS",
-                          "EXPLODED-VIEW · 3D ANATOMY RIGS",
-                          "FRONTEND, BACKEND, MOBILE, AI & DEVOPS",
-                        ]
+                        "SYSTEM ARCHITECTURE & 5 TECH STACK PILLARS",
+                        "EXPLODED-VIEW · 3D ANATOMY RIGS",
+                        "FRONTEND, BACKEND, MOBILE, AI & DEVOPS",
+                      ]
                   }
                   rotationInterval={3400}
                   mainClassName="text-white/80"
@@ -1068,17 +1062,17 @@ export function HomeClientSections({
                   texts={
                     locale === "id"
                       ? [
-                          "BRANKAS PRESTASI & SERTIFIKASI KOMPETENSI",
-                          "JUARA 1 DESAIN WEBSITE UMKM · IT'S DAY 2025",
-                          "JUARA II INOVASI TEKNOLOGI · OASE PTKI II",
-                          "DRIFT WALL 3D · DOKUMEN RESMI TERVERIFIKASI",
-                        ]
+                        "BRANKAS PRESTASI & SERTIFIKASI KOMPETENSI",
+                        "JUARA 1 DESAIN WEBSITE UMKM · IT'S DAY 2025",
+                        "JUARA II INOVASI TEKNOLOGI · OASE PTKI II",
+                        "DRIFT WALL 3D · DOKUMEN RESMI TERVERIFIKASI",
+                      ]
                       : [
-                          "VERIFIED CREDENTIALS & AWARDS VAULT",
-                          "1ST PLACE UMKM WEB DESIGN · IT'S DAY 2025",
-                          "2ND PLACE TECH INNOVATION · OASE PTKI II",
-                          "3D DRIFT WALL · VERIFIED CREDENTIALS",
-                        ]
+                        "VERIFIED CREDENTIALS & AWARDS VAULT",
+                        "1ST PLACE UMKM WEB DESIGN · IT'S DAY 2025",
+                        "2ND PLACE TECH INNOVATION · OASE PTKI II",
+                        "3D DRIFT WALL · VERIFIED CREDENTIALS",
+                      ]
                   }
                   rotationInterval={3200}
                   mainClassName="text-white/80"
@@ -1117,20 +1111,24 @@ export function HomeClientSections({
           </div>
         </div>
 
-        {/* 3D PERSPECTIVE DRIFT WALL - SEAMLESS (NO ENCLOSING CARD, MERGED DIRECTLY INTO SECTION) */}
-        <div className="relative mt-8 h-[540px] w-full overflow-hidden md:h-[620px]">
+        {/* 3D PERSPECTIVE DRIFT WALL - SEAMLESS, CENTERED, WITH INNER SHADOW MASKS */}
+        <div className="relative mt-10 h-[560px] w-full overflow-hidden md:h-[660px]">
+          {/* Top Fade Gradient Shadow */}
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-28 bg-gradient-to-b from-[#0c0d12] via-[#0c0d12]/70 to-transparent" />
+
+          {/* 3D Drift Wall Component with 5 columns and balanced centering */}
           <DriftWall
             items={driftWallItems}
-            columns={4}
-            tileWidth={290}
-            tileHeight={200}
-            gap={24}
+            columns={5}
+            tileWidth={310}
+            tileHeight={215}
+            gap={26}
             radius={18}
-            tilt={13}
-            turn={-10}
-            perspective={1200}
-            depth={110}
-            speed={32}
+            tilt={12}
+            turn={-7}
+            perspective={1250}
+            depth={90}
+            speed={30}
             pauseOnHover={true}
             onTileClick={(item) => {
               const found = dynamicCertificates.find((c) => c.id === item.id);
@@ -1141,8 +1139,12 @@ export function HomeClientSections({
               }
             }}
           />
+
+          {/* Bottom Inner Gradient Shadow / Fade Mask (user: "di bawah section kasih shadow ke dalem gitu supaya ga terlihat seperti kepotong") */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-44 bg-gradient-to-t from-[#0c0d12] via-[#0c0d12]/85 to-transparent" />
+
           {/* Ambient Lighting & Floating Interaction Hint */}
-          <div className="pointer-events-none absolute bottom-4 left-1/2 z-10 -translate-x-1/2 flex items-center gap-2 rounded-full border border-white/10 bg-black/50 px-4 py-1.5 font-mono text-[11px] text-white/75 backdrop-blur-md">
+          <div className="pointer-events-none absolute bottom-6 left-1/2 z-30 -translate-x-1/2 flex items-center gap-2 rounded-full border border-white/10 bg-black/60 px-4 py-1.5 font-mono text-[11px] text-white/80 shadow-lg backdrop-blur-md">
             <span className="h-1.5 w-1.5 rounded-full bg-[#c4e22e] animate-pulse" />
             <span>
               {locale === "id"
@@ -1167,17 +1169,17 @@ export function HomeClientSections({
                   texts={
                     locale === "id"
                       ? [
-                          "PORTAL AKADEMIK KEWIRAUSAHAAN · KELOMPOK K-1",
-                          "LOG PERTEMUAN MINGGUAN · ABSENSI & BUKTI FOTO",
-                          "ANALISIS SWOT 20 INDIKATOR · REKOMENDASI",
-                          "REPOSITORI GITHUB LIVE @FADLI154",
-                        ]
+                        "PORTAL AKADEMIK KEWIRAUSAHAAN · KELOMPOK K-1",
+                        "LOG PERTEMUAN MINGGUAN · ABSENSI & BUKTI FOTO",
+                        "ANALISIS SWOT 20 INDIKATOR · REKOMENDASI",
+                        "REPOSITORI GITHUB LIVE @FADLI154",
+                      ]
                       : [
-                          "ENTREPRENEURSHIP ACADEMIC PORTAL · GROUP K-1",
-                          "WEEKLY SESSIONS LOG · ATTENDANCE & PROOF",
-                          "SWOT MATRIX · 20 STRATEGIC INDICATORS",
-                          "LIVE GITHUB REPOSITORY SYNC @FADLI154",
-                        ]
+                        "ENTREPRENEURSHIP ACADEMIC PORTAL · GROUP K-1",
+                        "WEEKLY SESSIONS LOG · ATTENDANCE & PROOF",
+                        "SWOT MATRIX · 20 STRATEGIC INDICATORS",
+                        "LIVE GITHUB REPOSITORY SYNC @FADLI154",
+                      ]
                   }
                   rotationInterval={3200}
                 />
@@ -1242,11 +1244,10 @@ export function HomeClientSections({
                       playMechanicalClick(680);
                       setActiveHubTab(tab.id);
                     }}
-                    className={`inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-xs font-medium transition-all ${
-                      active
-                        ? "bg-[var(--ink)] text-[var(--cream)] shadow-sm"
-                        : "text-[var(--ink)] hover:bg-black/5"
-                    }`}
+                    className={`inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-xs font-medium transition-all ${active
+                      ? "bg-[var(--ink)] text-[var(--cream)] shadow-sm"
+                      : "text-[var(--ink)] hover:bg-black/5"
+                      }`}
                   >
                     <Icon className="h-3.5 w-3.5" />
                     <span>{tab.label}</span>
@@ -1296,13 +1297,12 @@ export function HomeClientSections({
                         playMechanicalClick(560);
                         setPertemuanViewMode("carousel");
                       }}
-                      className={`rounded-full px-3 py-1 font-mono text-[11px] font-semibold transition-all ${
-                        pertemuanViewMode === "carousel"
-                          ? "bg-[var(--ink)] text-white shadow-sm"
-                          : "text-[var(--mute)] hover:text-[var(--ink)]"
-                      }`}
+                      className={`rounded-full px-3 py-1 font-mono text-[11px] font-semibold transition-all ${pertemuanViewMode === "carousel"
+                        ? "bg-[var(--ink)] text-white shadow-sm"
+                        : "text-[var(--mute)] hover:text-[var(--ink)]"
+                        }`}
                     >
-                      Carousel Flow
+                      3D Circular Gallery
                     </button>
                     <button
                       type="button"
@@ -1310,11 +1310,10 @@ export function HomeClientSections({
                         playMechanicalClick(580);
                         setPertemuanViewMode("grid");
                       }}
-                      className={`rounded-full px-3 py-1 font-mono text-[11px] font-semibold transition-all ${
-                        pertemuanViewMode === "grid"
-                          ? "bg-[var(--ink)] text-white shadow-sm"
-                          : "text-[var(--mute)] hover:text-[var(--ink)]"
-                      }`}
+                      className={`rounded-full px-3 py-1 font-mono text-[11px] font-semibold transition-all ${pertemuanViewMode === "grid"
+                        ? "bg-[var(--ink)] text-white shadow-sm"
+                        : "text-[var(--mute)] hover:text-[var(--ink)]"
+                        }`}
                     >
                       Grid
                     </button>
@@ -1323,15 +1322,37 @@ export function HomeClientSections({
               </div>
 
               {pertemuanViewMode === "carousel" ? (
-                <div className="relative overflow-hidden rounded-[32px] border border-[var(--line)] bg-[#f5f5f2]/70 p-4 sm:p-6 md:p-8">
-                  <FlexCarousel
-                    items={courseworkFlexItems}
-                    focusOnClick={true}
-                    squeeze={0.25}
-                    captions={true}
-                    captureWheel={true}
-                    onOpenModal={(item) => setSelectedSessionModal(item.raw)}
+                <div className="relative h-[620px] w-full overflow-hidden rounded-[32px] border border-[var(--line)] bg-[#f5f5f2]/80 md:h-[680px]">
+                  <CircularGalleryWrapper
+                    items={courseworkGalleryItems}
+                    bend={2.5}
+                    textColor="var(--ink)"
+                    itemSize={1.05}
+                    itemAspect={0.714}
+                    gap={0.3}
+                    borderRadius={0.065}
+                    scrollSpeed={2.2}
+                    scrollEase={0.05}
+                    showTitles={false}
+                    snap={true}
+                    autoScroll={0}
+                    openOnClick={false}
+                    onItemClick={(item) => {
+                      const found = courseworkSessions.find(
+                        (s) => s.code === item.text || s.number.toString() === item.text
+                      );
+                      if (found) setSelectedSessionModal(found);
+                    }}
+                    className="h-full w-full"
                   />
+                  <div className="pointer-events-none absolute bottom-4 left-1/2 z-10 -translate-x-1/2 flex items-center gap-2 rounded-full border border-black/10 bg-white/85 px-4 py-1.5 font-mono text-[11px] text-[var(--ink)] shadow-xs backdrop-blur-md">
+                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--violet)]" />
+                    <span>
+                      {locale === "id"
+                        ? "Geser / Putar 3D Silinder · Klik kartu untuk detail absensi & tugas"
+                        : "Drag 3D Cylinder · Click card to inspect attendance & task"}
+                    </span>
+                  </div>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -1499,11 +1520,10 @@ export function HomeClientSections({
                           ? "rgba(196, 226, 46, 0.25)"
                           : "rgba(91, 49, 200, 0.14)"
                       }
-                      className={`flex h-full flex-col justify-between rounded-[26px] border p-7 ${
-                        member.isSelf
-                          ? "border-[#111213] bg-[#c4e22e] text-[#111213]"
-                          : "border-[var(--line)] bg-white text-[var(--ink)]"
-                      }`}
+                      className={`flex h-full flex-col justify-between rounded-[26px] border p-7 ${member.isSelf
+                        ? "border-[#111213] bg-[#c4e22e] text-[#111213]"
+                        : "border-[var(--line)] bg-white text-[var(--ink)]"
+                        }`}
                     >
                       <div>
                         <div className="flex items-center justify-between gap-2">
@@ -1511,13 +1531,12 @@ export function HomeClientSections({
                             ANGGOTA #{member.number}
                           </span>
                           <span
-                            className={`rounded-full px-3 py-1 font-mono text-[10px] font-bold uppercase ${
-                              member.isSelf
-                                ? "bg-[#111213] text-[#c4e22e]"
-                                : member.roleType === "entrepreneur"
-                                  ? "bg-[var(--violet)]/12 text-[var(--violet)]"
-                                  : "bg-emerald-500/15 text-emerald-800"
-                            }`}
+                            className={`rounded-full px-3 py-1 font-mono text-[10px] font-bold uppercase ${member.isSelf
+                              ? "bg-[#111213] text-[#c4e22e]"
+                              : member.roleType === "entrepreneur"
+                                ? "bg-[var(--violet)]/12 text-[var(--violet)]"
+                                : "bg-emerald-500/15 text-emerald-800"
+                              }`}
                           >
                             {locale === "id"
                               ? member.roleBadgeId
@@ -1540,11 +1559,10 @@ export function HomeClientSections({
                           href={member.portfolioUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className={`inline-flex w-full items-center justify-between rounded-full px-4 py-2.5 text-xs font-semibold transition ${
-                            member.isSelf
-                              ? "bg-[#111213] text-[#f5f5f2] hover:bg-[#5b31c8]"
-                              : "bg-[#f5f5f2] text-[var(--ink)] hover:bg-[var(--ink)] hover:text-[var(--cream)]"
-                          }`}
+                          className={`inline-flex w-full items-center justify-between rounded-full px-4 py-2.5 text-xs font-semibold transition ${member.isSelf
+                            ? "bg-[#111213] text-[#f5f5f2] hover:bg-[#5b31c8]"
+                            : "bg-[#f5f5f2] text-[var(--ink)] hover:bg-[var(--ink)] hover:text-[var(--cream)]"
+                            }`}
                         >
                           <span>Kunjungi Portofolio Google Sites</span>
                           <ExternalLink className="h-3.5 w-3.5" />
@@ -1722,15 +1740,15 @@ export function HomeClientSections({
                   texts={
                     locale === "id"
                       ? [
-                          "KOLABORASI, MAGANG & PROYEK PERANGKAT LUNAK",
-                          "KONSULTASI SOLUSI WEB, MOBILE & AI INKLUSIF",
-                          "RESPON CEPAT VIA EMAIL, WHATSAPP & LINKEDIN",
-                        ]
+                        "KOLABORASI, MAGANG & PROYEK PERANGKAT LUNAK",
+                        "KONSULTASI SOLUSI WEB, MOBILE & AI INKLUSIF",
+                        "RESPON CEPAT VIA EMAIL, WHATSAPP & LINKEDIN",
+                      ]
                       : [
-                          "INTERNSHIP, FREELANCE & RESEARCH COLLABORATION",
-                          "CONSULTING ON WEB, MOBILE & INCLUSIVE AI",
-                          "FAST RESPONSE VIA EMAIL, WHATSAPP & LINKEDIN",
-                        ]
+                        "INTERNSHIP, FREELANCE & RESEARCH COLLABORATION",
+                        "CONSULTING ON WEB, MOBILE & INCLUSIVE AI",
+                        "FAST RESPONSE VIA EMAIL, WHATSAPP & LINKEDIN",
+                      ]
                   }
                   rotationInterval={3400}
                 />

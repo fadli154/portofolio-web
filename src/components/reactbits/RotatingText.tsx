@@ -120,9 +120,8 @@ export function RotatingText({
                 transitionDelay: `${delay}s`,
                 animationDelay: `${delay}s`,
               }}
-              className={`inline-block origin-bottom ${animClasses} ${
-                isAnimating ? "animate-rotate-in" : ""
-              } ${elementLevelClassName}`}
+              className={`inline-block origin-bottom ${animClasses} ${isAnimating ? "animate-rotate-in" : ""
+                } ${elementLevelClassName}`}
             >
               {char}
             </span>
