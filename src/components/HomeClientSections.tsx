@@ -318,165 +318,217 @@ export function HomeClientSections({
          ===================================================================== */}
       <section className="pt-28 pb-16 md:pt-36 md:pb-24">
         <div className="keffi-wrap">
-          {/* Eyebrow Kicker */}
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
-            <span className="sec-kicker">
-              <span className="sec-kicker__dot animate-pulse" aria-hidden="true" />
-              <RotatingText
-                texts={
-                  locale === "id"
-                    ? [
-                        "PORTOFOLIO INFORMATIKA · WEB, MOBILE, GOVTECH & VISION AI",
-                        "MAGANG RESMI · DINAS KOMINFO (SIMDUK LARAVEL & MYSQL)",
-                        "INOVASI AI UNGGULAN · SMART HAJJ AKSESIBILITAS INKLUSIF",
-                        "PORTAL AKADEMIK · KELOMPOK K-1 KEWIRAUSAHAAN",
-                        "STACK REKAYASA · NEXT.JS 15, FLUTTER & PYTHON OPENCV",
-                      ]
-                    : [
-                        "INFORMATICS PORTFOLIO · WEB, MOBILE, GOVTECH & VISION AI",
-                        "OFFICIAL INTERNSHIP · DINAS KOMINFO (SIMDUK LARAVEL & MYSQL)",
-                        "FLAGSHIP AI · SMART HAJJ INCLUSIVE ACCESSIBILITY",
-                        "ACADEMIC PORTAL · ENTREPRENEURSHIP GROUP K-1",
-                        "ENGINEERING STACK · NEXT.JS 15, FLUTTER & PYTHON OPENCV",
-                      ]
-                }
-                rotationInterval={3000}
-                staggerDuration={0.015}
-                mainClassName="font-mono text-xs font-semibold tracking-wider text-[var(--ink)]"
-              />
-            </span>
-          </div>
+          {/* Hero Top Grid: Left is Text Stack, Right is Pure 3D Lanyard (No Card Container) */}
+          <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-10">
+            {/* Left Column (7 cols): Kicker, Giant Headline, Description & CTAs */}
+            <div className="lg:col-span-7">
+              {/* Eyebrow Kicker with ReactBits RotatingText */}
+              <div className="mb-6 flex flex-wrap items-center gap-4">
+                <span className="sec-kicker">
+                  <span className="sec-kicker__dot animate-pulse" aria-hidden="true" />
+                  <RotatingText
+                    texts={
+                      locale === "id"
+                        ? [
+                            "PORTOFOLIO INFORMATIKA · WEB, MOBILE, GOVTECH & VISION AI",
+                            "MAGANG RESMI · DINAS KOMINFO (SIMDUK LARAVEL & MYSQL)",
+                            "INOVASI AI UNGGULAN · SMART HAJJ AKSESIBILITAS INKLUSIF",
+                            "PORTAL AKADEMIK · KELOMPOK K-1 KEWIRAUSAHAAN",
+                            "STACK REKAYASA · NEXT.JS 15, FLUTTER & PYTHON OPENCV",
+                          ]
+                        : [
+                            "INFORMATICS PORTFOLIO · WEB, MOBILE, GOVTECH & VISION AI",
+                            "OFFICIAL INTERNSHIP · DINAS KOMINFO (SIMDUK LARAVEL & MYSQL)",
+                            "FLAGSHIP AI · SMART HAJJ INCLUSIVE ACCESSIBILITY",
+                            "ACADEMIC PORTAL · ENTREPRENEURSHIP GROUP K-1",
+                            "ENGINEERING STACK · NEXT.JS 15, FLUTTER & PYTHON OPENCV",
+                          ]
+                    }
+                    rotationInterval={3000}
+                    staggerDuration={0.015}
+                    mainClassName="font-mono text-xs font-semibold tracking-wider text-[var(--ink)]"
+                  />
+                </span>
+              </div>
 
-          {/* Giant Studio Keffi Display Headline with ReactBits TechText */}
-          <h1 className="hero-giant max-w-[20ch]">
-            <TechText
-              text="Fadli Hifziansyah"
-              guides={true}
-              specks={12}
-              clickKick={true}
-              draggable={true}
-              intro="assemble"
-              className="font-medium tracking-tight text-[var(--ink)]"
-            />
-            <span className="mt-2 block text-3xl font-normal tracking-tight text-[var(--mute)] md:text-5xl lg:text-6xl">
-              {locale === "id"
-                ? "— rekayasa web, mobile & computer vision."
-                : "— web, mobile & computer vision engineering."}
-            </span>
-          </h1>
+              {/* Giant Studio Keffi Display Headline with ReactBits TechText */}
+              <h1 className="hero-giant">
+                <TechText
+                  text="Fadli Hifziansyah"
+                  guides={true}
+                  specks={12}
+                  clickKick={true}
+                  draggable={true}
+                  intro="assemble"
+                  className="font-medium tracking-tight text-[var(--ink)]"
+                />
+                <span className="mt-2 block text-3xl font-normal tracking-tight text-[var(--mute)] md:text-5xl lg:text-6xl">
+                  {locale === "id"
+                    ? "— rekayasa web, mobile & computer vision."
+                    : "— web, mobile & computer vision engineering."}
+                </span>
+              </h1>
 
-          {/* Sub-Headline & Studio Keffi Avatar Pill Action Row */}
-          <div className="keffi-grid mt-10 items-end border-t border-[var(--line)] pt-8">
-            <div className="col-span-12 lg:col-span-6">
-              <p className="max-w-xl text-base leading-relaxed text-[var(--mute)] md:text-lg">
+              {/* Sub-Headline Description */}
+              <p className="mt-6 max-w-xl text-base leading-relaxed text-[var(--mute)] md:text-lg">
                 {locale === "id"
                   ? "Mendokumentasikan karya akademik perkuliahan Informatika, pengalaman magang resmi di Dinas Kominfo (SIMDUK Laravel & MySQL), sistem pelaporan GovTech, serta inovasi AI Smart Hajj."
                   : "Documenting Informatics university coursework, official internship work at Dinas Kominfo (SIMDUK Laravel & MySQL), GovTech portals, and Smart Hajj Vision AI."}
               </p>
+
+              {/* CTAs & Action Pills */}
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <Magnet strength={0.2}>
+                  <a href="#work" className="keffi-pill-btn" data-cursor="EXPLORE">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={profile.avatarUrl}
+                      alt={profile.fullName}
+                      width={36}
+                      height={36}
+                      className="h-9 w-9 rounded-full object-cover ring-2 ring-[#c4e22e]"
+                    />
+                    <span>
+                      {locale === "id"
+                        ? "Lihat Pengalaman & Proyek"
+                        : "Explore Work & Experience"}
+                    </span>
+                    <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                  </a>
+                </Magnet>
+
+                <Magnet strength={0.16}>
+                  <a href="#coursework" className="keffi-pill-outline">
+                    <BookOpen className="h-4 w-4 text-[var(--violet)]" aria-hidden="true" />
+                    <span>
+                      {locale === "id"
+                        ? "Portal Kewirausahaan (K-1)"
+                        : "Coursework Portal (K-1)"}
+                    </span>
+                  </a>
+                </Magnet>
+              </div>
             </div>
 
-            <div className="col-span-12 flex flex-wrap items-center gap-3 lg:col-span-6 lg:justify-end">
-              <Magnet strength={0.2}>
-                <a href="#work" className="keffi-pill-btn" data-cursor="EXPLORE">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={profile.avatarUrl}
-                    alt={profile.fullName}
-                    width={36}
-                    height={36}
-                    className="h-9 w-9 rounded-full object-cover ring-2 ring-[#c4e22e]"
-                  />
-                  <span>
-                    {locale === "id"
-                      ? "Lihat Pengalaman & Proyek"
-                      : "Explore Work & Experience"}
-                  </span>
-                  <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-                </a>
-              </Magnet>
-
-              <Magnet strength={0.16}>
-                <a href="#coursework" className="keffi-pill-outline">
-                  <BookOpen className="h-4 w-4 text-[var(--violet)]" aria-hidden="true" />
-                  <span>
-                    {locale === "id"
-                      ? "Portal Kewirausahaan (K-1)"
-                      : "Coursework Portal (K-1)"}
-                  </span>
-                </a>
-              </Magnet>
+            {/* Right Column (5 cols): Pure 3D Interactive Lanyard (No Card Container / Clean Floating WebGL) */}
+            <div className="relative flex flex-col items-center justify-center lg:col-span-5">
+              <div className="relative h-[420px] w-full cursor-grab active:cursor-grabbing sm:h-[480px]">
+                <LanyardWrapper
+                  frontImage="/fadli-profile.png"
+                  backImage="/fadli-profile.png"
+                  imageFit="cover"
+                  finish="holographic"
+                  cardColor="#ffffff"
+                  strapColor="#111111"
+                  orientation="portrait"
+                  size={0.65}
+                  gravity={1.1}
+                  breeze={0.4}
+                  damping={0.55}
+                  elasticity={0.45}
+                  interactive={true}
+                  className="h-full w-full"
+                />
+              </div>
+              <div className="pointer-events-none -mt-2 inline-flex items-center gap-2 rounded-full border border-black/10 bg-black/5 px-3 py-1 font-mono text-[11px] text-[var(--mute)] backdrop-blur-xs dark:border-white/10 dark:bg-white/5">
+                <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#c4e22e]" />
+                <span>{locale === "id" ? "Tarik / Goyangkan Kartu 3D ✦" : "Grab & Swing 3D Badge ✦"}</span>
+              </div>
             </div>
           </div>
 
-          {/* ReactBits 3D Tilted Showcase Stage (Terminal + Identity Bento) */}
-          <div className="keffi-grid mt-12">
-            {/* Left 7 Cols: Interactive Dark Terminal Card */}
-            <div className="col-span-12 lg:col-span-7">
-              <TiltedCard maxTilt={4.5} cursorLabel="TERMINAL" className="h-full rounded-[28px]">
-                <SpotlightCard
-                  spotlightColor="rgba(196, 226, 46, 0.16)"
-                  className="flex h-full flex-col justify-between rounded-[28px] bg-[#111213] p-6 text-[#f5f5f2] shadow-2xl md:p-9"
-                >
-                  <div>
-                    <div className="flex items-center justify-between border-b border-white/12 pb-4">
-                      <div className="flex items-center gap-2">
-                        <span className="h-3 w-3 rounded-full bg-[#ff5f56]" />
-                        <span className="h-3 w-3 rounded-full bg-[#ffbd2e]" />
-                        <span className="h-3 w-3 rounded-full bg-[#27c93f]" />
-                        <span className="ml-2 font-mono text-xs text-white/55">
-                          fadli@informatika-k1: ~/portfolio
-                        </span>
-                      </div>
-                      <span className="rounded-full bg-[#c4e22e]/15 px-3 py-1 font-mono text-[11px] font-semibold text-[#c4e22e]">
-                        bash · zsh
+          {/* Below: Interactive Developer Terminal (Sole Showcase Element) */}
+          <div className="mt-14 md:mt-20">
+            <TiltedCard maxTilt={3.5} cursorLabel="TERMINAL" className="w-full rounded-[28px]">
+              <SpotlightCard
+                spotlightColor="rgba(196, 226, 46, 0.16)"
+                className="flex w-full flex-col justify-between rounded-[28px] bg-[#111213] p-6 text-[#f5f5f2] shadow-2xl md:p-9"
+              >
+                <div>
+                  <div className="flex items-center justify-between border-b border-white/12 pb-4">
+                    <div className="flex items-center gap-2">
+                      <span className="h-3 w-3 rounded-full bg-[#ff5f56]" />
+                      <span className="h-3 w-3 rounded-full bg-[#ffbd2e]" />
+                      <span className="h-3 w-3 rounded-full bg-[#27c93f]" />
+                      <span className="ml-2 font-mono text-xs text-white/55">
+                        fadli@informatika-k1: ~/portfolio
                       </span>
                     </div>
+                    <span className="rounded-full bg-[#c4e22e]/15 px-3 py-1 font-mono text-[11px] font-semibold text-[#c4e22e]">
+                      bash · zsh
+                    </span>
+                  </div>
 
-                    <div className="mt-6 space-y-3 font-mono text-xs leading-relaxed md:text-sm">
+                  <div className="mt-6 space-y-3 font-mono text-xs leading-relaxed md:text-sm">
+                    <div>
+                      <span className="text-[#c4e22e]">➜</span>{" "}
+                      <span className="text-sky-400">~</span>{" "}
+                      <span className="text-white/90">whoami --profile</span>
+                    </div>
+                    <div className="pl-4 text-white/70">
+                      {profile.fullName} (@{profile.handle}) · {locale === "id" ? profile.roleTitleId : profile.roleTitleEn}
+                    </div>
+
+                    <div className="pt-1">
+                      <span className="text-[#c4e22e]">➜</span>{" "}
+                      <span className="text-sky-400">~</span>{" "}
+                      <span className="text-white/90">cat experience_and_flagship.json</span>
+                    </div>
+                    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-xs text-white/80">
                       <div>
-                        <span className="text-[#c4e22e]">➜</span>{" "}
-                        <span className="text-sky-400">~</span>{" "}
-                        <span className="text-white/90">whoami --profile</span>
+                        <span className="text-[#c4e22e]">&quot;internship&quot;</span>:{" "}
+                        <span>&quot;Web Developer Intern · Dinas Kominfo (SIMDUK Laravel &amp; MySQL)&quot;</span>,
                       </div>
-                      <div className="pl-4 text-white/70">
-                        {profile.fullName} (@{profile.handle}) · Mahasiswa Informatika (Kelompok K-1)
+                      <div className="mt-1">
+                        <span className="text-[#c4e22e]">&quot;flagship_ai&quot;</span>:{" "}
+                        <span>&quot;Smart Hajj Vision AI (Deteksi Riyal SAR &amp; Isyarat 21-Titik)&quot;</span>,
                       </div>
-
-                      <div className="pt-1">
-                        <span className="text-[#c4e22e]">➜</span>{" "}
-                        <span className="text-sky-400">~</span>{" "}
-                        <span className="text-white/90">cat experience_and_flagship.json</span>
-                      </div>
-                      <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-xs text-white/80">
-                        <div>
-                          <span className="text-[#c4e22e]">&quot;internship&quot;</span>:{" "}
-                          <span>&quot;Web Developer Intern · Dinas Kominfo (SIMDUK Laravel &amp; MySQL)&quot;</span>,
-                        </div>
-                        <div className="mt-1">
-                          <span className="text-[#c4e22e]">&quot;flagship_ai&quot;</span>:{" "}
-                          <span>&quot;Smart Hajj Vision AI (Deteksi Riyal SAR &amp; Isyarat 21-Titik)&quot;</span>,
-                        </div>
-                        <div className="mt-1">
-                          <span className="text-[#c4e22e]">&quot;academic_team&quot;</span>:{" "}
-                          <span>&quot;Kelompok K-1 Kewirausahaan ({courseworkSessions.length} Pertemuan Dinamis)&quot;</span>
-                        </div>
+                      <div className="mt-1">
+                        <span className="text-[#c4e22e]">&quot;academic_team&quot;</span>:{" "}
+                        <span>&quot;Kelompok K-1 Kewirausahaan ({courseworkSessions.length} Pertemuan Dinamis)&quot;</span>
                       </div>
                     </div>
                   </div>
+                </div>
 
-                  <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-white/12 pt-5">
-                    <div className="flex flex-wrap gap-2">
-                      {["Laravel", "Next.js 15", "Flutter", "Python OpenCV", "MySQL & Supabase"].map(
-                        (tag) => (
-                          <span
-                            key={tag}
-                            className="rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-[11px] text-white/80"
-                          >
-                            {tag}
-                          </span>
-                        )
-                      )}
-                    </div>
+                <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-white/12 pt-5">
+                  <div className="flex flex-wrap gap-2">
+                    {["Laravel", "Next.js 15", "Flutter", "Python OpenCV", "MySQL & Supabase"].map(
+                      (tag) => (
+                        <span
+                          key={tag}
+                          className="rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-[11px] text-white/80"
+                        >
+                          {tag}
+                        </span>
+                      )
+                    )}
+                  </div>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <a
+                      href={profile.socials.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-mono text-xs text-white/70 hover:text-[#c4e22e] transition"
+                    >
+                      LinkedIn ↗
+                    </a>
+                    <a
+                      href={profile.socials.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-mono text-xs text-white/70 hover:text-[#c4e22e] transition"
+                    >
+                      Instagram ↗
+                    </a>
+                    <a
+                      href={profile.socials.kelompokK1}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-mono text-xs text-white/70 hover:text-[#c4e22e] transition"
+                    >
+                      Portal K-1 ↗
+                    </a>
                     <a
                       href={profile.socials.github}
                       target="_blank"
@@ -487,100 +539,9 @@ export function HomeClientSections({
                       <ArrowUpRight className="h-3.5 w-3.5" />
                     </a>
                   </div>
-                </SpotlightCard>
-              </TiltedCard>
-            </div>
-
-            {/* Right 5 Cols: Studio Keffi 3D Lanyard Interactive Badge */}
-            <div className="col-span-12 lg:col-span-5">
-              <SpotlightCard
-                spotlightColor="rgba(196, 226, 46, 0.18)"
-                className="flex h-full flex-col justify-between overflow-hidden rounded-[28px] border border-black/10 bg-[#111213] p-0 text-[#f5f5f2] shadow-2xl"
-              >
-                {/* Top Bar Header */}
-                <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
-                  <span className="inline-flex items-center gap-2 rounded-full bg-[#c4e22e]/15 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-wider text-[#c4e22e]">
-                    <Sparkles className="h-3 w-3 text-[#c4e22e]" />
-                    <span>3D INTERACTIVE ID BADGE</span>
-                  </span>
-                  <span className="font-mono text-[11px] text-white/50">
-                    {locale === "id" ? "Tarik kartu 3D ✦" : "Drag 3D card ✦"}
-                  </span>
-                </div>
-
-                {/* 3D Lanyard Stage */}
-                <div className="relative flex-1 min-h-[300px] w-full cursor-grab active:cursor-grabbing">
-                  <LanyardWrapper
-                    frontImage="/fadli-profile.png"
-                    backImage="/fadli-profile.png"
-                    imageFit="cover"
-                    finish="holographic"
-                    cardColor="#ffffff"
-                    strapColor="#c4e22e"
-                    orientation="portrait"
-                    size={0.6}
-                    gravity={1.2}
-                    breeze={0.4}
-                    damping={0.55}
-                    elasticity={0.45}
-                    interactive={true}
-                    className="h-full w-full"
-                  />
-                </div>
-
-                {/* Bottom Meta & Links */}
-                <div className="border-t border-white/10 bg-black/40 px-6 py-4 backdrop-blur-sm">
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <h3 className="text-sm font-medium tracking-tight text-white md:text-base">
-                        {profile.fullName}
-                      </h3>
-                      <p className="font-mono text-[11px] text-white/60">
-                        @{profile.handle} · {locale === "id" ? profile.roleTitleId : profile.roleTitleEn}
-                      </p>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-1.5">
-                      <a
-                        href={profile.socials.linkedin}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-white transition hover:bg-[#5b31c8]"
-                      >
-                        <span>LinkedIn</span>
-                        <ArrowUpRight className="h-3 w-3" />
-                      </a>
-                      <a
-                        href={profile.socials.instagram}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-white transition hover:bg-[#ff5f56]"
-                      >
-                        <span>Instagram</span>
-                        <ArrowUpRight className="h-3 w-3" />
-                      </a>
-                      <a
-                        href={profile.socials.googleSites}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-white transition hover:bg-[#111213]"
-                      >
-                        <span>Sites</span>
-                        <ArrowUpRight className="h-3 w-3" />
-                      </a>
-                      <a
-                        href={profile.socials.kelompokK1}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 rounded-full bg-[#c4e22e] px-2.5 py-1 text-[11px] font-medium text-[#111213] transition hover:bg-white"
-                      >
-                        <span>Portal K-1</span>
-                        <ArrowUpRight className="h-3 w-3" />
-                      </a>
-                    </div>
-                  </div>
                 </div>
               </SpotlightCard>
-            </div>
+            </TiltedCard>
           </div>
         </div>
       </section>
