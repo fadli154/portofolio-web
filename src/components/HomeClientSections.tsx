@@ -60,6 +60,7 @@ import { CustomCursor } from "@/components/reactbits/CustomCursor";
 import { DriftWall, type DriftWallItem } from "@/components/reactbits/DriftWall";
 import { TechText } from "@/components/reactbits/TechText";
 import { RotatingText } from "@/components/reactbits/RotatingText";
+import { CurvedLoop } from "@/components/reactbits/CurvedLoop";
 import CircularGalleryWrapper, { type GalleryItem } from "@/components/reactbits/CircularGalleryWrapper";
 import LanyardWrapper from "@/components/reactbits/LanyardWrapper";
 import { KeffiStackFigure } from "@/components/figures/keffi-svc-figures";
@@ -544,30 +545,33 @@ export function HomeClientSections({
         </div>
       </section>
 
-      {/* Infinite Kinetic Ticker */}
-      <div className="keffi-ticker" aria-hidden="true">
-        <div className="keffi-ticker__track">
-          {[...Array(2)].map((_, loopIdx) => (
-            <React.Fragment key={loopIdx}>
-              {[
-                "FADLI HIFZIANSYAH (@FADLI154)",
-                "DINAS KOMINFO · SIMDUK LARAVEL & MYSQL",
-                "SMART HAJJ VISION AI · SAR & SIGN LANGUAGE",
-                "MAHASISWA INFORMATIKA · KELOMPOK K-1",
-                "REACT · NEXT.JS 15 · FLUTTER · OPENCV",
-                "SUPABASE POSTGRESQL · DYNAMIC CMS",
-              ].map((item, idx) => (
-                <span
-                  key={`${loopIdx}-${idx}`}
-                  className="inline-flex items-center gap-5 font-mono text-xs font-medium uppercase tracking-widest text-[var(--ink)]"
-                >
-                  <span className="h-2 w-2 rounded-full bg-[var(--violet)]" />
-                  <span>{item}</span>
-                </span>
-              ))}
-            </React.Fragment>
-          ))}
-        </div>
+      {/* 3D ReactBits CurvedLoop Infinite Marquee Ribbon */}
+      <div className="relative w-full overflow-hidden border-y border-[var(--line)] bg-[#f5f5f2]/70 py-2.5 backdrop-blur-xs dark:bg-black/40">
+        <CurvedLoop
+          marqueeText={[
+            "FADLI HIFZIANSYAH (@FADLI154)",
+            "DINAS KOMINFO · SIMDUK LARAVEL & MYSQL",
+            "SMART HAJJ VISION AI · SAR & SIGN LANGUAGE",
+            "MAHASISWA INFORMATIKA · KELOMPOK K-1",
+            "REACT · NEXT.JS 15 · FLUTTER · OPENCV",
+            "SUPABASE POSTGRESQL · DYNAMIC CMS",
+          ]}
+          speed={1.6}
+          curveAmount={110}
+          shape="wave"
+          fontSize={13}
+          fontWeight={600}
+          letterSpacing={2.2}
+          color="var(--ink)"
+          separator="●"
+          separatorColor="var(--violet)"
+          edgeFade={0.08}
+          interactive={true}
+          pauseOnHover={true}
+          scrollBoost={0.35}
+          className="font-mono uppercase tracking-widest text-xs"
+          containerClassName="relative flex items-center justify-center w-full overflow-hidden select-none py-1.5"
+        />
       </div>
 
       {/* =====================================================================
