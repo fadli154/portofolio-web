@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" fill="none">
+  <rect width="1200" height="630" fill="#FAFAFA"/>
+  <rect x="40" y="40" width="1120" height="550" rx="24" fill="#FFFFFF" stroke="#E2E8F0" stroke-width="2"/>
+  <rect x="96" y="96" width="52" height="52" rx="12" fill="#0F172A"/>
+  <text x="109" y="129" fill="#FFFFFF" font-family="monospace" font-size="22" font-weight="700">FH</text>
+  <text x="168" y="128" fill="#2563EB" font-family="monospace" font-size="18" font-weight="600" letter-spacing="2">FADLI HIFZIANSYAH · DEVELOPER PORTFOLIO</text>
+  <text x="96" y="255" fill="#0F172A" font-family="sans-serif" font-size="58" font-weight="800">Full-Stack Web &amp; Mobile</text>
+  <text x="96" y="330" fill="#0F172A" font-family="sans-serif" font-size="58" font-weight="800">Software Engineer</text>
+  <text x="96" y="415" fill="#475569" font-family="sans-serif" font-size="24">Next.js App Router · TypeScript · Flutter · Supabase PostgreSQL</text>
+  <text x="96" y="520" fill="#2563EB" font-family="monospace" font-size="18" font-weight="600">github.com/fadli154 · Indonesia (UTC+7)</text>
+</svg>

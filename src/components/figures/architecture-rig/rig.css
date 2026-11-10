@@ -1,0 +1,167 @@
+.rig-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: transparent !important;
+}
+
+.rig-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.rig-station-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.rig-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(245, 245, 242, 0.72);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.3, 1);
+}
+
+.rig-pill:hover {
+  color: #f5f5f2;
+  border-color: rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.08);
+  transform: translateY(-1px);
+}
+
+.rig-pill.is-active {
+  color: #111213;
+  border-color: #c4e22e;
+  background: #c4e22e;
+  font-weight: 600;
+}
+
+.rig-pill-code {
+  color: #c4e22e;
+  font-weight: 700;
+}
+
+.rig-pill.is-active .rig-pill-code {
+  color: #111213;
+}
+
+.rig-sim-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 18px;
+  border: 1px solid #c4e22e;
+  border-radius: 999px;
+  background: rgba(196, 226, 46, 0.12);
+  color: #f5f5f2;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.3, 1);
+}
+
+.rig-sim-btn:hover {
+  background: #c4e22e;
+  color: #111213;
+  transform: translateY(-1px);
+}
+
+.rig-sim-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #c4e22e;
+}
+
+.rig-sim-btn:hover .rig-sim-dot {
+  background: #111213;
+}
+
+.rig-sim-dot[data-simulating="true"] {
+  animation: iso-pulse 0.8s infinite;
+}
+
+.rig-carriage-drag {
+  cursor: grab;
+  touch-action: none;
+  outline: none;
+}
+
+.rig-carriage-drag:active {
+  cursor: grabbing;
+}
+
+.rig-carriage-drag:focus-visible .iso-edge {
+  stroke: #c4e22e;
+  stroke-width: 1.4px;
+}
+
+.rig-no-hit {
+  pointer-events: none;
+}
+
+.rig-inspector {
+  display: grid;
+  gap: 8px;
+  padding: 18px 0 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  background: transparent !important;
+}
+
+.rig-inspector-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+}
+
+.rig-inspector-badge {
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid #c4e22e;
+  background: rgba(196, 226, 46, 0.12);
+  color: #c4e22e;
+  letter-spacing: 0.08em;
+}
+
+.rig-inspector-title {
+  color: #f5f5f2;
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.rig-inspector-status {
+  margin-left: auto;
+  color: rgba(245, 245, 242, 0.6);
+  letter-spacing: 0.06em;
+}
+
+.rig-inspector-desc {
+  margin: 0;
+  color: rgba(245, 245, 242, 0.68);
+  font-size: 14px;
+  line-height: 1.65;
+  max-width: 74ch;
+}
