@@ -15,22 +15,24 @@ import {
 
 export type CurvedLoopShape = 'arc' | 'wave' | 'circle' | 'line';
 
+export type ResponsiveProp<T> = T | { mobile?: T; tablet?: T; desktop?: T };
+
 export interface CurvedLoopProps {
   marqueeText?: string | string[];
   speed?: number;
   className?: string;
   containerClassName?: string;
   containerStyle?: React.CSSProperties;
-  curveAmount?: number;
+  curveAmount?: ResponsiveProp<number>;
   direction?: 'left' | 'right';
   interactive?: boolean;
   pauseOnHover?: boolean;
   color?: string;
   edgeFade?: number;
   shape?: CurvedLoopShape;
-  fontSize?: number;
+  fontSize?: ResponsiveProp<number>;
   fontWeight?: number | string;
-  letterSpacing?: number;
+  letterSpacing?: ResponsiveProp<number>;
   outline?: boolean;
   separator?: string;
   separatorColor?: string;
@@ -88,12 +90,12 @@ const edgeMask = (amount: number, span: number) => {
   return `linear-gradient(to right, ${[...left, ...right].join(', ')})`;
 };
 
-const wavePath = (amplitude: number, baseline: number) => {
+const wavePath = (amplitude: number, baseline: number, width: number) => {
   const from = -100;
-  const to = VIEW_WIDTH + 100;
+  const to = width + 100;
   const k = TAU / WAVE_LENGTH;
-  const y = (x: number) => baseline + amplitude * Math.cos(k * (x - VIEW_WIDTH / 2));
-  const slope = (x: number) => -amplitude * k * Math.sin(k * (x - VIEW_WIDTH / 2));
+  const y = (x: number) => baseline + amplitude * Math.cos(k * (x - width / 2));
+  const slope = (x: number) => -amplitude * k * Math.sin(k * (x - width / 2));
   const count = Math.ceil((to - from) / (WAVE_LENGTH / 8));
   const step = (to - from) / count;
   const f = (n: number) => n.toFixed(2);
@@ -106,7 +108,37 @@ const wavePath = (amplitude: number, baseline: number) => {
   return d;
 };
 
-const getGeometry = (shape: CurvedLoopShape, curveAmount: number, fontSize: number, spacing: number): Geometry => {
+const resolveResponsiveProp = <T,>(
+  prop: ResponsiveProp<T> | undefined,
+  fallback: T,
+  width: number
+): T => {
+  if (prop === undefined) return fallback;
+  if (typeof prop !== 'object' || prop === null) {
+    if (typeof prop === 'number') {
+      if (width > 0 && width < 640) {
+        return Math.max(14, Math.round(prop * 0.625)) as unknown as T;
+      }
+      if (width >= 640 && width < 1024) {
+        return Math.max(17, Math.round(prop * 0.8)) as unknown as T;
+      }
+    }
+    return prop as T;
+  }
+  const responsive = prop as { mobile?: T; tablet?: T; desktop?: T };
+  if (width < 640) return responsive.mobile ?? fallback;
+  if (width < 1024) return responsive.tablet ?? responsive.mobile ?? fallback;
+  return responsive.desktop ?? responsive.tablet ?? responsive.mobile ?? fallback;
+};
+
+const getGeometry = (
+  shape: CurvedLoopShape,
+  curveAmount: number,
+  fontSize: number,
+  spacing: number,
+  viewWidth: number,
+  viewHeight: number
+): Geometry => {
   if (shape === 'circle') {
     const repeats = spacing > 0 ? Math.max(1, Math.round((TAU * fontSize * RING_RADIUS) / spacing)) : 1;
     const radius = spacing > 0 ? (repeats * spacing) / TAU : fontSize * RING_RADIUS;
@@ -116,14 +148,20 @@ const getGeometry = (shape: CurvedLoopShape, curveAmount: number, fontSize: numb
       viewBox: `${-half} ${-half} ${half * 2} ${half * 2}`,
       radius,
       repeats,
-      span: Math.min(1, (fontSize * (RING_RADIUS + 1) * 2) / VIEW_WIDTH)
+      span: Math.min(1, (fontSize * (RING_RADIUS + 1) * 2) / viewWidth)
     };
   }
-  const flat = { viewBox: `0 0 ${VIEW_WIDTH} ${VIEW_HEIGHT}`, radius: 0, repeats: 0, span: 1 };
-  const baseline = VIEW_HEIGHT / 2 + fontSize * 0.35;
-  if (shape === 'line') return { ...flat, d: `M-100,${baseline} L${VIEW_WIDTH + 100},${baseline}` };
-  if (shape === 'wave') return { ...flat, d: wavePath(curveAmount * 0.25, baseline) };
-  return { ...flat, d: `M-100,16 Q720,${16 + curveAmount} 1540,16` };
+  const flat = { viewBox: `0 0 ${viewWidth} ${viewHeight}`, radius: 0, repeats: 0, span: 1 };
+  const baseline = viewHeight / 2 + fontSize * 0.35;
+  if (shape === 'line') return { ...flat, d: `M-100,${baseline} L${viewWidth + 100},${baseline}` };
+  if (shape === 'wave') return { ...flat, d: wavePath(curveAmount * 0.25, baseline, viewWidth) };
+
+  const startX = -100;
+  const endX = viewWidth + 100;
+  const midX = viewWidth / 2;
+  const startY = Math.max(8, (viewHeight - curveAmount - fontSize) / 2);
+  const controlY = startY + curveAmount;
+  return { ...flat, d: `M${startX},${startY} Q${midX},${controlY} ${endX},${startY}` };
 };
 
 export const CurvedLoop: FC<CurvedLoopProps> = ({
@@ -167,9 +205,60 @@ export const CurvedLoop: FC<CurvedLoopProps> = ({
   const pathRef = useRef<SVGPathElement | null>(null);
   const textPathsRef = useRef<SVGTextPathElement[]>([]);
 
+  const [containerWidth, setContainerWidth] = useState<number>(0);
   const [spacing, setSpacing] = useState(0);
   const [pathLength, setPathLength] = useState(0);
   const [dragging, setDragging] = useState(false);
+
+  useIsomorphicLayoutEffect(() => {
+    const el = jacketRef.current;
+    if (!el) return;
+
+    const updateWidth = () => {
+      const w = el.clientWidth || window.innerWidth || 1440;
+      setContainerWidth(w);
+    };
+
+    updateWidth();
+
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(updateWidth) : null;
+    ro?.observe(el);
+
+    window.addEventListener('resize', updateWidth, { passive: true });
+
+    return () => {
+      ro?.disconnect();
+      window.removeEventListener('resize', updateWidth);
+    };
+  }, []);
+
+  const viewWidth = containerWidth > 0 ? containerWidth : 1440;
+  const isMobile = viewWidth < 640;
+  const isTablet = viewWidth >= 640 && viewWidth < 1024;
+
+  const resolvedFontSize = resolveResponsiveProp(
+    fontSize,
+    isMobile ? 15 : isTablet ? 19 : 24,
+    viewWidth
+  );
+
+  const resolvedCurveAmount = resolveResponsiveProp(
+    curveAmount,
+    isMobile ? 28 : isTablet ? 48 : 68,
+    viewWidth
+  );
+
+  const resolvedLetterSpacing = resolveResponsiveProp(
+    letterSpacing,
+    isMobile ? 1.5 : 2,
+    viewWidth
+  );
+
+  const viewHeight = isMobile
+    ? Math.max(68, resolvedCurveAmount + resolvedFontSize + 26)
+    : isTablet
+    ? Math.max(90, resolvedCurveAmount + resolvedFontSize + 32)
+    : Math.max(115, resolvedCurveAmount + resolvedFontSize + 36);
 
   const spacingRef = useRef(0);
   const offsetRef = useRef(0);
@@ -192,7 +281,7 @@ export const CurvedLoop: FC<CurvedLoopProps> = ({
   });
 
   const ring = shape === 'circle';
-  const geometry = getGeometry(shape, curveAmount, fontSize, spacing);
+  const geometry = getGeometry(shape, resolvedCurveAmount, resolvedFontSize, spacing, viewWidth, viewHeight);
   const ready = spacing > 0;
   const copies = ready ? (ring ? geometry.repeats + 1 : Math.ceil((pathLength || 1800) / spacing) + 2) : 1;
   const mask = edgeMask(edgeFade, geometry.span);
@@ -243,7 +332,7 @@ export const CurvedLoop: FC<CurvedLoopProps> = ({
       fonts?.removeEventListener?.('loadingdone', measure);
       observer?.disconnect();
     };
-  }, [text, className, fontSize, fontWeight, letterSpacing]);
+  }, [text, className, resolvedFontSize, fontWeight, resolvedLetterSpacing, viewWidth]);
 
   useIsomorphicLayoutEffect(() => {
     if (pathRef.current) setPathLength(pathRef.current.getTotalLength());
@@ -331,14 +420,14 @@ export const CurvedLoop: FC<CurvedLoopProps> = ({
   const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
     if (!interactive || !ready) return;
     const rect = svgRef.current?.getBoundingClientRect();
-    const width = rect?.width || VIEW_WIDTH;
+    const width = rect?.width || viewWidth;
     const cx = rect ? rect.left + rect.width / 2 : e.clientX;
     const cy = rect ? rect.top + rect.height / 2 : e.clientY;
     dragRef.current = {
       active: true,
       x: e.clientX,
       time: performance.now(),
-      scale: VIEW_WIDTH / width,
+      scale: viewWidth / width,
       velocity: 0,
       ring,
       radius: geometry.radius,
@@ -411,9 +500,9 @@ export const CurvedLoop: FC<CurvedLoopProps> = ({
         className="select-none w-full overflow-visible block uppercase leading-none fill-current pointer-events-none"
         viewBox={geometry.viewBox}
         style={{
-          fontSize,
+          fontSize: resolvedFontSize,
           fontWeight,
-          letterSpacing,
+          letterSpacing: resolvedLetterSpacing,
           ...(ring ? { width: `${(geometry.span * 100).toFixed(3)}%`, aspectRatio: '1' } : null)
         }}
         role="img"
@@ -433,12 +522,12 @@ export const CurvedLoop: FC<CurvedLoopProps> = ({
             <mask
               id={maskId}
               maskUnits="userSpaceOnUse"
-              x={-VIEW_WIDTH}
-              y={-VIEW_WIDTH}
-              width={VIEW_WIDTH * 3}
-              height={VIEW_WIDTH * 3}
+              x={-viewWidth}
+              y={-viewWidth}
+              width={viewWidth * 3}
+              height={viewWidth * 3}
             >
-              <rect x={-VIEW_WIDTH} y={-VIEW_WIDTH} width={VIEW_WIDTH * 3} height={VIEW_WIDTH * 3} fill="#fff" />
+              <rect x={-viewWidth} y={-viewWidth} width={viewWidth * 3} height={viewWidth * 3} fill="#fff" />
               <text xmlSpace="preserve" className={className} fill="#000">
                 <textPath href={`#${pathId}`} xmlSpace="preserve">
                   {plain}
@@ -454,7 +543,7 @@ export const CurvedLoop: FC<CurvedLoopProps> = ({
               className={className}
               fill="none"
               stroke={color}
-              strokeWidth={fontSize * 0.05}
+              strokeWidth={resolvedFontSize * 0.05}
               strokeLinejoin="round"
               mask={`url(#${maskId})`}
             >

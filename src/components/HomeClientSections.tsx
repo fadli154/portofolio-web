@@ -562,7 +562,7 @@ export function HomeClientSections({
       </section>
 
       {/* 3D ReactBits CurvedLoop Infinite Marquee Ribbon — Pure Transparent Kinetic Typography */}
-      <div className="relative w-full overflow-hidden py-1 md:py-2 select-none bg-transparent">
+      <div className="relative w-full overflow-hidden py-3 md:py-6 select-none bg-transparent">
         <CurvedLoop
           marqueeText={[
             "FADLI HIFZIANSYAH",
@@ -573,11 +573,11 @@ export function HomeClientSections({
             "NEXT.JS 15 · FLUTTER · OPENCV",
           ]}
           speed={2}
-          curveAmount={68}
+          curveAmount={{ mobile: 36, tablet: 48, desktop: 68 }}
           shape="arc"
-          fontSize={24}
+          fontSize={{ mobile: 16, tablet: 19, desktop: 24 }}
           fontWeight={700}
-          letterSpacing={2}
+          letterSpacing={{ mobile: 1.5, tablet: 2, desktop: 2 }}
           color="var(--ink)"
           separator="✦"
           separatorColor="var(--violet)"
