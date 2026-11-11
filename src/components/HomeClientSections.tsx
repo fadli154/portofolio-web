@@ -24,6 +24,7 @@ import {
   Sparkles,
   Star,
   Terminal,
+  Trophy,
   Users,
   X,
 } from "lucide-react";
@@ -372,6 +373,26 @@ export function HomeClientSections({
       raw: c,
     }));
   }, [dynamicCertificates, locale]);
+
+  // Featured Crown Achievement: Juara II OASE III PTKIN 2026 (Kemenag RI)
+  const featuredOaseCert = useMemo(() => {
+    return (
+      dynamicCertificates.find(
+        (c) =>
+          c.id === "6f1d2c3a-0001-4a5b-9c01-0e0f00000001" ||
+          c.title.includes("OASE")
+      ) || dynamicCertificates[0]
+    );
+  }, [dynamicCertificates]);
+
+  const hajicareProject = useMemo(() => {
+    return dynamicProjects.find(
+      (p) =>
+        p.slug === "smart-hajj" ||
+        p.slug === "hajicare" ||
+        p.title.toLowerCase().includes("hajj")
+    );
+  }, [dynamicProjects]);
 
   const handleCopyEmail = async () => {
     playMechanicalClick(760);
@@ -882,14 +903,14 @@ export function HomeClientSections({
                     locale === "id"
                       ? [
                         "BRANKAS PRESTASI & SERTIFIKASI KOMPETENSI",
+                        "JUARA II INOVASI TEKNOLOGI · OASE III PTKIN 2026",
                         "JUARA 1 DESAIN WEBSITE UMKM · IT'S DAY 2025",
-                        "JUARA II INOVASI TEKNOLOGI · OASE PTKI II",
                         "DRIFT WALL 3D · DOKUMEN RESMI TERVERIFIKASI",
                       ]
                       : [
                         "VERIFIED CREDENTIALS & AWARDS VAULT",
+                        "2ND PLACE TECH INNOVATION · OASE III PTKIN 2026",
                         "1ST PLACE UMKM WEB DESIGN · IT'S DAY 2025",
-                        "2ND PLACE TECH INNOVATION · OASE PTKI II",
                         "3D DRIFT WALL · VERIFIED CREDENTIALS",
                       ]
                   }
@@ -927,6 +948,181 @@ export function HomeClientSections({
                 </Link>
               </div>
             </div>
+          </div>
+
+          {/* =================================================================
+              CROWN JEWEL SPOTLIGHT: JUARA II NASIONAL OASE III PTKIN 2026
+              (Kementerian Agama Republik Indonesia · Inovasi HajiCare)
+             ================================================================= */}
+          {featuredOaseCert && (
+            <div className="relative mt-12 overflow-hidden rounded-[28px] border-2 border-amber-400/40 bg-gradient-to-br from-[#191a26] via-[#12131b] to-[#1e1b10] p-6 shadow-[0_20px_70px_-15px_rgba(245,158,11,0.22)] transition-all duration-500 hover:border-amber-400/70 sm:p-8 md:rounded-[36px] md:p-10 lg:p-12">
+              {/* Luxury ambient radial glows */}
+              <div className="pointer-events-none absolute -top-32 -right-32 h-80 w-80 rounded-full bg-amber-500/15 blur-3xl sm:h-96 sm:w-96" />
+              <div className="pointer-events-none absolute -bottom-32 -left-32 h-80 w-80 rounded-full bg-[#c4e22e]/10 blur-3xl sm:h-96 sm:w-96" />
+
+              <div className="relative z-10 grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-10">
+                {/* Left Column: Prestigious Copy & Metadata */}
+                <div className="flex flex-col justify-between space-y-5 lg:col-span-7">
+                  <div>
+                    {/* Crown Kicker Badge */}
+                    <div className="flex flex-wrap items-center gap-2.5">
+                      <span className="inline-flex items-center gap-2 rounded-full border border-amber-400/50 bg-amber-400/15 px-3.5 py-1.5 font-mono text-[11px] sm:text-xs font-bold text-amber-300 shadow-[0_0_24px_rgba(251,191,36,0.25)]">
+                        <Trophy className="h-4 w-4 text-amber-300 animate-pulse" />
+                        <span>
+                          {locale === "id"
+                            ? "PRESTASI UTAMA TINGKAT NASIONAL"
+                            : "NATIONAL CROWN ACHIEVEMENT"}
+                        </span>
+                      </span>
+                      <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-[11px] text-white/70">
+                        KEMENAG RI · DIKTIS
+                      </span>
+                    </div>
+
+                    {/* Main Title */}
+                    <h3 className="mt-4 text-2xl font-bold tracking-tight text-white sm:text-3xl md:text-4xl lg:text-5xl leading-tight">
+                      {locale === "id" ? (
+                        <>
+                          Juara II Literasi Inovasi{" "}
+                          <span className="bg-gradient-to-r from-amber-300 via-amber-200 to-[#c4e22e] bg-clip-text text-transparent">
+                            Teknologi
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          National 2nd Place: Tech Innovation{" "}
+                          <span className="bg-gradient-to-r from-amber-300 via-amber-200 to-[#c4e22e] bg-clip-text text-transparent">
+                            Literacy
+                          </span>
+                        </>
+                      )}
+                    </h3>
+
+                    {/* Subtitle / Competition Venue */}
+                    <p className="mt-2 text-sm sm:text-base font-medium text-amber-200/90">
+                      OASE III PTKIN se-Indonesia · UIN Sunan Kalijaga Yogyakarta (3–7 November 2026)
+                    </p>
+
+                    {/* Context & Description */}
+                    <p className="mt-3.5 text-sm leading-relaxed text-white/75 sm:text-base">
+                      {locale === "id"
+                        ? "Mewakili UIN Sultan Maulana Hasanuddin Banten di panggung nasional. Meraih predikat Juara II lewat karya sistem inovasi kecerdasan buatan Smart Hajj (HajiCare) — platform Computer Vision pelacakan gerak sendi tangan 60fps untuk menerjemahkan bahasa isyarat dan mendampingi jamaah haji lansia serta disabilitas rungu."
+                        : "Representing UIN Sultan Maulana Hasanuddin Banten on the national stage. Awarded 2nd Place for developing the Smart Hajj (HajiCare) AI accessibility ecosystem — mobile Computer Vision 60fps hand landmark tracking translating sign language for deaf and elderly pilgrims in Mecca."}
+                    </p>
+
+                    {/* Official Verification Pills */}
+                    <div className="mt-5 flex flex-wrap items-center gap-3 font-mono text-xs text-white/70">
+                      <div className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-black/40 px-3 py-1.5">
+                        <ShieldCheck className="h-4 w-4 text-[#c4e22e]" />
+                        <span>No. SK: 712/Dt.I.III/PP.01/11/2026</span>
+                      </div>
+                      <div className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-black/40 px-3 py-1.5">
+                        <CheckCircle2 className="h-4 w-4 text-amber-300" />
+                        <span>Tercatat Resmi Kemenag RI</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* High Tactile Action Buttons */}
+                  <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-white/10">
+                    <a
+                      href={featuredOaseCert.fileUrl || "/sertif/oase-juara-2-lit.pdf"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="keffi-pill-btn keffi-pill-btn--lime !py-2.5 !px-5 !text-xs font-bold shadow-lg"
+                    >
+                      <FileText className="h-4 w-4" />
+                      <span>{locale === "id" ? "Buka Berkas PDF Resmi" : "Open Official PDF"}</span>
+                      <ArrowUpRight className="h-3.5 w-3.5" />
+                    </a>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        playMechanicalClick(750);
+                        setSelectedCertModal(featuredOaseCert);
+                      }}
+                      className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-400/10 px-5 py-2.5 font-mono text-xs font-semibold text-amber-200 transition-all hover:bg-amber-400/20 hover:border-amber-400/70"
+                    >
+                      <Eye className="h-4 w-4" />
+                      <span>{locale === "id" ? "Perbesar Sertifikat" : "Inspect Certificate"}</span>
+                    </button>
+
+                    {hajicareProject && (
+                      <Link
+                        href={`/projects/${hajicareProject.slug}`}
+                        onClick={() => playMechanicalClick(720)}
+                        className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-5 py-2.5 font-mono text-xs font-medium text-white/85 transition hover:border-[#c4e22e] hover:text-[#c4e22e]"
+                      >
+                        <Sparkles className="h-4 w-4 text-[#c4e22e]" />
+                        <span>{locale === "id" ? "Lihat Karya HajiCare" : "View HajiCare Case Study"}</span>
+                        <ArrowUpRight className="h-3.5 w-3.5" />
+                      </Link>
+                    )}
+                  </div>
+                </div>
+
+                {/* Right Column: High-Res Interactive Certificate Frame */}
+                <div className="lg:col-span-5">
+                  <div
+                    onClick={() => {
+                      playMechanicalClick(780);
+                      setSelectedCertModal(featuredOaseCert);
+                    }}
+                    className="group relative cursor-pointer overflow-hidden rounded-2xl border-2 border-amber-400/35 bg-[#0d0f14] shadow-2xl transition-all duration-500 hover:border-amber-400/80 hover:shadow-[0_0_40px_rgba(251,191,36,0.3)]"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={featuredOaseCert.imageUrl}
+                      alt={featuredOaseCert.title}
+                      className="w-full object-contain transition-transform duration-700 group-hover:scale-105"
+                      loading="lazy"
+                    />
+
+                    {/* Golden Hologram Seal Badge */}
+                    <div className="absolute top-3 right-3 flex items-center gap-1.5 rounded-full border border-amber-400/50 bg-black/85 px-3 py-1 font-mono text-[10px] font-bold text-amber-300 backdrop-blur-md">
+                      <Star className="h-3 w-3 fill-amber-300 text-amber-300" />
+                      <span>JUARA II NASIONAL</span>
+                    </div>
+
+                    {/* Hover Overlay with Inspect prompt */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-end bg-gradient-to-t from-black/90 via-black/20 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                      <span className="inline-flex items-center gap-1.5 rounded-full bg-[#c4e22e] px-4 py-1.5 font-mono text-xs font-bold text-[#111213] shadow-md">
+                        <Eye className="h-3.5 w-3.5" />
+                        <span>{locale === "id" ? "Klik untuk Melihat Ukuran Penuh" : "Click to view full size"}</span>
+                      </span>
+                    </div>
+                  </div>
+                  <p className="mt-2.5 text-center font-mono text-[11px] text-white/50">
+                    {locale === "id"
+                      ? "Dokumen resmi terverifikasi · Format cetak Kementerian Agama RI"
+                      : "Official verified document · Ministry of Religious Affairs standard"}
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Section Transition Header for 3D Drift Wall */}
+          <div className="mt-14 flex flex-col items-start justify-between gap-3 border-t border-white/10 pt-8 sm:flex-row sm:items-center">
+            <div>
+              <span className="sec-kicker !text-white/60">
+                <span className="sec-kicker__dot sec-kicker__dot--lime" />
+                <span>
+                  {locale === "id"
+                    ? "DINDING 3D LISENSI & SERTIFIKASI KOMPETENSI"
+                    : "3D DRIFT WALL · TECHNICAL CREDENTIALS & LICENSES"}
+                </span>
+              </span>
+              <p className="mt-1 text-xs text-white/65 max-w-xl">
+                {locale === "id"
+                  ? "Sertifikasi resmi Cisco IOS, MikroTik MTCNA, Keamanan Siber, Administrasi Linux, dan Kompetisi Web UMKM."
+                  : "Verified certifications spanning Cisco IOS, MikroTik MTCNA, Cybersecurity, Linux Administration, and UMKM Web Competition."}
+              </p>
+            </div>
+            <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-[11px] text-[#c4e22e]">
+              3D Interactive · Drag / Tilt
+            </span>
           </div>
         </div>
 

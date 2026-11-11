@@ -9,6 +9,8 @@ import {
   ExternalLink,
   FileText,
   ShieldCheck,
+  Star,
+  Trophy,
   X,
 } from "lucide-react";
 import type { CertificateItem } from "@/data/site";
@@ -118,97 +120,202 @@ export function CertificatesVaultClient({
 
         {/* Certificate Cards Grid */}
         <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
-          {visible.map((cert) => (
-            <TiltedCard
-              key={cert.id}
-              maxTilt={4}
-              cursorLabel="INSPECT"
-              className="h-full rounded-[28px]"
-            >
-              <SpotlightCard
-                spotlightColor="rgba(196, 226, 46, 0.14)"
-                onClick={() => {
-                  playMechanicalClick(720);
-                  setSelectedCert(cert);
-                }}
-                className="flex h-full cursor-pointer flex-col justify-between rounded-[28px] border border-white/12 bg-[#171920] p-6 shadow-md transition hover:border-[#c4e22e]/40 md:p-8"
+          {visible.map((cert) => {
+            const isCrown =
+              cert.category === "Prestasi Nasional" ||
+              cert.id === "6f1d2c3a-0001-4a5b-9c01-0e0f00000001";
+
+            if (isCrown) {
+              return (
+                <TiltedCard
+                  key={cert.id}
+                  maxTilt={3}
+                  cursorLabel="CROWN ACHIEVEMENT"
+                  className="h-full rounded-[28px] md:col-span-2"
+                >
+                  <SpotlightCard
+                    spotlightColor="rgba(245, 158, 11, 0.22)"
+                    onClick={() => {
+                      playMechanicalClick(750);
+                      setSelectedCert(cert);
+                    }}
+                    className="flex h-full cursor-pointer flex-col justify-between rounded-[28px] border-2 border-amber-400/50 bg-gradient-to-br from-[#191b26] via-[#13141d] to-[#1d1a10] p-6 shadow-[0_15px_50px_rgba(245,158,11,0.2)] transition-all duration-300 hover:border-amber-400/80 md:p-8"
+                  >
+                    <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-12">
+                      {/* Left: Certificate Preview Frame */}
+                      <div className="relative h-64 w-full overflow-hidden rounded-2xl border-2 border-amber-400/30 bg-[#0d0f14] md:col-span-5 md:h-80">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={cert.imageUrl}
+                          alt={cert.title}
+                          loading="lazy"
+                          className="h-full w-full object-contain transition-transform duration-500 hover:scale-105"
+                        />
+                        <div className="absolute top-3 right-3 flex items-center gap-1.5 rounded-full border border-amber-400/50 bg-black/85 px-3 py-1 font-mono text-[10px] font-bold text-amber-300 backdrop-blur-md">
+                          <Star className="h-3 w-3 fill-amber-300 text-amber-300" />
+                          <span>JUARA II NASIONAL</span>
+                        </div>
+                        <span className="absolute bottom-3 left-3 rounded-full bg-black/80 px-3 py-1 font-mono text-[10px] text-white/75 backdrop-blur-sm">
+                          {cert.issueDate}
+                        </span>
+                      </div>
+
+                      {/* Right: Rich Details & Actions */}
+                      <div className="flex flex-col justify-between space-y-4 md:col-span-7">
+                        <div>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-400/15 px-3 py-1 font-mono text-[11px] font-bold text-amber-300 shadow-[0_0_18px_rgba(251,191,36,0.25)]">
+                              <Trophy className="h-3.5 w-3.5 text-amber-300" />
+                              <span>★ PRESTASI UTAMA TINGKAT NASIONAL</span>
+                            </span>
+                            <span className="rounded-full bg-black/50 px-3 py-1 font-mono text-[11px] text-white/70 border border-white/10">
+                              Kemenag RI · OASE III PTKIN
+                            </span>
+                          </div>
+
+                          <h2 className="mt-3 text-2xl font-bold tracking-tight text-white md:text-3xl">
+                            {cert.title}
+                          </h2>
+
+                          <div className="mt-2 flex flex-wrap items-center gap-3 font-mono text-xs text-white/70">
+                            <span className="inline-flex items-center gap-1.5 text-amber-300">
+                              <Award className="h-4 w-4" aria-hidden="true" />
+                              <span>{cert.issuer}</span>
+                            </span>
+                            {cert.credentialId && (
+                              <span className="inline-flex items-center gap-1 rounded bg-white/5 px-2 py-0.5 text-[11px]">
+                                <ShieldCheck className="h-3.5 w-3.5 text-[#c4e22e]" />
+                                No. SK: {cert.credentialId}
+                              </span>
+                            )}
+                          </div>
+
+                          {(cert.summaryId || cert.summaryEn) && (
+                            <p className="mt-3.5 text-sm leading-relaxed text-white/80">
+                              {locale === "id" ? cert.summaryId : cert.summaryEn}
+                            </p>
+                          )}
+                        </div>
+
+                        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-4 font-mono text-xs">
+                          <span className="text-amber-300 font-semibold">
+                            Klik kartu untuk inspeksi modal
+                          </span>
+                          <div className="flex items-center gap-3">
+                            {cert.fileUrl && (
+                              <a
+                                href={cert.fileUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="keffi-pill-btn keffi-pill-btn--lime !py-1.5 !px-4 !text-xs font-bold"
+                              >
+                                <FileText className="h-3.5 w-3.5" />
+                                <span>Buka Dokumen PDF Resmi</span>
+                                <ArrowUpRight className="h-3 w-3" />
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </SpotlightCard>
+                </TiltedCard>
+              );
+            }
+
+            return (
+              <TiltedCard
+                key={cert.id}
+                maxTilt={4}
+                cursorLabel="INSPECT"
+                className="h-full rounded-[28px]"
               >
-                <div>
-                  {/* Certificate Image Frame */}
-                  <div className="relative h-56 w-full overflow-hidden rounded-2xl border border-white/10 bg-[#0d0f14] md:h-64">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={cert.imageUrl}
-                      alt={cert.title}
-                      loading="lazy"
-                      className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                    />
-                    <span className="absolute bottom-3 left-3 rounded-full bg-black/80 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-[#c4e22e] backdrop-blur-sm">
-                      {cert.category}
-                    </span>
-                    <span className="absolute bottom-3 right-3 rounded-full bg-black/80 px-3 py-1 font-mono text-[10px] text-white/75 backdrop-blur-sm">
-                      {cert.issueDate}
-                    </span>
-                  </div>
-
-                  <div className="mt-6 flex items-center justify-between font-mono text-xs text-white/60">
-                    <span className="inline-flex items-center gap-1.5 text-[#c4e22e]">
-                      <Award className="h-4 w-4" aria-hidden="true" />
-                      <span>{cert.issuer}</span>
-                    </span>
-                    {cert.credentialId && (
-                      <span className="line-clamp-1 text-[11px]">
-                        ID: {cert.credentialId}
+                <SpotlightCard
+                  spotlightColor="rgba(196, 226, 46, 0.14)"
+                  onClick={() => {
+                    playMechanicalClick(720);
+                    setSelectedCert(cert);
+                  }}
+                  className="flex h-full cursor-pointer flex-col justify-between rounded-[28px] border border-white/12 bg-[#171920] p-6 shadow-md transition hover:border-[#c4e22e]/40 md:p-8"
+                >
+                  <div>
+                    {/* Certificate Image Frame */}
+                    <div className="relative h-56 w-full overflow-hidden rounded-2xl border border-white/10 bg-[#0d0f14] md:h-64">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={cert.imageUrl}
+                        alt={cert.title}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                      />
+                      <span className="absolute bottom-3 left-3 rounded-full bg-black/80 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-[#c4e22e] backdrop-blur-sm">
+                        {cert.category}
                       </span>
+                      <span className="absolute bottom-3 right-3 rounded-full bg-black/80 px-3 py-1 font-mono text-[10px] text-white/75 backdrop-blur-sm">
+                        {cert.issueDate}
+                      </span>
+                    </div>
+
+                    <div className="mt-6 flex items-center justify-between font-mono text-xs text-white/60">
+                      <span className="inline-flex items-center gap-1.5 text-[#c4e22e]">
+                        <Award className="h-4 w-4" aria-hidden="true" />
+                        <span>{cert.issuer}</span>
+                      </span>
+                      {cert.credentialId && (
+                        <span className="line-clamp-1 text-[11px]">
+                          ID: {cert.credentialId}
+                        </span>
+                      )}
+                    </div>
+
+                    <h2 className="mt-3 text-xl font-medium tracking-tight text-white md:text-2xl">
+                      {cert.title}
+                    </h2>
+
+                    {(cert.summaryId || cert.summaryEn) && (
+                      <p className="mt-3 text-sm leading-relaxed text-white/70">
+                        {locale === "id" ? cert.summaryId : cert.summaryEn}
+                      </p>
                     )}
                   </div>
 
-                  <h2 className="mt-3 text-xl font-medium tracking-tight text-white md:text-2xl">
-                    {cert.title}
-                  </h2>
-
-                  {(cert.summaryId || cert.summaryEn) && (
-                    <p className="mt-3 text-sm leading-relaxed text-white/70">
-                      {locale === "id" ? cert.summaryId : cert.summaryEn}
-                    </p>
-                  )}
-                </div>
-
-                <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-5 font-mono text-xs">
-                  <span className="text-[#c4e22e] font-semibold">
-                    Klik untuk memperbesar
-                  </span>
-                  <div className="flex items-center gap-3">
-                    {cert.fileUrl && (
-                      <a
-                        href={cert.fileUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="inline-flex items-center gap-1 text-white/80 hover:text-[#c4e22e]"
-                      >
-                        <FileText className="h-3.5 w-3.5" />
-                        <span>Dokumen</span>
-                        <ArrowUpRight className="h-3 w-3" />
-                      </a>
-                    )}
-                    {cert.verifyUrl && (
-                      <a
-                        href={cert.verifyUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="inline-flex items-center gap-1 text-[#c4e22e] hover:underline"
-                      >
-                        <span>Verifikasi</span>
-                        <ExternalLink className="h-3 w-3" />
-                      </a>
-                    )}
+                  <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-5 font-mono text-xs">
+                    <span className="text-[#c4e22e] font-semibold">
+                      Klik untuk memperbesar
+                    </span>
+                    <div className="flex items-center gap-3">
+                      {cert.fileUrl && (
+                        <a
+                          href={cert.fileUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="inline-flex items-center gap-1 text-white/80 hover:text-[#c4e22e]"
+                        >
+                          <FileText className="h-3.5 w-3.5" />
+                          <span>Dokumen</span>
+                          <ArrowUpRight className="h-3 w-3" />
+                        </a>
+                      )}
+                      {cert.verifyUrl && (
+                        <a
+                          href={cert.verifyUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="inline-flex items-center gap-1 text-[#c4e22e] hover:underline"
+                        >
+                          <span>Verifikasi</span>
+                          <ExternalLink className="h-3 w-3" />
+                        </a>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </SpotlightCard>
-            </TiltedCard>
-          ))}
+                </SpotlightCard>
+              </TiltedCard>
+            );
+          })}
         </div>
       </div>
 
