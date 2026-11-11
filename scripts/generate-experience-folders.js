@@ -22,9 +22,9 @@ const folders = [
     subtitle: 'Dinas Komunikasi & Informatika',
     badge: 'MAGANG RESMI',
     year: '2025',
-    color: '#18191c',
-    tabColor: '#222327',
-    accentColor: '#c4e22e',
+    color: '#2563eb',
+    tabColor: '#1d4ed8',
+    accentColor: '#93c5fd',
     textColor: '#ffffff',
     summary: 'Digitalisasi administrasi kependudukan daerah via SIMDUK berbasis Laravel & MySQL.',
     papers: [
@@ -42,9 +42,9 @@ const folders = [
     subtitle: 'Sistem Aksesibilitas Inklusif',
     badge: 'AI & COMPUTER VISION',
     year: '2025 - 2026',
-    color: '#3b1c85',
-    tabColor: '#4c28a8',
-    accentColor: '#c4e22e',
+    color: '#6366f1',
+    tabColor: '#4f46e5',
+    accentColor: '#c7d2fe',
     textColor: '#ffffff',
     summary: 'Platform Computer Vision deteksi pecahan uang SAR & isyarat dua arah jemaah disabilitas.',
     papers: [
@@ -62,8 +62,8 @@ const folders = [
     subtitle: 'Kementerian Agama RI (Nasional)',
     badge: 'PRESTASI NASIONAL',
     year: '2024',
-    color: '#064e3b',
-    tabColor: '#065f46',
+    color: '#059669',
+    tabColor: '#047857',
     accentColor: '#6ee7b7',
     textColor: '#ffffff',
     summary: 'Penghargaan resmi Juara II Nasional Karya Literasi & Inovasi Teknologi OASE III PTKI se-Indonesia.',
@@ -82,9 +82,9 @@ const folders = [
     subtitle: 'Ekosistem Kolaboratif Informatika',
     badge: 'TIM AKADEMIK',
     year: '2026',
-    color: '#0f172a',
-    tabColor: '#1e293b',
-    accentColor: '#38bdf8',
+    color: '#0284c7',
+    tabColor: '#0369a1',
+    accentColor: '#7dd3fc',
     textColor: '#ffffff',
     summary: 'Rancang bangun portal perkuliahan 6 pertemuan, pelacakan tugas, absensi, & sinkronisasi Supabase.',
     papers: [
@@ -102,9 +102,9 @@ const folders = [
     subtitle: 'GovTech Sensus & Ekspor',
     badge: 'DATABASE GOVTECH',
     year: '2025',
-    color: '#281c1c',
-    tabColor: '#3a2727',
-    accentColor: '#fca5a5',
+    color: '#d97706',
+    tabColor: '#b45309',
+    accentColor: '#fde68a',
     textColor: '#ffffff',
     summary: 'Agregasi demografi kelurahan, rekap RT/RW, dan otomasi pelaporan kependudukan tingkat daerah.',
     papers: [
@@ -122,9 +122,9 @@ const folders = [
     subtitle: 'Pelacakan Isyarat 21-Titik',
     badge: 'RESEARCH & APPLIED CV',
     year: '2025',
-    color: '#1e1b4b',
-    tabColor: '#2e276b',
-    accentColor: '#a5b4fc',
+    color: '#8b5cf6',
+    tabColor: '#7c3aed',
+    accentColor: '#ddd6fe',
     textColor: '#ffffff',
     summary: 'Engine visi komputer pelacakan sendi tangan real-time dengan toleransi rotasi tinggi untuk mobile.',
     papers: [
@@ -145,9 +145,6 @@ folders.forEach((folder, idx) => {
   const svg = `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="440" height="600" viewBox="0 0 440 600">
   <defs>
-    <filter id="folder-shadow" x="-8%" y="-4%" width="116%" height="112%" filterUnits="userSpaceOnUse">
-      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="rgba(0,0,0,0.22)"/>
-    </filter>
     <filter id="paper-shadow" x="-5%" y="-5%" width="110%" height="114%" filterUnits="userSpaceOnUse">
       <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="rgba(0,0,0,0.14)"/>
     </filter>
@@ -161,8 +158,8 @@ folders.forEach((folder, idx) => {
     </linearGradient>
   </defs>
 
-  <!-- Folder Back Cover with Tab (Physical Manila / Studio Keffi Folder Silhouette) -->
-  <g filter="url(#folder-shadow)">
+  <!-- Folder Back Cover with Tab (Physical Manila / Studio Keffi Folder Silhouette - NO OUTER SHADOW) -->
+  <g id="folder-back">
     <!-- Back Tab Shape: Left aligned tab -->
     <path d="M 30,76 
              L 190,76 
@@ -225,7 +222,7 @@ folders.forEach((folder, idx) => {
   </g>
 
   <!-- Folder Front Pocket / Flap (Overlaps the bottom 65% of the folder) -->
-  <g filter="url(#folder-shadow)">
+  <g id="folder-front">
     <path d="M 16,230 
              Q 16,218 28,218 
              L 412,218 
@@ -343,7 +340,7 @@ export interface ExperienceFolderData {
 export const EXPERIENCE_FOLDERS: ExperienceFolderData[] = ${JSON.stringify(
     folders.map(f => ({
       ...f,
-      image: `/experience-folders/${f.slug}.svg`
+      image: `/experience-folders/${f.slug}.png`
     })),
     null,
     2
