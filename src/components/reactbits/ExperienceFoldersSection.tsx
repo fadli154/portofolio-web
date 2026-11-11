@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect, useCallback } from "react";
+import React, { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import {
   Briefcase,
@@ -49,6 +49,16 @@ export function ExperienceFoldersSection({
   // Active paper index being inspected inside the folder
   const [activePaperIndex, setActivePaperIndex] = useState(0);
 
+  // Horizontal Pills Tab Slider ref & scroll progress
+  const tabsRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+  const [isDraggingTabs, setIsDraggingTabs] = useState(false);
+  const [dragStartX, setDragStartX] = useState(0);
+  const [dragScrollLeft, setDragScrollLeft] = useState(0);
+
   // Responsive screen width tracking
   const [screenWidth, setScreenWidth] = useState(1280);
 
@@ -60,6 +70,97 @@ export function ExperienceFoldersSection({
   }, []);
 
   const isMobile = screenWidth < 768;
+
+  // Track scroll position of the horizontal pills row
+  const updateScrollProgress = useCallback(() => {
+    const el = tabsRef.current;
+    if (!el) return;
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    if (maxScroll <= 0) {
+      setScrollProgress(0);
+      setCanScrollLeft(false);
+      setCanScrollRight(false);
+      return;
+    }
+    const progress = el.scrollLeft / maxScroll;
+    setScrollProgress(Math.min(1, Math.max(0, progress)));
+    setCanScrollLeft(el.scrollLeft > 4);
+    setCanScrollRight(el.scrollLeft < maxScroll - 4);
+  }, []);
+
+  useEffect(() => {
+    const el = tabsRef.current;
+    if (!el) return;
+    updateScrollProgress();
+    el.addEventListener("scroll", updateScrollProgress, { passive: true });
+    window.addEventListener("resize", updateScrollProgress);
+    return () => {
+      el.removeEventListener("scroll", updateScrollProgress);
+      window.removeEventListener("resize", updateScrollProgress);
+    };
+  }, [updateScrollProgress, viewMode]);
+
+  // Smoothly center the active folder pill into view whenever activeDeckIndex changes
+  useEffect(() => {
+    if (viewMode !== "deck") return;
+    const el = tabsRef.current;
+    if (!el) return;
+    const activeBtn = el.children[activeDeckIndex] as HTMLElement;
+    if (activeBtn) {
+      activeBtn.scrollIntoView({
+        behavior: "smooth",
+        inline: "center",
+        block: "nearest",
+      });
+    }
+  }, [activeDeckIndex, viewMode]);
+
+  const scrollTabs = (direction: "left" | "right") => {
+    const el = tabsRef.current;
+    if (!el) return;
+    const scrollAmount = Math.max(220, el.clientWidth * 0.45);
+    el.scrollBy({
+      left: direction === "left" ? -scrollAmount : scrollAmount,
+      behavior: "smooth",
+    });
+    playMechanicalClick(560);
+  };
+
+  const handleTrackClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = tabsRef.current;
+    const track = trackRef.current;
+    if (!el || !track) return;
+    const rect = track.getBoundingClientRect();
+    const clickRatio = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    el.scrollTo({
+      left: clickRatio * maxScroll,
+      behavior: "smooth",
+    });
+    playMechanicalClick(600);
+  };
+
+  const handleMouseDownTabs = (e: React.MouseEvent) => {
+    const el = tabsRef.current;
+    if (!el) return;
+    setIsDraggingTabs(true);
+    setDragStartX(e.pageX - el.offsetLeft);
+    setDragScrollLeft(el.scrollLeft);
+  };
+
+  const handleMouseMoveTabs = (e: React.MouseEvent) => {
+    if (!isDraggingTabs) return;
+    e.preventDefault();
+    const el = tabsRef.current;
+    if (!el) return;
+    const x = e.pageX - el.offsetLeft;
+    const walk = (x - dragStartX) * 1.4;
+    el.scrollLeft = dragScrollLeft - walk;
+  };
+
+  const handleMouseUpTabs = () => {
+    setIsDraggingTabs(false);
+  };
 
   // Gallery items for CircularGallery
   const galleryItems: GalleryItem[] = useMemo(() => {
@@ -297,8 +398,17 @@ export function ExperienceFoldersSection({
       {viewMode === "deck" && (
         <div className="keffi-wrap">
           <div className="mt-10 overflow-hidden rounded-[32px] border border-[var(--line)] bg-[#f5f5f2]/80 p-6 md:p-10 dark:border-white/10 dark:bg-[#121316]">
-            {/* Folder Tabs Navigation */}
-            <div className="flex max-w-full overflow-x-auto gap-2 border-b border-[var(--line)] pb-4 no-scrollbar">
+            {/* Folder Tabs Navigation with Drag-to-Scroll */}
+            <div
+              ref={tabsRef}
+              onMouseDown={handleMouseDownTabs}
+              onMouseMove={handleMouseMoveTabs}
+              onMouseUp={handleMouseUpTabs}
+              onMouseLeave={handleMouseUpTabs}
+              className={`flex max-w-full overflow-x-auto gap-2 pb-3.5 no-scrollbar select-none scroll-smooth ${
+                isDraggingTabs ? "cursor-grabbing" : "cursor-grab"
+              }`}
+            >
               {EXPERIENCE_FOLDERS.map((f, idx) => (
                 <button
                   key={f.id}
@@ -308,15 +418,81 @@ export function ExperienceFoldersSection({
                     setActivePaperIndex(0);
                     playMechanicalClick(580 + idx * 25);
                   }}
-                  className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-4 py-2 font-mono text-xs font-semibold whitespace-nowrap transition-all ${activeDeckIndex === idx
-                    ? "bg-[var(--violet)] text-white shadow-xs"
-                    : "border border-[var(--line)] bg-white text-[var(--ink)] hover:bg-gray-100 dark:border-white/10 dark:bg-[#1a1b1e] dark:text-gray-300 dark:hover:bg-[#25272c]"
-                    }`}
+                  className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-4 py-2 font-mono text-xs font-semibold whitespace-nowrap transition-all ${
+                    activeDeckIndex === idx
+                      ? "bg-[var(--violet)] text-white shadow-xs"
+                      : "border border-[var(--line)] bg-white text-[var(--ink)] hover:bg-gray-100 dark:border-white/10 dark:bg-[#1a1b1e] dark:text-gray-300 dark:hover:bg-[#25272c]"
+                  }`}
                 >
                   <span className="opacity-70">0{idx + 1}</span>
                   <span>{f.tab}</span>
                 </button>
               ))}
+            </div>
+
+            {/* Micro-Slider Bar: Clean & Elegant Pill Navigation Slider Track */}
+            <div className="flex items-center justify-between gap-3 border-t border-[var(--line)]/70 pt-3 dark:border-white/10">
+              {/* Previous & Next Slide Chevrons */}
+              <div className="flex items-center gap-1.5 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => scrollTabs("left")}
+                  disabled={!canScrollLeft}
+                  className={`inline-flex h-7 w-7 items-center justify-center rounded-full border transition-all ${
+                    canScrollLeft
+                      ? "border-[var(--line)] bg-white text-[var(--ink)] shadow-xs hover:border-[var(--violet)] hover:text-[var(--violet)] dark:border-white/15 dark:bg-[#1a1b1e] dark:text-white"
+                      : "cursor-not-allowed border-transparent opacity-25 text-[var(--mute)]"
+                  }`}
+                  aria-label="Geser tab pill ke kiri"
+                  title="Geser tab pill ke kiri"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => scrollTabs("right")}
+                  disabled={!canScrollRight}
+                  className={`inline-flex h-7 w-7 items-center justify-center rounded-full border transition-all ${
+                    canScrollRight
+                      ? "border-[var(--line)] bg-white text-[var(--ink)] shadow-xs hover:border-[var(--violet)] hover:text-[var(--violet)] dark:border-white/15 dark:bg-[#1a1b1e] dark:text-white"
+                      : "cursor-not-allowed border-transparent opacity-25 text-[var(--mute)]"
+                  }`}
+                  aria-label="Geser tab pill ke kanan"
+                  title="Geser tab pill ke kanan"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+
+              {/* Interactive Micro-Slider Track & Draggable Thumb */}
+              <div
+                ref={trackRef}
+                onClick={handleTrackClick}
+                className="group relative flex-1 h-3 cursor-pointer flex items-center"
+                title="Klik atau geser slider untuk navigasi tab proyek"
+              >
+                {/* Background Slider Track Line */}
+                <div className="h-1.5 w-full rounded-full bg-black/10 transition-all group-hover:h-2 dark:bg-white/15" />
+
+                {/* Animated Slider Capsule Dot / Thumb */}
+                <div
+                  className="absolute h-3 w-10 -translate-x-1/2 rounded-full bg-[var(--violet)] shadow-sm transition-all duration-100 group-hover:h-3.5 group-hover:w-12 dark:bg-[#c4e22e] dark:shadow-[0_0_10px_rgba(196,226,46,0.45)]"
+                  style={{
+                    left: `${Math.max(4, Math.min(96, scrollProgress * 100))}%`,
+                  }}
+                />
+              </div>
+
+              {/* Counter / Interactive Legend */}
+              <div className="hidden sm:flex items-center gap-2 font-mono text-[11px] text-[var(--mute)] dark:text-gray-400 shrink-0 select-none">
+                <span className="font-semibold text-[var(--ink)] dark:text-white">
+                  0{activeDeckIndex + 1} / 0{EXPERIENCE_FOLDERS.length}
+                </span>
+                <span className="hidden md:inline text-[10px] opacity-70">
+                  · {locale === "id" ? "Slider Navigasi Tab" : "Pill Slider Track"}
+                </span>
+              </div>
             </div>
 
             {/* Direct Folder Stage & Editorial Split */}
