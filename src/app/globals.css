@@ -116,6 +116,175 @@ section[id],
 }
 
 /* ============================================================================
+   AWWWARDS STANDARD ULTRA-CLEAN SCROLLBAR ("SLIDER") SYSTEM
+   Replaces dated Windows triangular buttons & thick gray bars with a minimalist,
+   floating 6px-7px capsule thumb across all browsers (WebKit, Blink, Firefox).
+   ============================================================================ */
+
+/* Standard CSS (Firefox, Chrome 121+) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(17, 18, 19, 0.22) transparent;
+}
+
+html[data-theme="dark"] *,
+.dark * {
+  scrollbar-color: rgba(245, 245, 242, 0.22) transparent;
+}
+
+/* WebKit / Chromium (Chrome, Edge, Safari, Brave, Opera) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Eliminate dated Windows triangular arrow buttons */
+::-webkit-scrollbar-button {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Modern floating pill thumb */
+::-webkit-scrollbar-thumb {
+  background-color: rgba(17, 18, 19, 0.22);
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+  transition: background-color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(17, 18, 19, 0.45);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background-color: rgba(91, 49, 200, 0.8); /* Studio Keffi violet accent when actively dragging */
+}
+
+/* Dark mode scrollbar thumb */
+html[data-theme="dark"] ::-webkit-scrollbar-thumb,
+.dark ::-webkit-scrollbar-thumb,
+#certificates ::-webkit-scrollbar-thumb,
+#stack ::-webkit-scrollbar-thumb {
+  background-color: rgba(245, 245, 242, 0.22);
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover,
+.dark ::-webkit-scrollbar-thumb:hover,
+#certificates ::-webkit-scrollbar-thumb:hover,
+#stack ::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(245, 245, 242, 0.5);
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-thumb:active,
+.dark ::-webkit-scrollbar-thumb:active,
+#certificates ::-webkit-scrollbar-thumb:active,
+#stack ::-webkit-scrollbar-thumb:active {
+  background-color: #c4e22e; /* Studio Keffi lime accent when actively dragging */
+}
+
+/* Hide scrollbar utility for horizontal tab lists & pill sliders */
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
+/* ============================================================================
+   CLEAN & ELEGANT RANGE SLIDERS (input[type="range"])
+   ============================================================================ */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 5px;
+  background: var(--line);
+  border-radius: 9999px;
+  outline: none;
+  transition: background 0.2s ease;
+  cursor: pointer;
+}
+
+html[data-theme="dark"] input[type="range"],
+.dark input[type="range"] {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+input[type="range"]:focus-visible {
+  outline: 2px solid var(--violet);
+  outline-offset: 4px;
+}
+
+/* WebKit Range Thumb */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--ink);
+  border: 2px solid var(--white);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+  cursor: grab;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+  background: var(--violet);
+}
+
+input[type="range"]::-webkit-slider-thumb:active {
+  transform: scale(1.25);
+  cursor: grabbing;
+}
+
+html[data-theme="dark"] input[type="range"]::-webkit-slider-thumb,
+.dark input[type="range"]::-webkit-slider-thumb {
+  background: #c4e22e;
+  border: 2px solid #111213;
+  box-shadow: 0 0 10px rgba(196, 226, 46, 0.35);
+}
+
+/* Firefox Range Thumb */
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--ink);
+  border: 2px solid var(--white);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+  cursor: grab;
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+  transform: scale(1.15);
+  background: var(--violet);
+}
+
+html[data-theme="dark"] input[type="range"]::-moz-range-thumb,
+.dark input[type="range"]::-moz-range-thumb {
+  background: #c4e22e;
+  border: 2px solid #111213;
+  box-shadow: 0 0 10px rgba(196, 226, 46, 0.35);
+}
+
+/* ============================================================================
    STUDIO KEFFI + REACTBITS CUSTOM CURSOR FOLLOWER
    ============================================================================ */
 .keffi-cursor {
