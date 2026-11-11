@@ -74,6 +74,7 @@ interface HomeClientSectionsProps {
   experiences: ExperienceItem[];
   educations: EducationItem[];
   certificates: CertificateItem[];
+  courseworkSessions?: KwuSessionItem[];
   technologies: TechnologyItem[];
   architectureRigSlot?: React.ReactNode;
 }
@@ -210,6 +211,7 @@ export function HomeClientSections({
   projects: initialProjects,
   experiences: initialExperiences,
   certificates: initialCertificates = [],
+  courseworkSessions: initialCourseworkSessions = [],
 }: HomeClientSectionsProps) {
   const { locale, openInquiryWithScope } = usePortfolioState();
   const [copiedEmail, setCopiedEmail] = useState(false);
@@ -224,7 +226,9 @@ export function HomeClientSections({
       initialCertificates.length > 0 ? initialCertificates : CERTIFICATES
     );
   const [courseworkSessions, setCourseworkSessions] =
-    useState<KwuSessionItem[]>(KWU_SESSIONS);
+    useState<KwuSessionItem[]>(
+      initialCourseworkSessions.length > 0 ? initialCourseworkSessions : KWU_SESSIONS
+    );
 
   // Interactive Lightbox / Modal state
   const [selectedCertModal, setSelectedCertModal] =
@@ -269,7 +273,13 @@ export function HomeClientSections({
         );
       }
       if (store.courseworkSessions?.length > 0) {
-        setCourseworkSessions(store.courseworkSessions);
+        if (initialCourseworkSessions.length > store.courseworkSessions.length) {
+          setCourseworkSessions(initialCourseworkSessions);
+        } else {
+          setCourseworkSessions(store.courseworkSessions);
+        }
+      } else if (initialCourseworkSessions.length > 0) {
+        setCourseworkSessions(initialCourseworkSessions);
       }
       if (store.certificates?.length > 0) {
         setDynamicCertificates(store.certificates);
@@ -277,6 +287,45 @@ export function HomeClientSections({
     };
 
     syncFromStore(loadCmsStoreClient());
+
+    // Live Supabase client fetch for visitors without localStorage
+    import("@/lib/supabase/client").then(({ createClient, isSupabaseConfigured }) => {
+      if (isSupabaseConfigured()) {
+        const supabase = createClient();
+        if (supabase) {
+          supabase
+            .from("coursework_sessions")
+            .select("*")
+            .order("session_number", { ascending: true })
+            .then(({ data, error }) => {
+              if (!error && data && data.length > 0) {
+                const live: KwuSessionItem[] = data
+                  .filter((r) => r.is_visible !== false)
+                  .map((row) => ({
+                    id: row.id || `kwu-${String(row.session_number).padStart(2, "0")}`,
+                    number: row.session_number,
+                    code: row.code || `PERTEMUAN ${String(row.session_number).padStart(2, "0")}`,
+                    titleId: row.title_id || "",
+                    titleEn: row.title_en || row.title_id || "",
+                    descId: row.desc_id || "",
+                    descEn: row.desc_en || row.desc_id || "",
+                    sessionDate: row.session_date || `Minggu ${row.session_number} · 2026`,
+                    attendanceStatus: row.attendance_status || "Hadir",
+                    attendanceProofUrl:
+                      row.attendance_proof_url || `/coursework/proof-session-${row.session_number}.png`,
+                    taskTitle: row.task_title || undefined,
+                    taskDescription: row.task_description || undefined,
+                    taskUrl: row.task_url || undefined,
+                    taskStatus: row.task_status || undefined,
+                  }));
+                if (live.length > 0) {
+                  setCourseworkSessions(live);
+                }
+              }
+            });
+        }
+      }
+    });
 
     const handleCmsUpdate = (e: Event) => {
       const custom = e as CustomEvent<CmsDynamicStore>;
@@ -297,7 +346,7 @@ export function HomeClientSections({
       window.removeEventListener("fadli-cms-updated", handleCmsUpdate);
       window.removeEventListener("storage", handleStorage);
     };
-  }, []);
+  }, [initialCourseworkSessions]);
 
   // Viewport tracking for adaptive 3D components & responsive controls
   const [screenWidth, setScreenWidth] = useState(1280);

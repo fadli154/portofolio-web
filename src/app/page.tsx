@@ -14,6 +14,7 @@ export default async function HomePage() {
       experiences={snapshot.experiences}
       educations={snapshot.educations}
       certificates={snapshot.certificates}
+      courseworkSessions={snapshot.courseworkSessions}
       technologies={snapshot.technologies}
     />
   );

@@ -54,7 +54,7 @@ export function loadCmsStoreClient(): CmsDynamicStore {
     if (!raw) {
       const mergedSessions = defaults.courseworkSessions.map((s) => ({
         ...s,
-        attendanceProofUrl: legacyProofs[s.number] || s.attendanceProofUrl || null,
+        attendanceProofUrl: legacyProofs[s.number] || s.attendanceProofUrl || `/coursework/proof-session-${s.number}.png`,
       }));
       return {
         ...defaults,
@@ -63,12 +63,33 @@ export function loadCmsStoreClient(): CmsDynamicStore {
     }
 
     const parsed = JSON.parse(raw) as Partial<CmsDynamicStore>;
-    const sessions = Array.isArray(parsed.courseworkSessions) && parsed.courseworkSessions.length > 0
-      ? parsed.courseworkSessions.map((s) => ({
-          ...s,
-          attendanceProofUrl: s.attendanceProofUrl || legacyProofs[s.number] || null,
-        }))
-      : defaults.courseworkSessions;
+    let sessions = defaults.courseworkSessions;
+    if (Array.isArray(parsed.courseworkSessions) && parsed.courseworkSessions.length > 0) {
+      if (parsed.courseworkSessions.length >= defaults.courseworkSessions.length) {
+        sessions = parsed.courseworkSessions.map((s) => {
+          const def = defaults.courseworkSessions.find((d) => d.number === s.number);
+          return {
+            ...s,
+            attendanceProofUrl:
+              s.attendanceProofUrl || legacyProofs[s.number] || def?.attendanceProofUrl || `/coursework/proof-session-${s.number}.png`,
+          };
+        });
+      } else {
+        // Merge so we never lose newly registered sessions (e.g. upgraded from 6 to 10 sessions)
+        sessions = defaults.courseworkSessions.map((defSession) => {
+          const found = parsed.courseworkSessions!.find((s) => s.number === defSession.number);
+          if (found) {
+            return {
+              ...defSession,
+              ...found,
+              attendanceProofUrl:
+                found.attendanceProofUrl || legacyProofs[found.number] || defSession.attendanceProofUrl || `/coursework/proof-session-${found.number}.png`,
+            };
+          }
+          return defSession;
+        });
+      }
+    }
 
     return {
       experiences:
