@@ -429,6 +429,7 @@ section[id],
 
 .sec-title {
   margin: 0;
+  color: var(--ink);
   font-family: var(--font-sans), sans-serif;
   font-size: clamp(38px, 5.2vw, 92px);
   font-weight: 500;

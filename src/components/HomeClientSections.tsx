@@ -806,7 +806,7 @@ export function HomeClientSections({
          ===================================================================== */}
       <section
         id="certificates"
-        className="scroll-mt-24 relative overflow-hidden border-t border-[var(--line)] bg-gradient-to-b from-[#0c0d12] via-[#0c0d12] via-70% to-white pt-24 pb-0 text-[#f5f5f2] md:pt-32 dark:to-[#0a0a0c]"
+        className="scroll-mt-24 relative overflow-hidden border-t border-[var(--line)] bg-[#0c0d12] pt-24 pb-12 text-[#f5f5f2] md:pt-32 md:pb-16"
       >
         <div className="keffi-wrap">
           <div className="sec-head sec-head--dark">
@@ -896,12 +896,12 @@ export function HomeClientSections({
             }}
           />
 
-          {/* Bottom Inner Gradient Shadow - Seamless Organic Dissolve into Coursework */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-32 md:h-44 bg-gradient-to-t from-white via-white/80 via-35% to-transparent dark:from-[#0a0a0c] dark:via-[#0a0a0c]/80" />
+          {/* Bottom Inner Gradient Shadow - Deep Dark Vault Fade */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-20 md:h-28 bg-gradient-to-t from-[#0c0d12] via-[#0c0d12]/70 to-transparent" />
 
           {/* Ambient Lighting & Floating Interaction Hint */}
-          <div className="pointer-events-none absolute bottom-4 left-1/2 z-30 -translate-x-1/2 flex max-w-[90vw] items-center justify-center gap-2 rounded-full border border-black/10 bg-white/85 px-3.5 py-1.5 font-mono text-[10px] md:text-[11px] text-[var(--ink)] shadow-md backdrop-blur-md text-center dark:border-white/10 dark:bg-black/60 dark:text-white/80">
-            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--violet)] dark:bg-[#c4e22e] animate-pulse" />
+          <div className="pointer-events-none absolute bottom-4 left-1/2 z-30 -translate-x-1/2 flex max-w-[90vw] items-center justify-center gap-2 rounded-full border border-white/10 bg-black/60 px-3.5 py-1.5 font-mono text-[10px] md:text-[11px] text-white/80 shadow-lg backdrop-blur-md text-center">
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#c4e22e] animate-pulse" />
             <span className="truncate md:overflow-visible md:whitespace-nowrap">
               {locale === "id"
                 ? isMobile
@@ -919,7 +919,12 @@ export function HomeClientSections({
           5. PORTAL AKADEMIK KEWIRAUSAHAAN (PERTEMUAN, ABSEN, BUKTI, TUGAS),
              KELOMPOK K-1, EVALUASI SWOT & LIVE GITHUB (#coursework)
          ===================================================================== */}
-      <section id="coursework" className="scroll-mt-24 overflow-hidden pt-12 pb-24 md:pt-16 md:pb-32 dark:bg-[#0a0a0c]">
+      <section
+        id="coursework"
+        className="scroll-mt-24 relative overflow-hidden bg-white pt-28 pb-24 md:pt-36 md:pb-32 dark:bg-[#0a0a0c]"
+      >
+        {/* Seamless Dark Bleed from Certificates into Coursework (Reversed Blend: Black to White) */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-32 md:h-44 bg-gradient-to-b from-[#0c0d12] via-[#0c0d12]/50 via-35% via-[#0c0d12]/10 via-70% to-transparent" />
         <div className="keffi-wrap">
           <div className="sec-head">
             <div>
@@ -945,7 +950,7 @@ export function HomeClientSections({
                   rotationInterval={3200}
                 />
               </span>
-              <h2 className="sec-title mt-3">
+              <h2 className="sec-title mt-3 text-[var(--ink)] dark:text-[#f5f5f2]">
                 <BlurText
                   text={
                     locale === "id"
