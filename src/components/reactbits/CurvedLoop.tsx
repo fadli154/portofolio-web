@@ -19,13 +19,16 @@ export type ResponsiveProp<T> = T | { mobile?: T; tablet?: T; desktop?: T };
 
 export interface CurvedLoopProps {
   marqueeText?: string | string[];
+  text?: string | string[];
   speed?: number;
   className?: string;
   containerClassName?: string;
   containerStyle?: React.CSSProperties;
   curveAmount?: ResponsiveProp<number>;
-  direction?: 'left' | 'right';
+  curviness?: ResponsiveProp<number>;
+  direction?: 'left' | 'right' | 'forward' | 'reverse';
   interactive?: boolean;
+  draggable?: boolean;
   pauseOnHover?: boolean;
   color?: string;
   edgeFade?: number;
@@ -37,6 +40,10 @@ export interface CurvedLoopProps {
   separator?: string;
   separatorColor?: string;
   scrollBoost?: number;
+  ribbon?: boolean;
+  ribbonColor?: string;
+  ribbonWidth?: number;
+  tilt?: number;
 }
 
 interface DragState {
@@ -165,14 +172,17 @@ const getGeometry = (
 };
 
 export const CurvedLoop: FC<CurvedLoopProps> = ({
-  marqueeText = '',
+  marqueeText,
+  text: textProp,
   speed = 1.6,
   className,
   containerClassName,
   containerStyle,
-  curveAmount = 60,
+  curveAmount,
+  curviness,
   direction = 'left',
-  interactive = true,
+  interactive,
+  draggable,
   pauseOnHover = false,
   color = 'currentColor',
   edgeFade = 0.08,
@@ -183,13 +193,23 @@ export const CurvedLoop: FC<CurvedLoopProps> = ({
   outline = false,
   separator = '●',
   separatorColor,
-  scrollBoost = 0.3
+  scrollBoost = 0.3,
+  ribbon = false,
+  ribbonColor,
+  ribbonWidth,
+  tilt = 0,
 }) => {
+  const content = textProp ?? marqueeText ?? '';
+  const isInteractive = interactive ?? draggable ?? true;
+  const normalizedDirection: 'left' | 'right' =
+    direction === 'reverse' || direction === 'right' ? 'right' : 'left';
+  const rawCurveAmount = curveAmount ?? curviness ?? (shape === 'line' ? 0 : 60);
+
   const itemsList = useMemo(() => {
-    if (Array.isArray(marqueeText)) return marqueeText.map(s => String(s).trim()).filter(Boolean);
-    const raw = String(marqueeText ?? '').trim();
+    if (Array.isArray(content)) return content.map(s => String(s).trim()).filter(Boolean);
+    const raw = String(content ?? '').trim();
     return raw ? [raw] : [];
-  }, [marqueeText]);
+  }, [content]);
 
   const mark = String(separator ?? '').trim();
   const text = useMemo(() => {
@@ -243,8 +263,8 @@ export const CurvedLoop: FC<CurvedLoopProps> = ({
   );
 
   const resolvedCurveAmount = resolveResponsiveProp(
-    curveAmount,
-    isMobile ? 28 : isTablet ? 48 : 68,
+    rawCurveAmount,
+    isMobile ? (shape === 'line' ? 0 : 28) : isTablet ? (shape === 'line' ? 0 : 48) : (shape === 'line' ? 0 : 68),
     viewWidth
   );
 
@@ -254,7 +274,9 @@ export const CurvedLoop: FC<CurvedLoopProps> = ({
     viewWidth
   );
 
-  const viewHeight = isMobile
+  const viewHeight = shape === 'line'
+    ? Math.max(48, Math.round(resolvedFontSize * 2.8))
+    : isMobile
     ? Math.max(68, resolvedCurveAmount + resolvedFontSize + 26)
     : isTablet
     ? Math.max(90, resolvedCurveAmount + resolvedFontSize + 32)
@@ -263,7 +285,7 @@ export const CurvedLoop: FC<CurvedLoopProps> = ({
   const spacingRef = useRef(0);
   const offsetRef = useRef(0);
   const velocityRef = useRef(0);
-  const directionRef = useRef<'left' | 'right'>(direction);
+  const directionRef = useRef<'left' | 'right'>(normalizedDirection);
   const hoverRef = useRef(false);
   const settingsRef = useRef({ speed, pauseOnHover, scrollBoost });
   const scrollRef = useRef({ distance: 0, level: 0 });
@@ -313,8 +335,8 @@ export const CurvedLoop: FC<CurvedLoopProps> = ({
   }, [speed, pauseOnHover, scrollBoost]);
 
   useEffect(() => {
-    directionRef.current = direction;
-  }, [direction]);
+    directionRef.current = normalizedDirection;
+  }, [normalizedDirection]);
 
   useIsomorphicLayoutEffect(() => {
     const measure = () => {
@@ -418,7 +440,7 @@ export const CurvedLoop: FC<CurvedLoopProps> = ({
   }, [ready]);
 
   const onPointerDown = (e: PointerEvent<HTMLDivElement>) => {
-    if (!interactive || !ready) return;
+    if (!isInteractive || !ready) return;
     const rect = svgRef.current?.getBoundingClientRect();
     const width = rect?.width || viewWidth;
     const cx = rect ? rect.left + rect.width / 2 : e.clientX;
@@ -479,10 +501,11 @@ export const CurvedLoop: FC<CurvedLoopProps> = ({
       className={containerClassName || "relative flex items-center justify-center w-full overflow-hidden select-none"}
       style={{
         visibility: ready ? 'visible' : 'hidden',
-        cursor: interactive ? (dragging ? 'grabbing' : 'grab') : 'auto',
-        touchAction: interactive ? 'pan-y' : 'auto',
+        cursor: isInteractive ? (dragging ? 'grabbing' : 'grab') : 'auto',
+        touchAction: isInteractive ? 'pan-y' : 'auto',
         maskImage: mask,
         WebkitMaskImage: mask,
+        transform: tilt ? `rotate(${tilt}deg)` : containerStyle?.transform,
         ...containerStyle
       }}
       onPointerDown={onPointerDown}
@@ -536,6 +559,16 @@ export const CurvedLoop: FC<CurvedLoopProps> = ({
             </mask>
           )}
         </defs>
+        {ready && ribbon && (
+          <path
+            d={geometry.d}
+            fill="none"
+            stroke={ribbonColor || color || 'currentColor'}
+            strokeWidth={ribbonWidth || Math.max(34, resolvedFontSize * 2.6)}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        )}
         {ready &&
           (outline ? (
             <text

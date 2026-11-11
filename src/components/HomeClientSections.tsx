@@ -61,6 +61,7 @@ import { DriftWall, type DriftWallItem } from "@/components/reactbits/DriftWall"
 import { TechText } from "@/components/reactbits/TechText";
 import { RotatingText } from "@/components/reactbits/RotatingText";
 import { CurvedLoop } from "@/components/reactbits/CurvedLoop";
+import { TextLoop } from "@/components/reactbits/TextLoop";
 import CircularGalleryWrapper, { type GalleryItem } from "@/components/reactbits/CircularGalleryWrapper";
 import { ExperienceFoldersSection } from "@/components/reactbits/ExperienceFoldersSection";
 import LanyardWrapper from "@/components/reactbits/LanyardWrapper";
@@ -915,16 +916,53 @@ export function HomeClientSections({
         </div>
       </section>
 
+      {/* KINETIC TYPOGRAPHY TRANSITION RIBBON (ReactBits TextLoop)
+          Acts as an intentional editorial bridge between Certificates (#0c0d12) and Coursework (white/light) */}
+      <div className="relative z-20 w-full overflow-hidden bg-[#0c0d12] border-t border-b border-white/10 py-3 md:py-4 select-none">
+        <TextLoop
+          text={
+            locale === "id"
+              ? [
+                "PORTAL AKADEMIK K-1",
+                "KEWIRAUSAHAAN DIGITAL",
+                "6 LOG ABSENSI & TUGAS TERVERIFIKASI",
+                "MATRIKS SWOT 20 INDIKATOR",
+                "REPOSITORI GITHUB LIVE @FADLI154",
+                "ARSITEKTUR & LAPORAN RESMI",
+              ]
+              : [
+                "ACADEMIC PORTAL K-1",
+                "DIGITAL ENTREPRENEURSHIP",
+                "6 VERIFIED SESSIONS & TASKS",
+                "SWOT MATRIX · 20 INDICATORS",
+                "GITHUB LIVE SYNC @FADLI154",
+                "SYSTEM ARCHITECTURE & REPORTS",
+              ]
+          }
+          speed={2}
+          shape="line"
+          fontSize={{ mobile: 13, tablet: 15, desktop: 17 }}
+          fontWeight={700}
+          letterSpacing={{ mobile: 1.5, tablet: 2, desktop: 2 }}
+          color="#f5f5f2"
+          separator="✦"
+          separatorColor="#c4e22e"
+          edgeFade={0.06}
+          interactive={true}
+          pauseOnHover={true}
+          className="font-mono text-xs md:text-sm font-bold uppercase tracking-wider text-white"
+          containerClassName="relative flex items-center justify-center w-full overflow-visible select-none"
+        />
+      </div>
+
       {/* =====================================================================
           5. PORTAL AKADEMIK KEWIRAUSAHAAN (PERTEMUAN, ABSEN, BUKTI, TUGAS),
              KELOMPOK K-1, EVALUASI SWOT & LIVE GITHUB (#coursework)
          ===================================================================== */}
       <section
         id="coursework"
-        className="scroll-mt-24 relative overflow-hidden bg-white pt-28 pb-24 md:pt-36 md:pb-32 dark:bg-[#0a0a0c]"
+        className="scroll-mt-24 relative overflow-hidden bg-white pt-16 pb-24 md:pt-24 md:pb-32 dark:bg-[#0a0a0c]"
       >
-        {/* Seamless Dark Bleed from Certificates into Coursework (Reversed Blend: Black to White) */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-32 md:h-44 bg-gradient-to-b from-[#0c0d12] via-[#0c0d12]/50 via-35% via-[#0c0d12]/10 via-70% to-transparent" />
         <div className="keffi-wrap">
           <div className="sec-head">
             <div>
