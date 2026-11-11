@@ -1,27 +1,108 @@
 -- ============================================================================
 -- Migration: 20261111000007_seed_tech_certificates_and_oase.sql
--- Purpose: Seed ID-Networkers tech certificates and update OASE III PTKIN
---          as the Crown Achievement ("Prestasi Nasional").
+-- Purpose: Self-contained, defensive migration to:
+--   1. Ensure `image_url` and `updated_at` columns exist on `public.certificates`
+--   2. Configure safe defaults, constraints, and handle_updated_at trigger
+--   3. Seed/Update OASE III PTKIN (Juara II Nasional · Crown Achievement)
+--   4. Seed/Update IT's Day 2025 UMKM
+--   5. Seed/Update 5 ID-Networkers credentials (Cyber Security, Cisco, MikroTik, Jaringan, Linux)
 -- ============================================================================
 
 begin;
 
--- 1. Ensure OASE is categorized as Prestasi Nasional and prioritized at sort_order 1
-update public.certificates
-set
-  category = 'Prestasi Nasional',
-  sort_order = 1,
-  summary_id = 'Juara II cabang Literasi Inovasi Teknologi pada Olimpiade Agama, Sains, dan Riset (OASE) III PTKIN se-Indonesia, UIN Sunan Kalijaga Yogyakarta, 3–7 November 2026. Mewakili UIN Sultan Maulana Hasanuddin Banten dengan karya inovasi HajiCare.',
-  summary_en = 'Second place, Technology Innovation Literacy, at the 3rd Olympiad of Religion, Science and Research (OASE) for Indonesian Islamic universities, UIN Sunan Kalijaga Yogyakarta, 3–7 November 2026 with HajiCare innovation.',
-  updated_at = timezone('utc'::text, now())
-where id = '6f1d2c3a-0001-4a5b-9c01-0e0f00000001';
+-- 1. Defensive DDL: Ensure required columns exist
+alter table public.certificates
+  add column if not exists image_url text,
+  add column if not exists updated_at timestamptz not null default timezone('utc'::text, now());
 
--- 2. Insert or update the 5 new ID-Networkers credentials
+-- 2. Ensure sensible defaults
+alter table public.certificates alter column credential_id set default '';
+alter table public.certificates alter column summary_en set default '';
+alter table public.certificates alter column summary_id set default '';
+alter table public.certificates alter column category set default 'Kompetisi';
+
+-- 3. URL & Title safety constraints (idempotent)
+alter table public.certificates drop constraint if exists certificates_title_length;
+alter table public.certificates
+  add constraint certificates_title_length check (char_length(title) between 3 and 200);
+
+alter table public.certificates drop constraint if exists certificates_safe_urls;
+alter table public.certificates
+  add constraint certificates_safe_urls check (
+    (image_url is null or image_url ~ '^(https://|/)')
+    and (file_url is null or file_url ~ '^(https://|/)')
+    and (verify_url is null or verify_url ~ '^https://')
+  );
+
+-- 4. Shared updated_at trigger function & trigger
+create or replace function public.handle_updated_at()
+returns trigger
+language plpgsql
+security definer
+set search_path = ''
+as $$
+begin
+  new.updated_at = timezone('utc'::text, now());
+  return new;
+end;
+$$;
+
+drop trigger if exists set_certificates_updated_at on public.certificates;
+create trigger set_certificates_updated_at
+  before update on public.certificates
+  for each row execute function public.handle_updated_at();
+
+-- 5. Update Storage bucket mime types if bucket exists
+do $$
+begin
+  if exists (select 1 from storage.buckets where id = 'certificates') then
+    update storage.buckets
+    set allowed_mime_types = array['image/webp', 'image/png', 'image/jpeg', 'application/pdf']
+    where id = 'certificates';
+  end if;
+end $$;
+
+-- 6. Seed / Upsert all 7 verified certificates idempotently
 insert into public.certificates (
   id, title, issuer, issue_date, credential_id, verify_url, file_url, image_url,
   category, summary_id, summary_en, sort_order, is_visible
 )
 values
+  -- [01] Crown Achievement: Juara II OASE III PTKIN 2026 (Kemenag RI)
+  (
+    '6f1d2c3a-0001-4a5b-9c01-0e0f00000001',
+    'Juara II Literasi Inovasi Teknologi · OASE III PTKIN 2026',
+    'Kementerian Agama Republik Indonesia',
+    '7 November 2026',
+    '712/Dt.I.III/PP.01/11/2026',
+    null,
+    '/sertif/oase-juara-2-lit.pdf',
+    '/sertif/oase-juara-2-lit.webp',
+    'Prestasi Nasional',
+    'Juara II cabang Literasi Inovasi Teknologi pada Olimpiade Agama, Sains, dan Riset (OASE) III PTKIN se-Indonesia, UIN Sunan Kalijaga Yogyakarta, 3–7 November 2026. Mewakili UIN Sultan Maulana Hasanuddin Banten dengan karya inovasi HajiCare.',
+    'Second place, Technology Innovation Literacy, at the 3rd Olympiad of Religion, Science and Research (OASE) for Indonesian Islamic universities, UIN Sunan Kalijaga Yogyakarta, 3–7 November 2026 with HajiCare innovation.',
+    1,
+    true
+  ),
+
+  -- [02] IT's Day 2025 UMKM (Jakarta Global University)
+  (
+    '6f1d2c3a-0002-4a5b-9c01-0e0f00000002',
+    'Peserta Lomba Nasional Website UMKM · IT''s Day 2025',
+    'Jakarta Global University',
+    '5 Juli 2025',
+    'ITSDAY-UMKM-2025',
+    null,
+    '/sertif/itsday-2025-lomba-website-umkm.jpg',
+    '/sertif/itsday-2025-lomba-website-umkm.webp',
+    'Kompetisi',
+    'Sertifikat penghargaan atas partisipasi dalam Lomba Nasional Website UMKM pada acara IT''s Day 2025, Fakultas Teknik dan Ilmu Komputer, Jakarta Global University, Depok.',
+    'Certificate of participation in the National UMKM Website Competition at IT''s Day 2025, Faculty of Engineering and Computer Science, Jakarta Global University, Depok.',
+    2,
+    true
+  ),
+
+  -- [03] Cyber Security Dasar (ID-Networkers)
   (
     '6f1d2c3a-0003-4a5b-9c01-0e0f00000003',
     'Cyber Security Dasar: Belajar Cyber Security dari Nol',
@@ -37,6 +118,8 @@ values
     3,
     true
   ),
+
+  -- [04] Cisco Networking Dasar (ID-Networkers)
   (
     '6f1d2c3a-0004-4a5b-9c01-0e0f00000004',
     'Cisco Networking Dasar: Routing & Switching',
@@ -52,6 +135,8 @@ values
     4,
     true
   ),
+
+  -- [05] MikroTik RouterOS Dasar (ID-Networkers)
   (
     '6f1d2c3a-0005-4a5b-9c01-0e0f00000005',
     'MikroTik RouterOS Dasar: MTCNA Fundamentals',
@@ -67,6 +152,8 @@ values
     5,
     true
   ),
+
+  -- [06] Jaringan Komputer Dasar (ID-Networkers)
   (
     '6f1d2c3a-0006-4a5b-9c01-0e0f00000006',
     'Jaringan Komputer Dasar: Fundamental TCP/IP & Subnetting',
@@ -82,6 +169,8 @@ values
     6,
     true
   ),
+
+  -- [07] Linux System Administration (ID-Networkers)
   (
     '6f1d2c3a-0007-4a5b-9c01-0e0f00000007',
     'Linux System Administration: Belajar Linux dari Nol',
