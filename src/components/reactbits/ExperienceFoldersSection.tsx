@@ -49,6 +49,18 @@ export function ExperienceFoldersSection({
   // Active paper index being inspected inside the folder
   const [activePaperIndex, setActivePaperIndex] = useState(0);
 
+  // Responsive screen width tracking
+  const [screenWidth, setScreenWidth] = useState(1280);
+
+  useEffect(() => {
+    const handleResize = () => setScreenWidth(window.innerWidth);
+    handleResize();
+    window.addEventListener("resize", handleResize, { passive: true });
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const isMobile = screenWidth < 768;
+
   // Gallery items for CircularGallery
   const galleryItems: GalleryItem[] = useMemo(() => {
     return EXPERIENCE_FOLDERS.map((f) => ({
@@ -127,7 +139,7 @@ export function ExperienceFoldersSection({
   const currentFolderForDeck = EXPERIENCE_FOLDERS[activeDeckIndex];
 
   return (
-    <section id="work" className="scroll-mt-24 overflow-hidden bg-white py-20 md:py-28 dark:bg-[#0a0a0c]">
+    <section id="work" className="scroll-mt-24 overflow-hidden bg-white pt-24 pb-20 md:pt-32 md:pb-28 dark:bg-[#0a0a0c]">
       <div className="keffi-wrap">
         {/* Section Header */}
         <div className="sec-head dark:border-white/10">
@@ -242,13 +254,17 @@ export function ExperienceFoldersSection({
 
           {/* Tactical Overlay: Bottom Controls & Folder Quick Launcher */}
           <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30">
-            <div className="keffi-wrap flex flex-col items-center justify-between gap-3 p-6 md:flex-row md:items-end">
-              <div className="pointer-events-auto flex items-center gap-2 rounded-full border border-[var(--line)] bg-white/90 px-4 py-2 font-mono text-xs text-[var(--ink)] shadow-md backdrop-blur-md dark:border-white/15 dark:bg-black/80 dark:text-white">
-                <span className="h-2 w-2 rounded-full bg-[var(--violet)] animate-pulse" />
-                <span>
-                  {locale === "id"
-                    ? "Geser kiri / kanan untuk memutar galeri · Klik folder untuk membuka berkas 3D"
-                    : "Drag left / right to spin gallery · Click any folder to inspect 3D papers"}
+            <div className="keffi-wrap flex flex-col items-center justify-between gap-2.5 p-4 md:p-6 md:flex-row md:items-end">
+              <div className="pointer-events-auto flex max-w-[90vw] items-center gap-2 rounded-full border border-[var(--line)] bg-white/90 px-3.5 py-1.5 font-mono text-[10px] md:text-xs text-[var(--ink)] shadow-md backdrop-blur-md dark:border-white/15 dark:bg-black/80 dark:text-white">
+                <span className="h-1.5 w-1.5 md:h-2 md:w-2 shrink-0 rounded-full bg-[var(--violet)] animate-pulse" />
+                <span className="truncate md:overflow-visible md:whitespace-nowrap">
+                  {isMobile
+                    ? (locale === "id"
+                      ? "Putar galeri 3D · Ketuk folder untuk buka"
+                      : "Spin 3D gallery · Tap folder to open")
+                    : (locale === "id"
+                      ? "Geser kiri / kanan untuk memutar galeri · Klik folder untuk membuka berkas 3D"
+                      : "Drag left / right to spin gallery · Click any folder to inspect 3D papers")}
                 </span>
               </div>
 
@@ -262,9 +278,9 @@ export function ExperienceFoldersSection({
                     setActivePaperIndex(0);
                     playMechanicalClick(640);
                   }}
-                  className="inline-flex items-center gap-2 rounded-full bg-[var(--violet)] px-5 py-2.5 font-mono text-xs font-bold text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
+                  className="inline-flex items-center gap-2 rounded-full bg-[var(--violet)] px-4 py-2 md:px-5 md:py-2.5 font-mono text-[11px] md:text-xs font-bold text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
                 >
-                  <FolderOpen className="h-4 w-4" />
+                  <FolderOpen className="h-3.5 w-3.5 md:h-4 md:w-4" />
                   <span>
                     {locale === "id"
                       ? `Buka: ${EXPERIENCE_FOLDERS[activeCircularIndex]?.tab || "Folder"}`
@@ -284,7 +300,7 @@ export function ExperienceFoldersSection({
         <div className="keffi-wrap">
           <div className="mt-10 overflow-hidden rounded-[32px] border border-[var(--line)] bg-[#f5f5f2]/80 p-6 md:p-10 dark:border-white/10 dark:bg-[#121316]">
             {/* Folder Tabs Navigation */}
-            <div className="flex flex-wrap items-center gap-2 border-b border-[var(--line)] pb-5 dark:border-white/10">
+            <div className="flex max-w-full overflow-x-auto gap-2 border-b border-[var(--line)] pb-4 no-scrollbar">
               {EXPERIENCE_FOLDERS.map((f, idx) => (
                 <button
                   key={f.id}
@@ -294,7 +310,7 @@ export function ExperienceFoldersSection({
                     setActivePaperIndex(0);
                     playMechanicalClick(580 + idx * 25);
                   }}
-                  className={`inline-flex items-center gap-2 rounded-xl px-4 py-2 font-mono text-xs font-semibold transition-all ${
+                  className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-4 py-2 font-mono text-xs font-semibold whitespace-nowrap transition-all ${
                     activeDeckIndex === idx
                       ? "bg-[var(--violet)] text-white shadow-xs"
                       : "border border-[var(--line)] bg-white text-[var(--ink)] hover:bg-gray-100 dark:border-white/10 dark:bg-[#1a1b1e] dark:text-gray-300 dark:hover:bg-[#25272c]"
@@ -309,14 +325,14 @@ export function ExperienceFoldersSection({
             {/* Direct Folder Stage & Editorial Split */}
             <div className="mt-8 grid grid-cols-1 items-center gap-10 lg:grid-cols-12">
               {/* Left Column: Interactive 3D Folder */}
-              <div className="flex min-h-[460px] items-center justify-center rounded-2xl bg-white/40 p-6 dark:bg-black/40 lg:col-span-6">
+              <div className="flex min-h-[380px] md:min-h-[460px] items-center justify-center rounded-2xl bg-white/40 p-4 md:p-6 dark:bg-black/40 lg:col-span-6">
                 <Folder
                   key={currentFolderForDeck.id}
                   label={currentFolderForDeck.tab}
                   color={currentFolderForDeck.color}
                   mode="flap"
                   variant="solid"
-                  size={1.4}
+                  size={isMobile ? 1.05 : 1.35}
                   defaultOpen={true}
                   draggable={true}
                   zoomOnClick={true}

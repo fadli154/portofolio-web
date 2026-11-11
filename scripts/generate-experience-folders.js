@@ -283,15 +283,15 @@ folders.forEach((folder, idx) => {
       </text>
       <g transform="translate(0, 10)">
         ${folder.stack.slice(0, 4).map((tech, tIdx) => {
-          const xOffset = tIdx * 88;
-          return `
+    const xOffset = tIdx * 88;
+    return `
           <g transform="translate(${xOffset}, 0)">
             <rect x="0" y="0" width="80" height="22" rx="11" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
             <text x="40" y="14" font-family="monospace" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">
               ${escapeXml(tech)}
             </text>
           </g>`;
-        }).join('')}
+  }).join('')}
       </g>
     </g>
 

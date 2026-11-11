@@ -63,7 +63,10 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <a href="#main-content" className="skip-link">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999] focus:rounded-full focus:bg-[var(--ink)] focus:px-5 focus:py-2.5 focus:font-sans focus:text-xs focus:font-semibold focus:text-white focus:shadow-xl focus:outline-none focus:ring-2 focus:ring-[var(--violet)]"
+        >
           Lewati ke konten utama
         </a>
 

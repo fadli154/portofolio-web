@@ -242,6 +242,28 @@ export function HomeClientSections({
     };
   }, []);
 
+  // Viewport tracking for adaptive 3D components & responsive controls
+  const [screenWidth, setScreenWidth] = useState(1280);
+
+  useEffect(() => {
+    const handleResize = () => setScreenWidth(window.innerWidth);
+    handleResize();
+    window.addEventListener("resize", handleResize, { passive: true });
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const isMobile = screenWidth < 768;
+
+  const driftWallConfig = useMemo(() => {
+    if (screenWidth < 640) {
+      return { columns: 3, tileWidth: 230, tileHeight: 160, gap: 16 };
+    }
+    if (screenWidth < 1024) {
+      return { columns: 4, tileWidth: 270, tileHeight: 185, gap: 20 };
+    }
+    return { columns: 5, tileWidth: 310, tileHeight: 215, gap: 26 };
+  }, [screenWidth]);
+
   // Fetch live GitHub data for @fadli154
   useEffect(() => {
     let active = true;
@@ -313,7 +335,7 @@ export function HomeClientSections({
       {/* =====================================================================
           1. STUDIO KEFFI HERO + REACTBITS ANIMATED DISPLAY & 3D BENTO STAGE
          ===================================================================== */}
-      <section className="relative overflow-visible pb-16 pt-28 md:pb-24 md:pt-36">
+      <section id="hero" className="relative overflow-visible pb-16 pt-28 md:pb-24 md:pt-36">
         {/* Full-bleed 3D Lanyard Canvas: Extends through the entire hero stage and terminal without bottom clipping */}
         <div className="pointer-events-none absolute left-0 top-0 z-20 h-[1200px] w-full md:h-[1350px]">
           <LanyardWrapper
@@ -324,9 +346,9 @@ export function HomeClientSections({
             cardColor="#ffffff"
             strapColor="#111111"
             orientation="portrait"
-            anchor={0.70}
-            strapLength={0.52}
-            size={0.62}
+            anchor={isMobile ? 0.82 : 0.70}
+            strapLength={isMobile ? 0.45 : 0.52}
+            size={isMobile ? 0.48 : 0.62}
             gravity={1.1}
             breeze={0.35}
             damping={0.55}
@@ -571,7 +593,7 @@ export function HomeClientSections({
       {/* =====================================================================
           2. STUDIO KEFFI EDITORIAL ABOUT & ANIMATED COUNTUP METRICS (#about)
          ===================================================================== */}
-      <section id="about" className="py-20 md:py-28">
+      <section id="about" className="scroll-mt-24 pt-24 pb-20 md:pt-32 md:pb-28">
         <div className="keffi-wrap">
           <div className="keffi-grid items-start">
             {/* Left 3 Columns: Studio Keffi Metadata Definition List */}
@@ -675,7 +697,7 @@ export function HomeClientSections({
       {/* =====================================================================
           4. DARK STUDIO KEFFI STICKY STACKING TECH STACK & TRANSPARENT /ANATOMY
          ===================================================================== */}
-      <section id="stack" className="bg-[#111213] py-24 text-[#f5f5f2] md:py-32">
+      <section id="stack" className="scroll-mt-24 bg-[#111213] pt-24 pb-24 text-[#f5f5f2] md:pt-32 md:pb-32">
         <div className="keffi-wrap">
           <div className="sec-head sec-head--dark">
             <div>
@@ -784,7 +806,7 @@ export function HomeClientSections({
          ===================================================================== */}
       <section
         id="certificates"
-        className="relative overflow-hidden border-t border-[var(--line)] bg-[#0c0d12] pt-20 pb-10 text-[#f5f5f2] md:pt-28 md:pb-12"
+        className="scroll-mt-24 relative overflow-hidden border-t border-[var(--line)] bg-[#0c0d12] pt-24 pb-12 text-[#f5f5f2] md:pt-32 md:pb-16"
       >
         <div className="keffi-wrap">
           <div className="sec-head sec-head--dark">
@@ -849,13 +871,13 @@ export function HomeClientSections({
           {/* Top Fade Gradient Shadow */}
           <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-28 bg-gradient-to-b from-[#0c0d12] via-[#0c0d12]/70 to-transparent" />
 
-          {/* 3D Drift Wall Component with 5 columns and balanced centering */}
+          {/* 3D Drift Wall Component with responsive columns and balanced centering */}
           <DriftWall
             items={driftWallItems}
-            columns={5}
-            tileWidth={310}
-            tileHeight={215}
-            gap={26}
+            columns={driftWallConfig.columns}
+            tileWidth={driftWallConfig.tileWidth}
+            tileHeight={driftWallConfig.tileHeight}
+            gap={driftWallConfig.gap}
             radius={18}
             tilt={12}
             turn={-7}
@@ -878,12 +900,16 @@ export function HomeClientSections({
           <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-16 bg-gradient-to-t from-[#0c0d12] via-[#0c0d12]/40 to-transparent" />
 
           {/* Ambient Lighting & Floating Interaction Hint */}
-          <div className="pointer-events-none absolute bottom-4 left-1/2 z-30 -translate-x-1/2 flex items-center gap-2 rounded-full border border-white/10 bg-black/60 px-4 py-1.5 font-mono text-[11px] text-white/80 shadow-lg backdrop-blur-md">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#c4e22e] animate-pulse" />
-            <span>
+          <div className="pointer-events-none absolute bottom-4 left-1/2 z-30 -translate-x-1/2 flex max-w-[90vw] items-center justify-center gap-2 rounded-full border border-white/10 bg-black/60 px-3.5 py-1.5 font-mono text-[10px] md:text-[11px] text-white/80 shadow-lg backdrop-blur-md text-center">
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#c4e22e] animate-pulse" />
+            <span className="truncate md:overflow-visible md:whitespace-nowrap">
               {locale === "id"
-                ? "Arahkan kursor untuk memiringkan 3D · Klik tile untuk detail sertifikat"
-                : "Hover to tilt 3D · Click tile to inspect certificate"}
+                ? isMobile
+                  ? "Ketuk sertifikat untuk melihat detail"
+                  : "Arahkan kursor untuk memiringkan 3D · Klik tile untuk detail sertifikat"
+                : isMobile
+                  ? "Tap tile to inspect certificate"
+                  : "Hover to tilt 3D · Click tile to inspect certificate"}
             </span>
           </div>
         </div>
@@ -893,7 +919,7 @@ export function HomeClientSections({
           5. PORTAL AKADEMIK KEWIRAUSAHAAN (PERTEMUAN, ABSEN, BUKTI, TUGAS),
              KELOMPOK K-1, EVALUASI SWOT & LIVE GITHUB (#coursework)
          ===================================================================== */}
-      <section id="coursework" className="overflow-hidden pt-14 pb-24 md:pt-16 md:pb-32">
+      <section id="coursework" className="scroll-mt-24 overflow-hidden pt-24 pb-24 md:pt-32 md:pb-32">
         <div className="keffi-wrap">
           <div className="sec-head">
             <div>
@@ -931,7 +957,7 @@ export function HomeClientSections({
 
             {/* Studio Keffi Pill Switcher for Academic & Telemetry Sub-Views */}
             <div
-              className="flex flex-wrap gap-2 rounded-full bg-[var(--bone)] p-1.5"
+              className="flex max-w-full overflow-x-auto gap-2 rounded-2xl md:rounded-full bg-[var(--bone)] p-1.5 no-scrollbar scroll-smooth"
               role="tablist"
               aria-label="Academic and telemetry tabs"
             >
@@ -978,7 +1004,7 @@ export function HomeClientSections({
                       playMechanicalClick(680);
                       setActiveHubTab(tab.id);
                     }}
-                    className={`inline-flex items-center gap-2 rounded-full px-4 py-2.5 text-xs font-medium transition-all ${active
+                    className={`inline-flex shrink-0 items-center gap-2 rounded-xl md:rounded-full px-4 py-2.5 text-xs font-medium whitespace-nowrap transition-all ${active
                       ? "bg-[var(--ink)] text-[var(--cream)] shadow-sm"
                       : "text-[var(--ink)] hover:bg-black/5"
                       }`}
@@ -1087,12 +1113,16 @@ export function HomeClientSections({
                 />
 
                 {/* Floating Tactical Interaction Pill */}
-                <div className="pointer-events-none absolute bottom-6 left-1/2 z-30 -translate-x-1/2 flex items-center gap-2 rounded-full border border-[var(--line)] bg-white/85 px-4 py-1.5 font-mono text-[11px] text-[var(--ink)] shadow-md backdrop-blur-md dark:border-white/15 dark:bg-black/80 dark:text-white">
-                  <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[var(--violet)]" />
-                  <span>
+                <div className="pointer-events-none absolute bottom-4 md:bottom-6 left-1/2 z-30 -translate-x-1/2 flex max-w-[90vw] items-center justify-center gap-2 rounded-full border border-[var(--line)] bg-white/85 px-3.5 py-1.5 font-mono text-[10px] md:text-[11px] text-[var(--ink)] shadow-md backdrop-blur-md dark:border-white/15 dark:bg-black/80 dark:text-white text-center">
+                  <span className="h-1.5 w-1.5 shrink-0 animate-pulse rounded-full bg-[var(--violet)]" />
+                  <span className="truncate md:overflow-visible md:whitespace-nowrap">
                     {locale === "id"
-                      ? "Geser / Putar 3D Silinder · Klik kartu untuk detail absensi & tugas"
-                      : "Drag 3D Cylinder · Click card to inspect attendance & task"}
+                      ? isMobile
+                        ? "Putar Silinder 3D · Ketuk kartu untuk absensi"
+                        : "Geser / Putar 3D Silinder · Klik kartu untuk detail absensi & tugas"
+                      : isMobile
+                        ? "Spin 3D Cylinder · Tap card for details"
+                        : "Drag 3D Cylinder · Click card to inspect attendance & task"}
                   </span>
                 </div>
               </div>
@@ -1473,7 +1503,7 @@ export function HomeClientSections({
       {/* =====================================================================
           6. STUDIO KEFFI CLOSING CONTACT & COLLABORATION SECTION (#contact)
          ===================================================================== */}
-      <section id="contact" className="border-t border-[var(--line)] bg-white py-24 md:py-32">
+      <section id="contact" className="scroll-mt-24 border-t border-[var(--line)] bg-white pt-24 pb-24 md:pt-32 md:pb-32">
         <div className="keffi-wrap">
           <div className="keffi-grid items-end">
             <div className="col-span-12 lg:col-span-8">
