@@ -593,7 +593,7 @@ export function HomeClientSections({
       {/* =====================================================================
           2. STUDIO KEFFI EDITORIAL ABOUT & ANIMATED COUNTUP METRICS (#about)
          ===================================================================== */}
-      <section id="about" className="scroll-mt-24 pt-24 pb-20 md:pt-32 md:pb-28">
+      <section id="about" className="scroll-mt-24 pt-10 pb-20 md:pt-20 md:pb-28">
         <div className="keffi-wrap">
           <div className="keffi-grid items-start">
             {/* Left 3 Columns: Studio Keffi Metadata Definition List */}
@@ -721,7 +721,7 @@ export function HomeClientSections({
                   mainClassName="text-white/80"
                 />
               </span>
-              <h2 className="sec-title mt-3 text-[#f5f5f2]">
+              <h2 className="sec-title mt-3 !text-[#f5f5f2]">
                 <BlurText
                   text={
                     locale === "id"
@@ -833,7 +833,7 @@ export function HomeClientSections({
                   mainClassName="text-white/80"
                 />
               </span>
-              <h2 className="sec-title mt-3 text-[#f5f5f2]">
+              <h2 className="sec-title mt-3 !text-[#f5f5f2]">
                 <BlurText
                   text={
                     locale === "id"
@@ -1067,8 +1067,8 @@ export function HomeClientSections({
                         setPertemuanViewMode("carousel");
                       }}
                       className={`rounded-full px-3.5 py-1.5 font-mono text-[11px] font-semibold transition-all ${pertemuanViewMode === "carousel"
-                          ? "bg-white text-[var(--ink)] shadow-xs dark:bg-[#1a1b1e] dark:text-white"
-                          : "text-[var(--mute)] hover:text-[var(--ink)] dark:text-gray-400 dark:hover:text-white"
+                        ? "bg-white text-[var(--ink)] shadow-xs dark:bg-[#1a1b1e] dark:text-white"
+                        : "text-[var(--mute)] hover:text-[var(--ink)] dark:text-gray-400 dark:hover:text-white"
                         }`}
                     >
                       3D Circular Gallery
@@ -1080,8 +1080,8 @@ export function HomeClientSections({
                         setPertemuanViewMode("grid");
                       }}
                       className={`rounded-full px-3.5 py-1.5 font-mono text-[11px] font-semibold transition-all ${pertemuanViewMode === "grid"
-                          ? "bg-white text-[var(--ink)] shadow-xs dark:bg-[#1a1b1e] dark:text-white"
-                          : "text-[var(--mute)] hover:text-[var(--ink)] dark:text-gray-400 dark:hover:text-white"
+                        ? "bg-white text-[var(--ink)] shadow-xs dark:bg-[#1a1b1e] dark:text-white"
+                        : "text-[var(--mute)] hover:text-[var(--ink)] dark:text-gray-400 dark:hover:text-white"
                         }`}
                     >
                       Grid
@@ -1092,7 +1092,7 @@ export function HomeClientSections({
             </div>
 
             {pertemuanViewMode === "carousel" ? (
-              <div className="relative mt-6 h-[600px] w-full overflow-hidden md:h-[680px]">
+              <div className="relative mt-1 h-[600px] w-full overflow-hidden md:h-[680px]">
                 <CircularGalleryWrapper
                   items={courseworkGalleryItems}
                   bend={2.5}

@@ -404,6 +404,14 @@ section[id],
   border-bottom-color: rgba(245, 245, 242, 0.14);
 }
 
+.sec-head--dark .sec-title {
+  color: #f5f5f2 !important;
+}
+
+.sec-head--dark .sec-kicker {
+  color: rgba(245, 245, 242, 0.7) !important;
+}
+
 .sec-kicker {
   display: inline-flex;
   align-items: center;
