@@ -46,8 +46,10 @@ html[data-theme="light"] {
 html[data-theme="dark"],
 .dark {
   --bg: #0a0a0c;
-  --bg-elevated: #141418;
+  --cream: #0a0a0c;
+  --bone: #141418;
   --card: #141418;
+  --bg-elevated: #141418;
   --ink: #f5f5f2;
   --ink-muted: rgba(245, 245, 242, 0.7);
   --mute: rgba(245, 245, 242, 0.65);
