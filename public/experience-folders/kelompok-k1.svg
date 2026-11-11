@@ -1,177 +1,165 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="440" height="600" viewBox="0 0 440 600">
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="390" viewBox="0 0 560 390">
   <defs>
-    <filter id="paper-shadow" x="-5%" y="-5%" width="110%" height="114%" filterUnits="userSpaceOnUse">
-      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="rgba(0,0,0,0.14)"/>
+    <!-- Drop shadows -->
+    
+    <filter id="paper-drop-shadow-1" x="-15%" y="-15%" width="130%" height="130%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="-2" dy="8" stdDeviation="8" flood-color="rgba(0,0,0,0.24)"/>
     </filter>
-    <linearGradient id="folder-grad-3" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#0284c7" stop-opacity="0.95"/>
-      <stop offset="100%" stop-color="#0284c7" stop-opacity="1"/>
+    <filter id="paper-drop-shadow-2" x="-15%" y="-15%" width="130%" height="130%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="rgba(0,0,0,0.28)"/>
+    </filter>
+    <filter id="paper-drop-shadow-3" x="-15%" y="-15%" width="130%" height="130%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="3" dy="8" stdDeviation="8" flood-color="rgba(0,0,0,0.22)"/>
+    </filter>
+
+    <filter id="front-shadow" x="-5%" y="-5%" width="110%" height="120%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="-4" stdDeviation="6" flood-color="rgba(0,0,0,0.25)"/>
+    </filter>
+
+    <!-- Folder Gradients -->
+    <linearGradient id="backGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0369a1"/>
+      <stop offset="100%" stop-color="#0284c7"/>
     </linearGradient>
-    <linearGradient id="flap-light-3" x1="0" y1="0" x2="1" y2="0.6">
-      <stop offset="0%" stop-color="rgba(255,255,255,0.12)"/>
-      <stop offset="100%" stop-color="rgba(255,255,255,0.02)"/>
+
+    <linearGradient id="frontGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0284c7"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </linearGradient>
+
+    <linearGradient id="frontHighlight" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="rgba(255,255,255,0.25)"/>
+      <stop offset="50%" stop-color="rgba(255,255,255,0.08)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0.18)"/>
     </linearGradient>
   </defs>
 
-  <!-- Folder Back Cover with Tab (Physical Manila / Studio Keffi Folder Silhouette - NO OUTER SHADOW) -->
+  <!-- 1. BACK FOLDER SILHOUETTE (With Tab) -->
   <g id="folder-back">
-    <!-- Back Tab Shape: Left aligned tab -->
-    <path d="M 30,76 
-             L 190,76 
-             Q 206,76 216,92 
-             L 224,106 
-             Q 232,118 248,118 
-             L 410,118 
-             Q 424,118 424,132 
-             L 424,564 
-             Q 424,578 410,578 
-             L 30,578 
-             Q 16,578 16,564 
-             L 16,90 
-             Q 16,76 30,76 Z" 
-          fill="#0369a1" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" />
+    <path d="M 0 60 Q 0 36 24 36 L 286 36 C 310 36 310 0 334 0 L 476 0 C 500 0 500 36 524 36 L 536 36 Q 560 36 560 60 L 560 366 Q 560 390 536 390 L 24 390 Q 0 390 0 366 Z" fill="url(#backGrad)" />
     
     <!-- Tab Text Label -->
-    <text x="36" y="102" font-family="monospace" font-size="11" font-weight="bold" fill="#7dd3fc" letter-spacing="0.08em">
-      ACADEMIC · TIM K-1
+    <text x="405" y="24" 
+          font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" 
+          font-size="13" 
+          font-weight="700" 
+          fill="#ffffff" 
+          letter-spacing="0.04em"
+          text-anchor="middle">
+      ACAD · TIM K-1
     </text>
   </g>
 
-  <!-- Peeking Paper Sheets (Physical Papers inside folder) -->
-  <!-- Sheet 3 (Deepest) -->
-  <g filter="url(#paper-shadow)" transform="rotate(3, 220, 200)">
-    <rect x="52" y="100" width="336" height="300" rx="12" fill="#eef0f3" stroke="#d5d9df" stroke-width="1.2"/>
-    <rect x="74" y="118" width="120" height="8" rx="4" fill="#cbd5e1"/>
-    <rect x="74" y="134" width="260" height="6" rx="3" fill="#e2e8f0"/>
+  <!-- 2. FANNED OUT WHITE DOCUMENT PAPERS -->
+  
+  <!-- Sheet 1: Left Paper (-5 deg) -->
+  <g transform="rotate(-5, 175, 190)" filter="url(#paper-drop-shadow-1)">
+    <rect x="55" y="60" width="230" height="230" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
+    <!-- Paper Header -->
+    <rect x="73" y="78" width="60" height="18" rx="9" fill="#0f172a"/>
+    <text x="103" y="91" font-family="monospace" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      DOC-01
+    </text>
+    <!-- Paper Title -->
+    <text x="73" y="118" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#0f172a">
+      Struktur Organisasi & Ti...
+    </text>
+    <!-- Paper Simulated Content Lines -->
+    <rect x="73" y="132" width="180" height="5" rx="2.5" fill="#94a3b8"/>
+    <rect x="73" y="144" width="160" height="5" rx="2.5" fill="#cbd5e1"/>
+    <rect x="73" y="156" width="140" height="5" rx="2.5" fill="#e2e8f0"/>
   </g>
 
-  <!-- Sheet 2 (Middle) -->
-  <g filter="url(#paper-shadow)" transform="rotate(-1.8, 220, 200)">
-    <rect x="42" y="112" width="356" height="300" rx="12" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.2"/>
-    <rect x="66" y="130" width="160" height="10" rx="5" fill="#94a3b8"/>
-    <rect x="66" y="150" width="280" height="6" rx="3" fill="#cbd5e1"/>
-    <rect x="66" y="164" width="240" height="6" rx="3" fill="#e2e8f0"/>
+  <!-- Sheet 3: Right Paper (+5 deg) -->
+  <g transform="rotate(5, 375, 190)" filter="url(#paper-drop-shadow-3)">
+    <rect x="270" y="62" width="230" height="230" rx="14" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.2"/>
+    <!-- Paper Header -->
+    <rect x="288" y="80" width="60" height="18" rx="9" fill="#334155"/>
+    <text x="318" y="93" font-family="monospace" font-size="9" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      DOC-03
+    </text>
+    <!-- Paper Title -->
+    <text x="288" y="120" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#0f172a">
+      Katalog Tugas & Delivera...
+    </text>
+    <!-- Paper Simulated Content Lines -->
+    <rect x="288" y="134" width="180" height="5" rx="2.5" fill="#94a3b8"/>
+    <rect x="288" y="146" width="150" height="5" rx="2.5" fill="#cbd5e1"/>
+    <rect x="288" y="158" width="130" height="5" rx="2.5" fill="#e2e8f0"/>
   </g>
 
-  <!-- Sheet 1 (Top Paper / Document Preview) -->
-  <g filter="url(#paper-shadow)">
-    <rect x="36" y="126" width="368" height="300" rx="14" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
+  <!-- Sheet 2: Center Main Hero Paper (0 deg) -->
+  <g filter="url(#paper-drop-shadow-2)">
+    <rect x="155" y="44" width="250" height="240" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+    <!-- Paper Header Badge & Page Num -->
+    <rect x="175" y="64" width="68" height="20" rx="10" fill="#0284c7"/>
+    <text x="209" y="78" font-family="monospace" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">
+      DOC-02
+    </text>
+    <text x="385" y="78" font-family="monospace" font-size="10" font-weight="600" fill="#64748b" text-anchor="end">
+      02/03
+    </text>
+    <!-- Paper Main Title -->
+    <text x="175" y="108" font-family="system-ui, sans-serif" font-size="14" font-weight="800" fill="#0f172a" letter-spacing="-0.01em">
+      Log Absensi 6 Pertemua...
+    </text>
+    <text x="175" y="126" font-family="system-ui, sans-serif" font-size="10.5" font-weight="500" fill="#475569">
+      Sinkronisasi riwayat kehadiran per...
+    </text>
+    <!-- Crisp Document Simulation Lines -->
+    <rect x="175" y="142" width="205" height="5.5" rx="2.75" fill="#94a3b8"/>
+    <rect x="175" y="154" width="185" height="5.5" rx="2.75" fill="#cbd5e1"/>
+    <rect x="175" y="166" width="195" height="5.5" rx="2.75" fill="#e2e8f0"/>
+  </g>
+
+  <!-- 3. FRONT FOLDER FLAP (The signature pocket) -->
+  <g filter="url(#front-shadow)">
+    <path d="M 0 170 Q 0 146 24 146 L 536 146 Q 560 146 560 170 L 560 366 Q 560 390 536 390 L 24 390 Q 0 390 0 366 Z" fill="url(#frontGrad)" />
     
-    <!-- Document Header -->
-    <g transform="translate(60, 150)">
-      <rect x="0" y="0" width="60" height="18" rx="9" fill="#111827"/>
-      <text x="30" y="12" font-family="monospace" font-size="9" font-weight="bold" fill="#f8fafc" text-anchor="middle">
-        DOC-01
+    <!-- Top Edge Highlight Sheen -->
+    <path d="M 0 170 Q 0 146 24 146 L 536 146 Q 560 146 560 170" 
+          fill="none" stroke="url(#frontHighlight)" stroke-width="2.5" />
+    
+    <!-- Subtle Inner Bevel / Folder Line -->
+    <rect x="28" y="174" width="504" height="188" rx="16" 
+          fill="rgba(0,0,0,0.12)" stroke="rgba(255,255,255,0.14)" stroke-width="1.2" />
+
+    <!-- Content on Front Flap: Editorial Showcase -->
+    <g transform="translate(48, 194)">
+      <!-- Badge -->
+      <rect x="0" y="0" width="166.5" height="22" rx="11" fill="rgba(255,255,255,0.22)"/>
+      <text x="83.25" y="15" 
+            font-family="monospace" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle" letter-spacing="0.05em">
+        PORTAL TIM AKADEMIK
       </text>
 
-      <text x="72" y="13" font-family="system-ui, sans-serif" font-size="12" font-weight="700" fill="#0f172a">
-        Kontrak Perkuliahan &amp; Tim K-1
+      <!-- Year -->
+      <text x="464" y="15" 
+            font-family="monospace" font-size="11" font-weight="bold" fill="rgba(255,255,255,0.85)" text-anchor="end">
+        2026
+      </text>
+
+      <!-- Main Title on Flap -->
+      <text x="0" y="52" 
+            font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="800" fill="#ffffff" letter-spacing="-0.02em">
+        Portal Perkuliahan K-1
       </text>
       
-      <rect x="0" y="28" width="320" height="1" fill="#f1f5f9"/>
-
-      <text x="0" y="44" font-family="system-ui, sans-serif" font-size="10.5" fill="#64748b">
-        Struktur kepengurusan tim, repositori GitHub, &amp; 
+      <!-- Subtitle / Organization -->
+      <text x="0" y="74" 
+            font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="500" fill="rgba(255,255,255,0.85)">
+        Mata Kuliah Kewirausahaan
       </text>
-    </g>
-  </g>
 
-  <!-- Folder Front Pocket / Flap (Overlaps the bottom 65% of the folder) -->
-  <g id="folder-front">
-    <path d="M 16,230 
-             Q 16,218 28,218 
-             L 412,218 
-             Q 424,218 424,230 
-             L 424,566 
-             Q 424,578 412,578 
-             L 28,578 
-             Q 16,578 16,566 Z" 
-          fill="url(#folder-grad-3)" 
-          stroke="rgba(255,255,255,0.16)" 
-          stroke-width="1.5" />
-    
-    <!-- Subtle Light Wash on Flap -->
-    <path d="M 16,230 Q 16,218 28,218 L 412,218 Q 424,218 424,230 L 424,566 Q 424,578 412,578 L 28,578 Q 16,578 16,566 Z" 
-          fill="url(#flap-light-3)" />
-    
-    <!-- Top Flap Lip / Stitch Accent -->
-    <line x1="28" y1="228" x2="412" y2="228" stroke="rgba(255,255,255,0.22)" stroke-width="1" stroke-dasharray="4 4"/>
-  </g>
-
-  <!-- Folder Content Typography & Badges on the Front Pocket -->
-  <g transform="translate(42, 252)">
-    <!-- Badge and Year -->
-    <rect x="0" y="0" width="118.39999999999999" height="24" rx="12" fill="#7dd3fc"/>
-    <text x="59.199999999999996" y="15" font-family="monospace" font-size="10" font-weight="bold" fill="#111827" text-anchor="middle">
-      TIM AKADEMIK
-    </text>
-
-    <text x="356" y="16" font-family="monospace" font-size="11" font-weight="bold" fill="rgba(255,255,255,0.7)" text-anchor="end">
-      2026
-    </text>
-
-    <!-- Main Title -->
-    <text x="0" y="58" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="700" fill="#ffffff" letter-spacing="-0.02em">
-      Portal Kewirausahaan K-1
-    </text>
-
-    <!-- Subtitle / Organization -->
-    <text x="0" y="82" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="500" fill="rgba(255,255,255,0.78)">
-      Ekosistem Kolaboratif Informatika
-    </text>
-
-    <!-- Summary Paragraph -->
-    <g transform="translate(0, 114)">
-      <rect x="0" y="0" width="356" height="58" rx="10" fill="rgba(0,0,0,0.24)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-      <text x="14" y="24" font-family="system-ui, sans-serif" font-size="11.5" fill="rgba(255,255,255,0.9)" letter-spacing="-0.01em">
-        Rancang bangun portal perkuliahan 6 pertemuan, p
-      </text>
-      <text x="14" y="42" font-family="system-ui, sans-serif" font-size="11.5" fill="rgba(255,255,255,0.9)" letter-spacing="-0.01em">
-        elacakan tugas, absensi, &amp; sinkronisasi Supabase...
-      </text>
-    </g>
-
-    <!-- Tech Stack Row -->
-    <g transform="translate(0, 192)">
-      <text x="0" y="0" font-family="monospace" font-size="9.5" font-weight="bold" fill="#7dd3fc" letter-spacing="0.08em" text-transform="uppercase">
-        ENGINEERING STACK:
-      </text>
-      <g transform="translate(0, 10)">
-        
-          <g transform="translate(0, 0)">
-            <rect x="0" y="0" width="80" height="22" rx="11" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
-            <text x="40" y="14" font-family="monospace" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">
-              Next.js 15
-            </text>
-          </g>
-          <g transform="translate(88, 0)">
-            <rect x="0" y="0" width="80" height="22" rx="11" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
-            <text x="40" y="14" font-family="monospace" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">
-              TypeScript
-            </text>
-          </g>
-          <g transform="translate(176, 0)">
-            <rect x="0" y="0" width="80" height="22" rx="11" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
-            <text x="40" y="14" font-family="monospace" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">
-              Tailwind
-            </text>
-          </g>
-          <g transform="translate(264, 0)">
-            <rect x="0" y="0" width="80" height="22" rx="11" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
-            <text x="40" y="14" font-family="monospace" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">
-              Supabase
-            </text>
-          </g>
+      <!-- Interactive Cue Pill -->
+      <g transform="translate(0, 102)">
+        <rect x="0" y="0" width="220" height="30" rx="15" fill="rgba(0,0,0,0.3)" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+        <text x="110" y="19" 
+              font-family="monospace" font-size="10.5" font-weight="bold" fill="#ffffff" text-anchor="middle" letter-spacing="0.04em">
+          ✦ KLIK UNTUK BUKA BERKAS 3D
+        </text>
       </g>
-    </g>
-
-    <!-- Bottom Action Pill: Buka Berkas -->
-    <g transform="translate(0, 260)">
-      <rect x="0" y="0" width="356" height="34" rx="17" fill="rgba(255,255,255,0.09)" stroke="#7dd3fc" stroke-width="1"/>
-      <text x="178" y="21" font-family="monospace" font-size="11" font-weight="bold" fill="#7dd3fc" text-anchor="middle">
-        📂 KLIK UNTUK BUKA FOLDER 3D →
-      </text>
     </g>
   </g>
 </svg>

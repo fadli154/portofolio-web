@@ -139,7 +139,7 @@ export function ExperienceFoldersSection({
   const currentFolderForDeck = EXPERIENCE_FOLDERS[activeDeckIndex];
 
   return (
-    <section id="work" className="scroll-mt-24 overflow-hidden bg-white pt-24 pb-20 md:pt-32 md:pb-28 dark:bg-[#0a0a0c]">
+    <section id="work" className="scroll-mt-28 overflow-hidden bg-white pt-28 pb-20 md:pt-36 md:pb-28 dark:bg-[#0a0a0c]">
       <div className="keffi-wrap">
         {/* Section Header */}
         <div className="sec-head dark:border-white/10">
@@ -172,11 +172,10 @@ export function ExperienceFoldersSection({
                   setViewMode("circular");
                   playMechanicalClick(560);
                 }}
-                className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-mono text-xs font-semibold transition-all ${
-                  viewMode === "circular"
-                    ? "bg-white text-[var(--ink)] shadow-xs dark:bg-[#1f2024] dark:text-white"
-                    : "text-[var(--mute)] hover:text-[var(--ink)] dark:text-gray-400 dark:hover:text-white"
-                }`}
+                className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-mono text-xs font-semibold transition-all ${viewMode === "circular"
+                  ? "bg-white text-[var(--ink)] shadow-xs dark:bg-[#1f2024] dark:text-white"
+                  : "text-[var(--mute)] hover:text-[var(--ink)] dark:text-gray-400 dark:hover:text-white"
+                  }`}
               >
                 <span>🎡</span>
                 <span>{locale === "id" ? "Galeri Melingkar" : "Circular Gallery"}</span>
@@ -188,11 +187,10 @@ export function ExperienceFoldersSection({
                   setViewMode("deck");
                   playMechanicalClick(680);
                 }}
-                className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-mono text-xs font-semibold transition-all ${
-                  viewMode === "deck"
-                    ? "bg-white text-[var(--ink)] shadow-xs dark:bg-[#1f2024] dark:text-white"
-                    : "text-[var(--mute)] hover:text-[var(--ink)] dark:text-gray-400 dark:hover:text-white"
-                }`}
+                className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-mono text-xs font-semibold transition-all ${viewMode === "deck"
+                  ? "bg-white text-[var(--ink)] shadow-xs dark:bg-[#1f2024] dark:text-white"
+                  : "text-[var(--mute)] hover:text-[var(--ink)] dark:text-gray-400 dark:hover:text-white"
+                  }`}
               >
                 <span>📂</span>
                 <span>{locale === "id" ? "Meja Berkas 3D" : "3D Folder Deck"}</span>
@@ -255,7 +253,7 @@ export function ExperienceFoldersSection({
           {/* Tactical Overlay: Bottom Controls & Folder Quick Launcher */}
           <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30">
             <div className="keffi-wrap flex flex-col items-center justify-between gap-2.5 p-4 md:p-6 md:flex-row md:items-end">
-              <div className="pointer-events-auto flex max-w-[90vw] items-center gap-2 rounded-full border border-[var(--line)] bg-white/90 px-3.5 py-1.5 font-mono text-[10px] md:text-xs text-[var(--ink)] shadow-md backdrop-blur-md dark:border-white/15 dark:bg-black/80 dark:text-white">
+              <div className="pointer-events-auto flex max-w-[90vw] items-center gap-2 rounded-full border border-[var(--line)] bg-white/90 px-3.5 py-1.5 font-mono text-[10px] md:text-xs text-[var(--ink)] backdrop-blur-md dark:border-white/15 dark:bg-black/80 dark:text-white">
                 <span className="h-1.5 w-1.5 md:h-2 md:w-2 shrink-0 rounded-full bg-[var(--violet)] animate-pulse" />
                 <span className="truncate md:overflow-visible md:whitespace-nowrap">
                   {isMobile
@@ -278,7 +276,7 @@ export function ExperienceFoldersSection({
                     setActivePaperIndex(0);
                     playMechanicalClick(640);
                   }}
-                  className="inline-flex items-center gap-2 rounded-full bg-[var(--violet)] px-4 py-2 md:px-5 md:py-2.5 font-mono text-[11px] md:text-xs font-bold text-white shadow-lg transition-transform hover:scale-105 active:scale-95"
+                  className="inline-flex items-center gap-2 rounded-full bg-[var(--violet)] px-4 py-2 md:px-5 md:py-2.5 font-mono text-[11px] md:text-xs font-bold text-white transition-transform hover:scale-105 active:scale-95"
                 >
                   <FolderOpen className="h-3.5 w-3.5 md:h-4 md:w-4" />
                   <span>
@@ -310,11 +308,10 @@ export function ExperienceFoldersSection({
                     setActivePaperIndex(0);
                     playMechanicalClick(580 + idx * 25);
                   }}
-                  className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-4 py-2 font-mono text-xs font-semibold whitespace-nowrap transition-all ${
-                    activeDeckIndex === idx
-                      ? "bg-[var(--violet)] text-white shadow-xs"
-                      : "border border-[var(--line)] bg-white text-[var(--ink)] hover:bg-gray-100 dark:border-white/10 dark:bg-[#1a1b1e] dark:text-gray-300 dark:hover:bg-[#25272c]"
-                  }`}
+                  className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-4 py-2 font-mono text-xs font-semibold whitespace-nowrap transition-all ${activeDeckIndex === idx
+                    ? "bg-[var(--violet)] text-white shadow-xs"
+                    : "border border-[var(--line)] bg-white text-[var(--ink)] hover:bg-gray-100 dark:border-white/10 dark:bg-[#1a1b1e] dark:text-gray-300 dark:hover:bg-[#25272c]"
+                    }`}
                 >
                   <span className="opacity-70">0{idx + 1}</span>
                   <span>{f.tab}</span>
@@ -388,11 +385,10 @@ export function ExperienceFoldersSection({
                           setActivePaperIndex(pIdx);
                           playMechanicalClick(650);
                         }}
-                        className={`flex flex-col items-start rounded-xl p-3 text-left transition-all ${
-                          activePaperIndex === pIdx
-                            ? "border border-[var(--violet)] bg-[var(--violet)]/10 text-[var(--violet)] dark:border-[var(--violet)] dark:bg-[var(--violet)]/25 dark:text-white"
-                            : "border border-[var(--line)] bg-[#f5f5f2] text-[var(--ink)] hover:border-gray-400 dark:border-white/10 dark:bg-black/30 dark:text-gray-300 dark:hover:border-white/30"
-                        }`}
+                        className={`flex flex-col items-start rounded-xl p-3 text-left transition-all ${activePaperIndex === pIdx
+                          ? "border border-[var(--violet)] bg-[var(--violet)]/10 text-[var(--violet)] dark:border-[var(--violet)] dark:bg-[var(--violet)]/25 dark:text-white"
+                          : "border border-[var(--line)] bg-[#f5f5f2] text-[var(--ink)] hover:border-gray-400 dark:border-white/10 dark:bg-black/30 dark:text-gray-300 dark:hover:border-white/30"
+                          }`}
                       >
                         <span className="font-mono text-[10px] font-bold">
                           {p.code}
@@ -432,202 +428,201 @@ export function ExperienceFoldersSection({
         </div>
       )}
 
-        {/* ===================================================================
+      {/* ===================================================================
             MODAL INSPECTION STAGE (Triggered on click from Circular Gallery)
             =================================================================== */}
-        {selectedFolder && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8">
-            {/* Backdrop */}
-            <div
-              className="absolute inset-0 bg-black/85 backdrop-blur-md"
-              onClick={() => setSelectedFolder(null)}
-            />
+      {selectedFolder && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/85 backdrop-blur-md"
+            onClick={() => setSelectedFolder(null)}
+          />
 
-            {/* Modal Dialog Card */}
-            <div className="relative z-10 flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-[32px] border border-white/15 bg-[#121316] text-[#f5f5f2] shadow-2xl">
-              {/* Modal Top Bar */}
-              <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
-                <div className="flex items-center gap-3">
-                  <span className="rounded-full bg-[var(--violet)] px-3 py-1 font-mono text-xs font-bold text-white">
-                    {selectedFolder.badge}
-                  </span>
-                  <span className="font-mono text-xs font-medium text-white/70">
-                    {selectedFolder.tab} · {selectedFolder.year}
-                  </span>
-                </div>
+          {/* Modal Dialog Card */}
+          <div className="relative z-10 flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-[32px] border border-white/15 bg-[#121316] text-[#f5f5f2] shadow-2xl">
+            {/* Modal Top Bar */}
+            <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
+              <div className="flex items-center gap-3">
+                <span className="rounded-full bg-[var(--violet)] px-3 py-1 font-mono text-xs font-bold text-white">
+                  {selectedFolder.badge}
+                </span>
+                <span className="font-mono text-xs font-medium text-white/70">
+                  {selectedFolder.tab} · {selectedFolder.year}
+                </span>
+              </div>
 
-                <div className="flex items-center gap-2">
-                  {/* Prev / Next folder switcher */}
-                  <div className="flex items-center gap-1 border-r border-white/15 pr-3">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const currIdx = EXPERIENCE_FOLDERS.findIndex(
-                          (f) => f.id === selectedFolder.id
-                        );
-                        const prevIdx =
-                          (currIdx - 1 + EXPERIENCE_FOLDERS.length) %
-                          EXPERIENCE_FOLDERS.length;
-                        setSelectedFolder(EXPERIENCE_FOLDERS[prevIdx]);
-                        setActivePaperIndex(0);
-                        playMechanicalClick(580);
-                      }}
-                      className="rounded-full p-2 text-white/70 hover:bg-white/10 hover:text-white"
-                      title="Folder Sebelumnya (Left Arrow)"
-                    >
-                      <ChevronLeft className="h-5 w-5" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const currIdx = EXPERIENCE_FOLDERS.findIndex(
-                          (f) => f.id === selectedFolder.id
-                        );
-                        const nextIdx =
-                          (currIdx + 1) % EXPERIENCE_FOLDERS.length;
-                        setSelectedFolder(EXPERIENCE_FOLDERS[nextIdx]);
-                        setActivePaperIndex(0);
-                        playMechanicalClick(660);
-                      }}
-                      className="rounded-full p-2 text-white/70 hover:bg-white/10 hover:text-white"
-                      title="Folder Berikutnya (Right Arrow)"
-                    >
-                      <ChevronRight className="h-5 w-5" />
-                    </button>
-                  </div>
-
-                  {/* Close button */}
+              <div className="flex items-center gap-2">
+                {/* Prev / Next folder switcher */}
+                <div className="flex items-center gap-1 border-r border-white/15 pr-3">
                   <button
                     type="button"
                     onClick={() => {
-                      setSelectedFolder(null);
-                      playMechanicalClick(500);
+                      const currIdx = EXPERIENCE_FOLDERS.findIndex(
+                        (f) => f.id === selectedFolder.id
+                      );
+                      const prevIdx =
+                        (currIdx - 1 + EXPERIENCE_FOLDERS.length) %
+                        EXPERIENCE_FOLDERS.length;
+                      setSelectedFolder(EXPERIENCE_FOLDERS[prevIdx]);
+                      setActivePaperIndex(0);
+                      playMechanicalClick(580);
                     }}
-                    className="rounded-full bg-white/10 p-2 text-white/80 hover:bg-white/20 hover:text-white"
-                    title="Tutup (Esc)"
+                    className="rounded-full p-2 text-white/70 hover:bg-white/10 hover:text-white"
+                    title="Folder Sebelumnya (Left Arrow)"
                   >
-                    <X className="h-5 w-5" />
+                    <ChevronLeft className="h-5 w-5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const currIdx = EXPERIENCE_FOLDERS.findIndex(
+                        (f) => f.id === selectedFolder.id
+                      );
+                      const nextIdx =
+                        (currIdx + 1) % EXPERIENCE_FOLDERS.length;
+                      setSelectedFolder(EXPERIENCE_FOLDERS[nextIdx]);
+                      setActivePaperIndex(0);
+                      playMechanicalClick(660);
+                    }}
+                    className="rounded-full p-2 text-white/70 hover:bg-white/10 hover:text-white"
+                    title="Folder Berikutnya (Right Arrow)"
+                  >
+                    <ChevronRight className="h-5 w-5" />
                   </button>
                 </div>
+
+                {/* Close button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedFolder(null);
+                    playMechanicalClick(500);
+                  }}
+                  className="rounded-full bg-white/10 p-2 text-white/80 hover:bg-white/20 hover:text-white"
+                  title="Tutup (Esc)"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Body: 2-Column Physical 3D Folder & Document Details */}
+            <div className="grid flex-1 grid-cols-1 overflow-y-auto p-6 md:p-8 lg:grid-cols-12 lg:gap-8">
+              {/* Stage 1: Interactive 3D Folder Canvas */}
+              <div className="flex min-h-[420px] items-center justify-center rounded-2xl bg-black/40 p-6 lg:col-span-6">
+                <Folder
+                  key={selectedFolder.id}
+                  label={selectedFolder.tab}
+                  color={selectedFolder.color}
+                  mode="flap"
+                  variant="solid"
+                  size={1.35}
+                  defaultOpen={true}
+                  draggable={true}
+                  zoomOnClick={true}
+                  intro={false}
+                  layout="spread"
+                  items={buildFolderItems(selectedFolder)}
+                  onItemClick={(_, pIdx) => {
+                    setActivePaperIndex(pIdx);
+                    playMechanicalClick(720);
+                  }}
+                />
               </div>
 
-              {/* Modal Body: 2-Column Physical 3D Folder & Document Details */}
-              <div className="grid flex-1 grid-cols-1 overflow-y-auto p-6 md:p-8 lg:grid-cols-12 lg:gap-8">
-                {/* Stage 1: Interactive 3D Folder Canvas */}
-                <div className="flex min-h-[420px] items-center justify-center rounded-2xl bg-black/40 p-6 lg:col-span-6">
-                  <Folder
-                    key={selectedFolder.id}
-                    label={selectedFolder.tab}
-                    color={selectedFolder.color}
-                    mode="flap"
-                    variant="solid"
-                    size={1.35}
-                    defaultOpen={true}
-                    draggable={true}
-                    zoomOnClick={true}
-                    intro={false}
-                    layout="spread"
-                    items={buildFolderItems(selectedFolder)}
-                    onItemClick={(_, pIdx) => {
-                      setActivePaperIndex(pIdx);
-                      playMechanicalClick(720);
-                    }}
-                  />
+              {/* Stage 2: Detailed Case Study Inspector */}
+              <div className="flex flex-col justify-between space-y-6 lg:col-span-6">
+                <div>
+                  <h3 className="text-2xl font-bold tracking-tight text-white md:text-3xl">
+                    {selectedFolder.title}
+                  </h3>
+                  <p className="mt-1 font-mono text-sm text-[var(--violet)]">
+                    {selectedFolder.subtitle}
+                  </p>
+
+                  <p className="mt-4 text-sm leading-relaxed text-white/80 md:text-base">
+                    {selectedFolder.summary}
+                  </p>
+
+                  {/* Paper Selector Tabs */}
+                  <div className="mt-6 space-y-3 rounded-2xl border border-white/10 bg-white/5 p-4">
+                    <div className="flex items-center justify-between font-mono text-xs text-white/60">
+                      <span>LEMBAR BERKAS TERSEDIA:</span>
+                      <span className="text-[#c4e22e]">
+                        {selectedFolder.papers[activePaperIndex]?.code}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-2">
+                      {selectedFolder.papers.map((p, pIdx) => (
+                        <button
+                          key={p.code}
+                          type="button"
+                          onClick={() => {
+                            setActivePaperIndex(pIdx);
+                            playMechanicalClick(650);
+                          }}
+                          className={`flex flex-col items-start rounded-xl p-2.5 text-left transition-all ${activePaperIndex === pIdx
+                            ? "border border-[#c4e22e] bg-[#c4e22e]/15 text-[#c4e22e]"
+                            : "border border-white/10 bg-black/30 text-white/70 hover:bg-white/10"
+                            }`}
+                        >
+                          <span className="font-mono text-[9px] font-bold">
+                            {p.code}
+                          </span>
+                          <span className="mt-1 line-clamp-1 text-[11px] font-semibold">
+                            {p.title}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+
+                    <div className="mt-3 border-t border-white/10 pt-3">
+                      <div className="font-bold text-sm text-white">
+                        {selectedFolder.papers[activePaperIndex]?.title}
+                      </div>
+                      <p className="mt-1 text-xs leading-relaxed text-white/75">
+                        {selectedFolder.papers[activePaperIndex]?.desc}
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Stage 2: Detailed Case Study Inspector */}
-                <div className="flex flex-col justify-between space-y-6 lg:col-span-6">
-                  <div>
-                    <h3 className="text-2xl font-bold tracking-tight text-white md:text-3xl">
-                      {selectedFolder.title}
-                    </h3>
-                    <p className="mt-1 font-mono text-sm text-[var(--violet)]">
-                      {selectedFolder.subtitle}
-                    </p>
-
-                    <p className="mt-4 text-sm leading-relaxed text-white/80 md:text-base">
-                      {selectedFolder.summary}
-                    </p>
-
-                    {/* Paper Selector Tabs */}
-                    <div className="mt-6 space-y-3 rounded-2xl border border-white/10 bg-white/5 p-4">
-                      <div className="flex items-center justify-between font-mono text-xs text-white/60">
-                        <span>LEMBAR BERKAS TERSEDIA:</span>
-                        <span className="text-[#c4e22e]">
-                          {selectedFolder.papers[activePaperIndex]?.code}
+                <div>
+                  {/* Engineering Stack */}
+                  <div className="border-t border-white/10 pt-4">
+                    <div className="font-mono text-[10px] uppercase text-white/50">
+                      Engineering Tech Stack:
+                    </div>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {selectedFolder.stack.map((tech) => (
+                        <span
+                          key={tech}
+                          className="rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-xs font-medium text-white"
+                        >
+                          {tech}
                         </span>
-                      </div>
-
-                      <div className="grid grid-cols-3 gap-2">
-                        {selectedFolder.papers.map((p, pIdx) => (
-                          <button
-                            key={p.code}
-                            type="button"
-                            onClick={() => {
-                              setActivePaperIndex(pIdx);
-                              playMechanicalClick(650);
-                            }}
-                            className={`flex flex-col items-start rounded-xl p-2.5 text-left transition-all ${
-                              activePaperIndex === pIdx
-                                ? "border border-[#c4e22e] bg-[#c4e22e]/15 text-[#c4e22e]"
-                                : "border border-white/10 bg-black/30 text-white/70 hover:bg-white/10"
-                            }`}
-                          >
-                            <span className="font-mono text-[9px] font-bold">
-                              {p.code}
-                            </span>
-                            <span className="mt-1 line-clamp-1 text-[11px] font-semibold">
-                              {p.title}
-                            </span>
-                          </button>
-                        ))}
-                      </div>
-
-                      <div className="mt-3 border-t border-white/10 pt-3">
-                        <div className="font-bold text-sm text-white">
-                          {selectedFolder.papers[activePaperIndex]?.title}
-                        </div>
-                        <p className="mt-1 text-xs leading-relaxed text-white/75">
-                          {selectedFolder.papers[activePaperIndex]?.desc}
-                        </p>
-                      </div>
+                      ))}
                     </div>
                   </div>
 
-                  <div>
-                    {/* Engineering Stack */}
-                    <div className="border-t border-white/10 pt-4">
-                      <div className="font-mono text-[10px] uppercase text-white/50">
-                        Engineering Tech Stack:
-                      </div>
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {selectedFolder.stack.map((tech) => (
-                          <span
-                            key={tech}
-                            className="rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-xs font-medium text-white"
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Bottom Close Button */}
-                    <div className="mt-6 flex items-center justify-end">
-                      <button
-                        type="button"
-                        onClick={() => setSelectedFolder(null)}
-                        className="rounded-full bg-white/15 px-6 py-2.5 font-mono text-xs font-semibold text-white transition-colors hover:bg-white/25"
-                      >
-                        {locale === "id" ? "Tutup Berkas" : "Close Folder"}
-                      </button>
-                    </div>
+                  {/* Bottom Close Button */}
+                  <div className="mt-6 flex items-center justify-end">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedFolder(null)}
+                      className="rounded-full bg-white/15 px-6 py-2.5 font-mono text-xs font-semibold text-white transition-colors hover:bg-white/25"
+                    >
+                      {locale === "id" ? "Tutup Berkas" : "Close Folder"}
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        )}
+        </div>
+      )}
     </section>
   );
 }
