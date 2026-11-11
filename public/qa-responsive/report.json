@@ -1,0 +1,30 @@
+{
+  "mobile": {
+    "hasOverflow": false,
+    "docW": 390,
+    "winW": 390,
+    "overflowingCount": 0,
+    "samples": []
+  },
+  "tablet": {
+    "hasOverflow": false,
+    "docW": 768,
+    "winW": 768,
+    "overflowingCount": 0,
+    "samples": []
+  },
+  "laptop": {
+    "hasOverflow": false,
+    "docW": 1280,
+    "winW": 1280,
+    "overflowingCount": 0,
+    "samples": []
+  },
+  "desktop": {
+    "hasOverflow": false,
+    "docW": 1920,
+    "winW": 1920,
+    "overflowingCount": 0,
+    "samples": []
+  }
+}
