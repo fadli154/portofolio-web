@@ -15,3 +15,4 @@ export const TextLoop: React.FC<TextLoopProps> = (props) => {
 };
 
 export default TextLoop;
+

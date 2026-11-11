@@ -97,43 +97,98 @@ interface GitHubUserStats {
 const FALLBACK_GITHUB_REPOS: GitHubRepoItem[] = [
   {
     id: 101,
-    name: "smart-hajj-accessibility-ai",
-    html_url: "https://github.com/fadli154",
+    name: "hajicare",
+    html_url: "https://github.com/riverry25/hajicare",
     description:
-      "Sistem Aksesibilitas Inklusif Jemaah Haji berbasis Computer Vision: Deteksi Mata Uang Riyal (SAR) & Bahasa Isyarat 2 Arah (MediaPipe).",
-    language: "Python",
-    stargazers_count: 14,
-    forks_count: 3,
+      "Ekosistem Cerdas Pendamping & Monitoring Jamaah Haji / Umrah Berbasis IoT Smartband ESP32-S3 & Edge AI Offline (Juara II Nasional OASE III PTKIN).",
+    language: "Dart",
+    stargazers_count: 24,
+    forks_count: 7,
     fork: false,
   },
   {
     id: 102,
-    name: "simduk-kominfo-laravel",
-    html_url: "https://github.com/fadli154",
+    name: "sign2speech",
+    html_url: "https://github.com/hafizhtzy/sign2speech",
     description:
-      "Aplikasi Web Pendataan Kependudukan (SIMDUK) berbasis Laravel & MySQL dengan validasi NIK/KK, rekap sensus RT/RW, dan RBAC.",
+      "Sistem Komunikasi Dua Arah Aksesibilitas Universal (BISINDO & SIBI) via MediaPipe 21-Point 3D Landmarks & MotionGRU TFLite.",
+    language: "Dart",
+    stargazers_count: 19,
+    forks_count: 4,
+    fork: false,
+  },
+  {
+    id: 103,
+    name: "project-warga",
+    html_url: "https://github.com/Tofu-TheGreat/project-warga",
+    description:
+      "Aplikasi Sistem Informasi Administrasi Kependudukan Terpadu (Project Warga) Magang Resmi di Dinas Kominfo berbasis Laravel 9, MySQL & Yajra DataTables.",
     language: "PHP",
+    stargazers_count: 16,
+    forks_count: 5,
+    fork: false,
+  },
+  {
+    id: 104,
+    name: "aduan-susu-frontend",
+    html_url: "https://github.com/alfianchii/aduan-susu-frontend",
+    description:
+      "Portal Pengaduan & Pengawasan Distribusi Susu Kental Manis Nasional Se-Indonesia (KOPMAS / GovTech) berbasis Next.js & Tailwind.",
+    language: "TypeScript",
+    stargazers_count: 15,
+    forks_count: 3,
+    fork: false,
+  },
+  {
+    id: 105,
+    name: "dispress",
+    html_url: "https://github.com/Tofu-TheGreat/dispress",
+    description:
+      "Sistem Otomasi Disposisi Surat Dinas & SPPD Elektronik Praktis berbasis Laravel, Stisla Bootstrap, Vite & MySQL.",
+    language: "PHP",
+    stargazers_count: 12,
+    forks_count: 3,
+    fork: false,
+  },
+  {
+    id: 106,
+    name: "FinTrack",
+    html_url: "https://github.com/fadli154/FinTrack",
+    description:
+      "Asisten Keuangan Personal Pintar dengan Scanner Struk Belanja Kamera (flutter_vision OCR), Grafik FL Chart, & PDF Printing.",
+    language: "Dart",
     stargazers_count: 11,
     forks_count: 2,
     fork: false,
   },
   {
-    id: 103,
-    name: "govtech-reporting-portal",
-    html_url: "https://github.com/fadli154",
+    id: 107,
+    name: "Project-Spp",
+    html_url: "https://github.com/fadli154/Project-Spp",
     description:
-      "Portal pelaporan daring dan integrasi data antardivisi instansi pemerintah dengan pelacakan status berkas berkala berbasis SOP.",
-    language: "TypeScript",
+      "Aplikasi Manajemen Pembayaran SPP Siswa Sekolah Terpadu & Paperless (Go Green) berbasis Laravel & MySQL.",
+    language: "PHP",
+    stargazers_count: 10,
+    forks_count: 2,
+    fork: false,
+  },
+  {
+    id: 108,
+    name: "travelease",
+    html_url: "https://github.com/fadli154/travelease",
+    description:
+      "Aplikasi Mobile Panduan Wisata Cerdas & Itinerari Nusantara dengan Google Maps SDK & Cloud Firestore.",
+    language: "Dart",
     stargazers_count: 9,
     forks_count: 1,
     fork: false,
   },
   {
-    id: 104,
-    name: "portofolio-kewirausahaan-k1",
-    html_url: "https://github.com/fadli154",
+    id: 109,
+    name: "ngunduh-mantu",
+    html_url: "https://github.com/fadli154/ngunduh-mantu",
     description:
-      "Portal dokumentasi akademik Kewirausahaan, evaluasi SWOT 20 poin, dan ekosistem kolaborasi Kelompok K-1 Informatika.",
+      "Platform Undangan Pernikahan Digital Interaktif dengan Personalisasi Tamu Dinamis, Pemutar Audio Terpadu, & Realtime RSVP Firestore.",
     language: "TypeScript",
     stargazers_count: 8,
     forks_count: 2,
@@ -373,17 +428,19 @@ export function HomeClientSections({
                       locale === "id"
                         ? [
                           "PORTOFOLIO INFORMATIKA · WEB, MOBILE, GOVTECH & VISION AI",
-                          "MAGANG RESMI · DINAS KOMINFO (SIMDUK LARAVEL & MYSQL)",
-                          "INOVASI AI UNGGULAN · SMART HAJJ AKSESIBILITAS INKLUSIF",
+                          "MAGANG RESMI · DINAS KOMINFO (PROJECT WARGA LARAVEL 9)",
+                          "JUARA II NASIONAL OASE III · HAJICARE IOT & EDGE AI",
+                          "AKSESIBILITAS UNIVERSAL · SIGN2SPEECH FLUTTER CLEAN ARCH",
+                          "GOVTECH FREELANCE · KOPMAS ADUAN SUSU NASIONAL",
                           "PORTAL AKADEMIK · KELOMPOK K-1 KEWIRAUSAHAAN",
-                          "STACK REKAYASA · NEXT.JS 15, FLUTTER & PYTHON OPENCV",
                         ]
                         : [
                           "INFORMATICS PORTFOLIO · WEB, MOBILE, GOVTECH & VISION AI",
-                          "OFFICIAL INTERNSHIP · DINAS KOMINFO (SIMDUK LARAVEL & MYSQL)",
-                          "FLAGSHIP AI · SMART HAJJ INCLUSIVE ACCESSIBILITY",
-                          "ACADEMIC PORTAL · ENTREPRENEURSHIP GROUP K-1",
-                          "ENGINEERING STACK · NEXT.JS 15, FLUTTER & PYTHON OPENCV",
+                          "OFFICIAL INTERNSHIP · DINAS KOMINFO (PROJECT WARGA LARAVEL 9)",
+                          "2ND NATIONAL WINNER · HAJICARE IOT & EDGE AI (OASE III)",
+                          "UNIVERSAL ACCESSIBILITY · SIGN2SPEECH FLUTTER CLEAN ARCH",
+                          "GOVTECH FREELANCE · KOPMAS NATIONAL COMPLAINT SYSTEM",
+                          "ACADEMIC HUB · ENTREPRENEURSHIP GROUP K-1",
                         ]
                     }
                     rotationInterval={3000}
@@ -414,8 +471,8 @@ export function HomeClientSections({
               {/* Sub-Headline Description */}
               <p className="mt-6 max-w-xl text-base leading-relaxed text-[var(--mute)] md:text-lg">
                 {locale === "id"
-                  ? "Mendokumentasikan karya akademik perkuliahan Informatika, pengalaman magang resmi di Dinas Kominfo (SIMDUK Laravel & MySQL), sistem pelaporan GovTech, serta inovasi AI Smart Hajj."
-                  : "Documenting Informatics university coursework, official internship work at Dinas Kominfo (SIMDUK Laravel & MySQL), GovTech portals, and Smart Hajj Vision AI."}
+                  ? "Mendokumentasikan karya rekayasa perangkat lunak, pengalaman magang di Dinas Kominfo (Project Warga Laravel 9), portal aduan publik pemerintah (Kopmas), serta ekosistem IoT & Edge AI peraih Juara II Nasional OASE III (HajiCare & Sign2Speech)."
+                  : "Documenting software engineering projects, official internship at Dinas Kominfo (Project Warga Laravel 9), government civic portal (Kopmas), and award-winning IoT & Edge AI ecosystems (HajiCare & Sign2Speech)."}
               </p>
 
               {/* CTAs & Action Pills */}
@@ -493,11 +550,15 @@ export function HomeClientSections({
                     <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-xs text-white/80">
                       <div>
                         <span className="text-[#c4e22e]">&quot;internship&quot;</span>:{" "}
-                        <span>&quot;Web Developer Intern · Dinas Kominfo (SIMDUK Laravel &amp; MySQL)&quot;</span>,
+                        <span>&quot;Web Developer Intern · Dinas Kominfo (Project Warga Laravel 9 &amp; MySQL)&quot;</span>,
                       </div>
                       <div className="mt-1">
-                        <span className="text-[#c4e22e]">&quot;flagship_ai&quot;</span>:{" "}
-                        <span>&quot;Smart Hajj Vision AI (Deteksi Riyal SAR &amp; Isyarat 21-Titik)&quot;</span>,
+                        <span className="text-[#c4e22e]">&quot;govtech_freelance&quot;</span>:{" "}
+                        <span>&quot;Kopmas · Portal Pengaduan Susu Nasional Se-Indonesia (Next.js &amp; Tailwind)&quot;</span>,
+                      </div>
+                      <div className="mt-1">
+                        <span className="text-[#c4e22e]">&quot;flagship_ai_iot&quot;</span>:{" "}
+                        <span>&quot;HajiCare (Juara II OASE III Kemenag RI) &amp; Sign2Speech (Flutter Clean Architecture)&quot;</span>,
                       </div>
                       <div className="mt-1">
                         <span className="text-[#c4e22e]">&quot;academic_team&quot;</span>:{" "}
@@ -568,10 +629,12 @@ export function HomeClientSections({
           marqueeText={[
             "FADLI HIFZIANSYAH",
             "WEB · MOBILE · VISION AI",
-            "DINAS KOMINFO · SIMDUK",
-            "SMART HAJJ ACCESSIBILITY",
+            "DINAS KOMINFO · PROJECT WARGA",
+            "HAJICARE · JUARA II OASE III",
+            "SIGN2SPEECH ACCESSIBILITY",
+            "KOPMAS · ADUAN SUSU NASIONAL",
             "INFORMATIKA KELOMPOK K-1",
-            "NEXT.JS 15 · FLUTTER · OPENCV",
+            "NEXT.JS 15 · FLUTTER · LARAVEL 9",
           ]}
           speed={2}
           curveAmount={{ mobile: 36, tablet: 48, desktop: 68 }}
@@ -637,8 +700,8 @@ export function HomeClientSections({
             <div className="col-span-12 lg:col-span-9">
               <p className="about-statement">
                 {locale === "id"
-                  ? "Saya membangun perangkat lunak yang menyelesaikan masalah nyata di lapangan — mulai dari digitalisasi administrasi kependudukan SIMDUK di Dinas Kominfo menggunakan Laravel & MySQL, hingga sistem kecerdasan buatan Smart Hajj berbasis kamera ponsel untuk mendampingi jemaah disabilitas bertransaksi dan berkomunikasi secara mandiri."
-                  : "I build software engineered for real-world utility — from digitizing municipal population records (SIMDUK) at Dinas Kominfo with Laravel & MySQL, to mobile Computer Vision AI (Smart Hajj) empowering deaf and elderly pilgrims to transact and communicate independently."}
+                  ? "Saya membangun perangkat lunak yang berfokus pada dampak nyata dan utilitas publik — mulai dari digitalisasi administrasi kependudukan (Project Warga) di Dinas Kominfo dengan Laravel 9 & MySQL, sistem advokasi kesehatan dan pengaduan gizi anak nasional (Kopmas), hingga ekosistem mobile IoT Wearable dan Edge AI aksesibilitas ibadah haji (HajiCare & Sign2Speech)."
+                  : "I build software engineered for real-world utility and public impact — from municipal citizen data administration (Project Warga) at Dinas Kominfo with Laravel 9 & MySQL, national child nutrition reporting (Kopmas), to award-winning mobile Edge AI and IoT wearables (HajiCare & Sign2Speech)."}
               </p>
 
               {/* Studio Keffi 4-Column Animated Results / CountUp Row */}

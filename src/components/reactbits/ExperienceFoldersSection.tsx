@@ -607,8 +607,16 @@ export function ExperienceFoldersSection({
                     </div>
                   </div>
 
-                  {/* Bottom Close Button */}
-                  <div className="mt-6 flex items-center justify-end">
+                  {/* Bottom Action Buttons */}
+                  <div className="mt-6 flex flex-wrap items-center justify-between gap-3">
+                    <Link
+                      href={`/projects/${selectedFolder.slug}`}
+                      className="inline-flex items-center gap-2 rounded-full border border-[#c4e22e] bg-[#c4e22e]/10 px-5 py-2.5 font-mono text-xs font-semibold text-[#c4e22e] transition hover:bg-[#c4e22e] hover:text-[#111213]"
+                    >
+                      <span>{locale === "id" ? "Buka Studi Kasus Lengkap" : "Open Full Case Study"}</span>
+                      <ArrowUpRight className="h-3.5 w-3.5" />
+                    </Link>
+
                     <button
                       type="button"
                       onClick={() => setSelectedFolder(null)}

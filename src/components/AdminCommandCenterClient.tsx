@@ -75,7 +75,7 @@ const INITIAL_INQUIRIES: MockInquiry[] = [
     receivedAt: "2026-11-10 08:42 UTC",
     status: "unread",
     message:
-      "Halo Fadli, kami meninjau dokumentasi aplikasi pendataan kependudukan SIMDUK (Laravel & MySQL) serta portal pelaporan GovTech Anda. Apakah tersedia waktu untuk diskusi pengembangan modul integrasi data berikutnya?",
+      "Halo Fadli, kami meninjau dokumentasi aplikasi pendataan kependudukan Project Warga (Laravel 9 & MySQL) serta portal pengaduan Kopmas Anda. Apakah tersedia waktu untuk diskusi pengembangan modul integrasi data berikutnya?",
   },
   {
     id: "inq-02",
@@ -86,7 +86,7 @@ const INITIAL_INQUIRIES: MockInquiry[] = [
     receivedAt: "2026-11-09 15:18 UTC",
     status: "replied",
     message:
-      "Kami sangat tertarik dengan prototipe Smart Hajj AI untuk deteksi mata uang Riyal (SAR) dan penerjemah bahasa isyarat berbasis MediaPipe Hand Landmarks.",
+      "Kami sangat tertarik dengan ekosistem HajiCare untuk deteksi mata uang Riyal (SAR) dan penerjemah bahasa isyarat berbasis MediaPipe Hand Landmarks peraih Juara II OASE III.",
   },
 ];
 

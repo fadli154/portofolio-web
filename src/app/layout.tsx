@@ -16,14 +16,14 @@ export const metadata: Metadata = {
     template: `%s · ${SITE_PROFILE.shortName}`,
   },
   description:
-    "Portofolio pribadi dan akademik Fadli Hifziansyah (@fadli154): Mahasiswa Informatika (K-1), Web Developer SIMDUK Kominfo, GovTech & Smart Hajj AI.",
+    "Portofolio rekayasa perangkat lunak Fadli Hifziansyah (@fadli154): Mahasiswa Informatika (K-1), Web Developer Project Warga Dinas Kominfo, Kopmas GovTech, serta HajiCare & Sign2Speech AI.",
   alternates: {
     canonical: "/",
   },
   openGraph: {
     title: `${SITE_PROFILE.fullName} · Portofolio Web, Mobile & AI`,
     description:
-      "Mendokumentasikan karya akademik Informatika, proyek SIMDUK Kominfo, sistem pelaporan GovTech, inovasi Smart Hajj AI, serta portal Kewirausahaan Kelompok K-1.",
+      "Mendokumentasikan karya rekayasa perangkat lunak, proyek Project Warga Kominfo, Kopmas portal aduan nasional, inovasi IoT & Edge AI HajiCare, serta portal Kewirausahaan Kelompok K-1.",
     type: "website",
     locale: "id_ID",
     images: [

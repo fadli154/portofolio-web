@@ -29,8 +29,8 @@ export function Footer() {
             </Link>
             <p className="mt-4 max-w-md text-sm leading-relaxed text-white/60">
               {locale === "id"
-                ? "Portofolio Pribadi & Akademik Mahasiswa Informatika (Kelompok K-1). Mendokumentasikan rekayasa aplikasi Web & Mobile, sistem instansi publik (SIMDUK Kominfo), Computer Vision AI (Smart Hajj), serta Kewirausahaan Teknologi."
-                : "Personal & Academic Portfolio of Informatics Student (Group K-1). Documenting Web & Mobile engineering, public-sector systems (SIMDUK Kominfo), Computer Vision AI (Smart Hajj), and Tech Entrepreneurship."}
+                ? "Portofolio Pribadi & Rekayasa Mahasiswa Informatika (Kelompok K-1). Mendokumentasikan aplikasi Web & Mobile, sistem instansi publik (Project Warga Kominfo & Kopmas GovTech), serta ekosistem IoT & Edge AI (HajiCare & Sign2Speech)."
+                : "Personal & Engineering Portfolio of Informatics Student (Group K-1). Documenting Web & Mobile engineering, public-sector systems (Project Warga Kominfo & Kopmas GovTech), and IoT & Edge AI ecosystems (HajiCare & Sign2Speech)."}
             </p>
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <a

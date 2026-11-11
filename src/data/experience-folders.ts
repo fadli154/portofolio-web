@@ -25,233 +25,267 @@ export interface ExperienceFolderData {
 
 export const EXPERIENCE_FOLDERS: ExperienceFolderData[] = [
   {
-    "id": "exp-01",
-    "slug": "simduk-kominfo",
-    "tab": "EXP-01 · SIMDUK",
-    "title": "Web Developer Intern",
-    "subtitle": "Dinas Komunikasi & Informatika",
-    "badge": "MAGANG RESMI",
-    "year": "2025",
-    "color": "#2563eb",
-    "tabColor": "#1d4ed8",
-    "accentColor": "#93c5fd",
-    "textColor": "#ffffff",
-    "summary": "Digitalisasi administrasi kependudukan daerah via SIMDUK berbasis Laravel & MySQL.",
-    "papers": [
+    id: "exp-01",
+    slug: "hajicare",
+    tab: "AI-01 · HAJICARE",
+    title: "HajiCare: IoT & Edge AI",
+    subtitle: "Juara II Nasional OASE III PTKIN",
+    badge: "JUARA II NASIONAL",
+    year: "2025 - 2026",
+    color: "#2563eb",
+    tabColor: "#1d4ed8",
+    accentColor: "#93c5fd",
+    textColor: "#ffffff",
+    summary: "Ekosistem IoT Smartband ESP32-S3 & Edge AI offline deteksi uang SAR dan bahasa isyarat jemaah haji.",
+    papers: [
       {
-        "code": "DOC-01",
-        "title": "Ringkasan Eksekutif & Demografi",
-        "desc": "Arsitektur CRUD kependudukan & validasi NIK/KK"
+        code: "DOC-01",
+        title: "Smart IoT Wearable (ESP32-S3)",
+        desc: "Telemetri BLE: GPS, SpO2, BPM, Suhu Tubuh, & Jatuh",
       },
       {
-        "code": "DOC-02",
-        "title": "Optimasi Database & Rekapitulasi Sensus",
-        "desc": "Query relasional terindeks & ekspor resmi RT/RW"
+        code: "DOC-02",
+        title: "Edge AI Offline 100%",
+        desc: "Deteksi Riyal (SAR) TFLite/YOLO dengan suara TTS otomatis",
       },
       {
-        "code": "DOC-03",
-        "title": "RBAC Multi-Level Kelurahan",
-        "desc": "Otentikasi bertingkat staf, verifikator & admin"
-      }
+        code: "DOC-03",
+        title: "Aksesibilitas Isyarat & Radar",
+        desc: "MediaPipe 21 sendi tangan, safe-radius, & tombol Panic SOS",
+      },
     ],
-    "stack": [
-      "Laravel",
-      "PHP",
-      "MySQL",
-      "Bootstrap",
-      "REST API"
-    ],
-    "image": "/experience-folders/simduk-kominfo.png"
+    stack: ["Flutter", "Dart", "Firebase", "ESP32-S3", "TensorFlow Lite", "MediaPipe"],
+    image: "/experience-folders/hajicare.png",
   },
   {
-    "id": "exp-02",
-    "slug": "smart-hajj-ai",
-    "tab": "AI-01 · SMART HAJJ",
-    "title": "Smart Hajj: Vision AI",
-    "subtitle": "Sistem Aksesibilitas Inklusif",
-    "badge": "AI & COMPUTER VISION",
-    "year": "2025 - 2026",
-    "color": "#6366f1",
-    "tabColor": "#4f46e5",
-    "accentColor": "#c7d2fe",
-    "textColor": "#ffffff",
-    "summary": "Platform Computer Vision deteksi pecahan uang SAR & isyarat dua arah jemaah disabilitas.",
-    "papers": [
+    id: "exp-02",
+    slug: "sign2speech",
+    tab: "AI-02 · SIGN2SPEECH",
+    title: "Sign2Speech: Aksesibilitas",
+    subtitle: "Universal 2-Way Communication",
+    badge: "AI & COMPUTER VISION",
+    year: "2025",
+    color: "#6366f1",
+    tabColor: "#4f46e5",
+    accentColor: "#c7d2fe",
+    textColor: "#ffffff",
+    summary: "Sistem komunikasi dua arah Teman Tuli & Teman Dengar via MediaPipe 21 sendi tangan dan TFLite MotionGRU.",
+    papers: [
       {
-        "code": "DOC-01",
-        "title": "Pipeline 4-Tahap Deteksi Kamera",
-        "desc": "Kamera ponsel -> OpenCV -> Klasifikasi SAR -> TTS"
+        code: "DOC-01",
+        title: "Ekstraksi 21 Sendi Tangan",
+        desc: "Pelacakan 3D MediaPipe 60 FPS real-time tanpa latensi",
       },
       {
-        "code": "DOC-02",
-        "title": "21-Titik MediaPipe Hand Landmarks",
-        "desc": "Ekstraksi koordinat 3D sendi tangan real-time 60fps"
+        code: "DOC-02",
+        title: "MotionGRU TFLite Classifier",
+        desc: "Klasifikasi sekuensial BISINDO & SIBI offline on-device",
       },
       {
-        "code": "DOC-03",
-        "title": "Penerjemah Bahasa Isyarat 2 Arah",
-        "desc": "Komunikasi mandiri jemaah haji & petugas Arab Saudi"
-      }
+        code: "DOC-03",
+        title: "Sintesis Suara FIFO & STT",
+        desc: "Antrean TTS bahasa Indonesia dan konversi ucapan ke teks",
+      },
     ],
-    "stack": [
-      "Python",
-      "OpenCV",
-      "MediaPipe",
-      "Deep Learning",
-      "Flutter"
-    ],
-    "image": "/experience-folders/smart-hajj-ai.png"
+    stack: ["Flutter", "Dart", "GetX", "TensorFlow Lite", "MediaPipe", "TTS & STT"],
+    image: "/experience-folders/sign2speech.png",
   },
   {
-    "id": "exp-03",
-    "slug": "oase-award",
-    "tab": "AWARD · OASE III",
-    "title": "Juara II Inovasi Teknologi",
-    "subtitle": "Kementerian Agama RI (Nasional)",
-    "badge": "PRESTASI NASIONAL",
-    "year": "2024",
-    "color": "#059669",
-    "tabColor": "#047857",
-    "accentColor": "#6ee7b7",
-    "textColor": "#ffffff",
-    "summary": "Penghargaan resmi Juara II Nasional Karya Literasi & Inovasi Teknologi OASE III PTKI se-Indonesia.",
-    "papers": [
+    id: "exp-03",
+    slug: "project-warga-kominfo",
+    tab: "GOV-01 · PROJ WARGA",
+    title: "Web Developer Intern",
+    subtitle: "Dinas Komunikasi & Informatika",
+    badge: "MAGANG RESMI",
+    year: "2025",
+    color: "#d97706",
+    tabColor: "#b45309",
+    accentColor: "#fde68a",
+    textColor: "#ffffff",
+    summary: "Digitalisasi administrasi kependudukan (Project Warga) di Dinas Kominfo berbasis Laravel 9 & MySQL.",
+    papers: [
       {
-        "code": "DOC-01",
-        "title": "Sertifikat Kejuaraan Nasional Resmi",
-        "desc": "Validasi Kementerian Agama Republik Indonesia"
+        code: "DOC-01",
+        title: "Arsitektur Kependudukan RT/RW",
+        desc: "Manajemen data warga, validasi NIK/KK, & filter demografis",
       },
       {
-        "code": "DOC-02",
-        "title": "Studi Kelayakan & Pengujian Juri",
-        "desc": "Pengujian prototipe teknologi literasi di hadapan juri"
+        code: "DOC-02",
+        title: "Server-Side Yajra DataTables",
+        desc: "Query relasional terindeks untuk puluhan ribu data sensus",
       },
       {
-        "code": "DOC-03",
-        "title": "Arsitektur Sistem Inklusif",
-        "desc": "Dampak nyata teknologi pada aksesibilitas publik"
-      }
+        code: "DOC-03",
+        title: "Otomasi Ekspor Maatwebsite Excel",
+        desc: "Ekspor/impor massal berkas rekapitulasi resmi kelurahan",
+      },
     ],
-    "stack": [
-      "AI Prototype",
-      "Computer Vision",
-      "GovTech",
-      "Python"
-    ],
-    "image": "/experience-folders/oase-award.png"
+    stack: ["Laravel 9", "PHP 8", "MySQL", "Vite", "Yajra DataTables", "Chart.js"],
+    image: "/experience-folders/project-warga.png",
   },
   {
-    "id": "exp-04",
-    "slug": "kelompok-k1",
-    "tab": "ACADEMIC · TIM K-1",
-    "title": "Portal Kewirausahaan K-1",
-    "subtitle": "Ekosistem Kolaboratif Informatika",
-    "badge": "TIM AKADEMIK",
-    "year": "2026",
-    "color": "#0284c7",
-    "tabColor": "#0369a1",
-    "accentColor": "#7dd3fc",
-    "textColor": "#ffffff",
-    "summary": "Rancang bangun portal perkuliahan 6 pertemuan, pelacakan tugas, absensi, & sinkronisasi Supabase.",
-    "papers": [
+    id: "exp-04",
+    slug: "kopmas-aduan-susu",
+    tab: "GOV-02 · KOPMAS",
+    title: "Portal Aduan Susu Nasional",
+    subtitle: "GovTech & Perlindungan Kesehatan",
+    badge: "PROYEK PEMERINTAH",
+    year: "2025",
+    color: "#059669",
+    tabColor: "#047857",
+    accentColor: "#6ee7b7",
+    textColor: "#ffffff",
+    summary: "Portal advokasi dan pengawasan distribusi kental manis serta nutrisi balita nasional se-Indonesia.",
+    papers: [
       {
-        "code": "DOC-01",
-        "title": "Kontrak Perkuliahan & Tim K-1",
-        "desc": "Struktur kepengurusan tim, repositori GitHub, & linimasa"
+        code: "DOC-01",
+        title: "Sistem Pengaduan Publik 34 Provinsi",
+        desc: "Formulir aduan interaktif berpenanda lokasi & foto bukti",
       },
       {
-        "code": "DOC-02",
-        "title": "Analisis SWOT & Ide Bisnis",
-        "desc": "Pemetaan peluang pasar web modern & proposisi nilai"
+        code: "DOC-02",
+        title: "Kompresi Gambar Client-Side",
+        desc: "Optimalisasi bukti upload hingga hemat 75% kuota di daerah",
       },
       {
-        "code": "DOC-03",
-        "title": "Integrasi Supabase & Headless CMS",
-        "desc": "State real-time sinkron dengan database PostgreSQL cloud"
-      }
+        code: "DOC-03",
+        title: "Dashboard Verifikasi & Tiket Terbuka",
+        desc: "Generator nomor tiket publik dan audit laporan petugas",
+      },
     ],
-    "stack": [
-      "Next.js 15",
-      "TypeScript",
-      "Tailwind",
-      "Supabase"
-    ],
-    "image": "/experience-folders/kelompok-k1.png"
+    stack: ["Next.js", "React", "TypeScript", "Tailwind CSS", "REST API", "Civic Tech"],
+    image: "/experience-folders/kopmas.png",
   },
   {
-    "id": "exp-05",
-    "slug": "govtech-reporting",
-    "tab": "DATA · KOMINFO",
-    "title": "Dashboard Pelaporan Publik",
-    "subtitle": "GovTech Sensus & Ekspor",
-    "badge": "DATABASE GOVTECH",
-    "year": "2025",
-    "color": "#d97706",
-    "tabColor": "#b45309",
-    "accentColor": "#fde68a",
-    "textColor": "#ffffff",
-    "summary": "Agregasi demografi kelurahan, rekap RT/RW, dan otomasi pelaporan kependudukan tingkat daerah.",
-    "papers": [
+    id: "exp-05",
+    slug: "dispress",
+    tab: "WEB-01 · DISPRESS",
+    title: "Dispress: SPPD & Disposisi",
+    subtitle: "Sistem Otomasi Persuratan Dinas",
+    badge: "WORKFLOW AUTOMATION",
+    year: "2024 - 2025",
+    color: "#475569",
+    tabColor: "#334155",
+    accentColor: "#cbd5e1",
+    textColor: "#ffffff",
+    summary: "Otomasi alur disposisi surat dinas masuk/keluar dan pencetakan SPPD elektronik terstandarisasi.",
+    papers: [
       {
-        "code": "DOC-01",
-        "title": "Skema Relasional Normalisasi 3NF",
-        "desc": "Struktur tabel terisolasi untuk data sensus & demografi"
+        code: "DOC-01",
+        title: "Alur Disposisi Multi-Role",
+        desc: "Tata kelola 3 tingkat: Admin, Officer, dan Staff",
       },
       {
-        "code": "DOC-02",
-        "title": "Ekspor Dokumen Laporan Kependudukan",
-        "desc": "Otomasi generate PDF/Excel terverifikasi tanda tangan"
+        code: "DOC-02",
+        title: "Linimasa Riwayat Surat",
+        desc: "Pelacakan kronologis status berkas dinas tanpa kertas",
       },
       {
-        "code": "DOC-03",
-        "title": "Filter Dinamis & Query Indexing",
-        "desc": "Pencarian NIK dalam hitungan milidetik pada puluhan ribu row"
-      }
+        code: "DOC-03",
+        title: "Generator Lembar SPPD",
+        desc: "Pencetakan surat tugas perjalanan dinas standar birokrasi",
+      },
     ],
-    "stack": [
-      "Laravel",
-      "MySQL",
-      "REST API",
-      "GovTech"
-    ],
-    "image": "/experience-folders/govtech-reporting.png"
+    stack: ["Laravel", "PHP", "MySQL", "Vite", "Stisla Bootstrap", "SweetAlert2"],
+    image: "/experience-folders/dispress.png",
   },
   {
-    "id": "exp-06",
-    "slug": "vision-gesture-engine",
-    "tab": "VISION · 21-PTS",
-    "title": "Vision AI Gesture Engine",
-    "subtitle": "Pelacakan Isyarat 21-Titik",
-    "badge": "RESEARCH & APPLIED CV",
-    "year": "2025",
-    "color": "#8b5cf6",
-    "tabColor": "#7c3aed",
-    "accentColor": "#ddd6fe",
-    "textColor": "#ffffff",
-    "summary": "Engine visi komputer pelacakan sendi tangan real-time dengan toleransi rotasi tinggi untuk mobile.",
-    "papers": [
+    id: "exp-06",
+    slug: "fintrack",
+    tab: "APP-01 · FINTRACK",
+    title: "FinTrack: Smart Finance",
+    subtitle: "Asisten Keuangan & Receipt OCR",
+    badge: "MOBILE & OCR CV",
+    year: "2025",
+    color: "#0891b2",
+    tabColor: "#0e7490",
+    accentColor: "#a5f3fc",
+    textColor: "#ffffff",
+    summary: "Pelacak finansial personal dengan scanner struk fisik otomatis berbasis computer vision & analitik grafik.",
+    papers: [
       {
-        "code": "DOC-01",
-        "title": "Topologi 21 Sendi Tangan MediaPipe",
-        "desc": "Pemetaan koordinat 3D pergelangan, jempol, hingga kelingking"
+        code: "DOC-01",
+        title: "Pemindai Struk Kamera (OCR)",
+        desc: "Ekstraksi nominal belanja otomatis via flutter_vision",
       },
       {
-        "code": "DOC-02",
-        "title": "Inferensi 60 FPS pada Mobile",
-        "desc": "Optimasi model TFLite untuk kamera Android/iOS"
+        code: "DOC-02",
+        title: "Visualisasi Grafik FL Chart 60 FPS",
+        desc: "Grafik arus kas interaktif & pengelompokan anggaran",
       },
       {
-        "code": "DOC-03",
-        "title": "Integrasi Suara TTS Dua Arah",
-        "desc": "Penerjemahan teks ke suara instan bahasa Arab & Indonesia"
-      }
+        code: "DOC-03",
+        title: "Sinkronisasi Cloud & Ekspor PDF",
+        desc: "Firebase Firestore multi-device & cetak laporan bulanan",
+      },
     ],
-    "stack": [
-      "MediaPipe",
-      "OpenCV",
-      "TensorFlow Lite",
-      "Python"
+    stack: ["Flutter", "Dart", "GetX", "flutter_vision", "Firebase", "FL Chart", "PDF"],
+    image: "/experience-folders/fintrack.png",
+  },
+  {
+    id: "exp-07",
+    slug: "project-spp",
+    tab: "EDU-01 · E-SPP",
+    title: "E-SPP: Paperless Finance",
+    subtitle: "Manajemen Pembayaran Sekolah",
+    badge: "EDUTECH",
+    year: "2024",
+    color: "#e11d48",
+    tabColor: "#be123c",
+    accentColor: "#fecdd3",
+    textColor: "#ffffff",
+    summary: "Digitalisasi pembayaran SPP sekolah terpadu, menghilangkan buku kas fisik & otomasi kuitansi digital.",
+    papers: [
+      {
+        code: "DOC-01",
+        title: "Buku Kas Siswa Digital",
+        desc: "Pencatatan transaksi SPP paperless dan ramah lingkungan",
+      },
+      {
+        code: "DOC-02",
+        title: "Monitoring Tunggakan & Rekap",
+        desc: "Kalkulasi saldo otomatis per siswa dan rekap bulanan",
+      },
+      {
+        code: "DOC-03",
+        title: "Kuitansi Pembayaran Otomatis",
+        desc: "Pencetakan bukti bayar resmi dan transparansi wali murid",
+      },
     ],
-    "image": "/experience-folders/vision-gesture-engine.png"
-  }
+    stack: ["Laravel", "PHP", "MySQL", "Laravel-Mix", "Bootstrap", "Axios"],
+    image: "/experience-folders/project-spp.png",
+  },
+  {
+    id: "exp-08",
+    slug: "travelease",
+    tab: "APP-02 · TRAVELEASE",
+    title: "TravelEase: Smart Tourism",
+    subtitle: "Panduan Wisata Nusantara",
+    badge: "GEOLOCATION MOBILE",
+    year: "2025",
+    color: "#7c3aed",
+    tabColor: "#6d28d9",
+    accentColor: "#ddd6fe",
+    textColor: "#ffffff",
+    summary: "Aplikasi mobile panduan wisata nusantara terpadu dengan peta interaktif Google Maps & Cloud Firebase.",
+    papers: [
+      {
+        code: "DOC-01",
+        title: "Navigasi Peta Google Maps Native",
+        desc: "Pencarian titik destinasi, penanda interaktif, & rute",
+      },
+      {
+        code: "DOC-02",
+        title: "Katalog Wisata & Rating Ulasan",
+        desc: "Profil wisata lengkap, info tiket, dan ulasan wisatawan",
+      },
+      {
+        code: "DOC-03",
+        title: "Arsitektur Cloud Firestore",
+        desc: "Sinkronisasi favorit offline/online dan portal admin",
+      },
+    ],
+    stack: ["Flutter", "Dart", "Material 3", "Provider", "Google Maps", "Firebase"],
+    image: "/experience-folders/travelease.png",
+  },
 ];
