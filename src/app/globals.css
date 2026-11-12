@@ -754,32 +754,19 @@ html[data-theme="dark"] input[type="range"]::-moz-range-thumb,
 /* ============================================================================
    STUDIO KEFFI STICKY STACKING SERVICE / TECH STACK CARDS (.svc)
    ============================================================================ */
-.stack-list {
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-  padding-top: 36px;
+.svc-scroll-stack .scroll-stack__inner {
+  padding-inline: 0;
 }
 
-.svc {
-  position: sticky;
-  top: calc(10vh + var(--i, 0) * 18px);
+.svc.scroll-stack-card {
+  height: auto;
   border-radius: 24px;
   padding: clamp(22px, 3vw, 40px);
   background: var(--svc-bg, #ffffff);
   color: var(--svc-fg, #111213);
   border: 1px solid var(--svc-line, rgba(17, 18, 19, 0.1));
-  box-shadow: 0 -10px 36px rgba(17, 18, 19, 0.1);
-  transition: transform 0.4s var(--ease);
+  box-shadow: 0 -10px 36px rgba(17, 18, 19, 0.18), 0 24px 48px -24px rgba(0, 0, 0, 0.45);
   overflow: hidden;
-}
-
-@media (max-width: 767px) {
-  .svc {
-    position: relative;
-    top: auto;
-    box-shadow: 0 2px 10px rgba(17, 18, 19, 0.05);
-  }
 }
 
 /* Calm 60-30-10 tonal sequence across the 5 stack cards */
@@ -829,13 +816,6 @@ html[data-theme="dark"] input[type="range"]::-moz-range-thumb,
 
 .svc:hover .svc__svg {
   transform: scale(1.03) translateY(-3px);
-}
-
-@media (max-width: 900px) {
-  .svc {
-    position: relative;
-    top: auto;
-  }
 }
 
 /* ============================================================================

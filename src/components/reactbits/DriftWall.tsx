@@ -146,9 +146,11 @@ export function DriftWall({
     const unit = tileHeight + gap;
     return columnItems.map((col) => {
       const copyHeight = Math.max(unit, col.length * unit);
+      // Cover >= 1 full copyHeight above y=0 AND >= 2.2 * containerHeight below y=0
+      // so shorter columns never run out of tiles at the bottom of the 3D tilted plane.
       const copies = Math.max(
-        2,
-        Math.ceil((containerHeight * 1.8) / copyHeight) + 1
+        4,
+        Math.ceil((containerHeight * 2.4 + copyHeight) / copyHeight) + 2
       );
       return { copyHeight, copies };
     });
@@ -199,7 +201,7 @@ export function DriftWall({
         const el = trackRefs.current[c];
         const meta = columnMeta[c];
         if (el && meta) {
-          el.style.transform = `translate3d(0, ${-(offsetsRef.current[c] ?? 0)}px, 0)`;
+          el.style.transform = `translate3d(0, ${-(meta.copyHeight + (offsetsRef.current[c] ?? 0))}px, 0)`;
         }
       }
       return;
@@ -246,7 +248,7 @@ export function DriftWall({
         offsetsRef.current[c] = next;
 
         const el = trackRefs.current[c];
-        if (el) el.style.transform = `translate3d(0, ${-next}px, 0)`;
+        if (el) el.style.transform = `translate3d(0, ${-(meta.copyHeight + next)}px, 0)`;
       }
 
       rafRef.current = requestAnimationFrame(animate);
@@ -326,9 +328,11 @@ export function DriftWall({
     release();
   }, [release]);
 
+  const fadePct = Math.max(0, Math.min(45, fade * 100));
   const maskStyle =
-    "radial-gradient(ellipse 84% 86% at 50% 50%, #000 var(--dw-edge), transparent 100%), " +
-    "linear-gradient(to top, #000 var(--dw-edge), transparent 100%)";
+    fade > 0
+      ? `linear-gradient(to bottom, transparent 0%, #000 ${fadePct}%, #000 ${100 - fadePct}%, transparent 100%)`
+      : undefined;
 
   const cssVars = useMemo<CSSProperties>(
     () =>
@@ -341,13 +345,14 @@ export function DriftWall({
         "--dw-dim": dim,
         "--dw-gray": grayscale ? 1 : 0,
         "--dw-overlay": overlayColor,
-        "--dw-edge": `${Math.max(0, (1 - fade) * 100)}%`,
         perspective: `${perspective}px`,
         perspectiveOrigin: "50% 50%",
-        WebkitMaskImage: maskStyle,
-        maskImage: maskStyle,
-        WebkitMaskComposite: "source-in",
-        maskComposite: "intersect",
+        ...(maskStyle
+          ? {
+              WebkitMaskImage: maskStyle,
+              maskImage: maskStyle,
+            }
+          : {}),
         ...style,
       }) as CSSProperties,
     [
@@ -409,8 +414,8 @@ export function DriftWall({
           alt={item.title ?? "Sertifikat"}
           width={tileWidth}
           height={tileHeight}
-          loading="lazy"
-          decoding="async"
+          loading="eager"
+          decoding="sync"
           draggable={false}
           className={imgClass}
         />
@@ -488,7 +493,8 @@ export function DriftWall({
     >
       <div
         ref={planeRef}
-        className="absolute left-1/2 top-1/2 flex cursor-pointer flex-row [transform-style:preserve-3d] [transform-origin:50%_50%] will-change-transform"
+        style={{ height: containerHeight }}
+        className="absolute left-1/2 top-1/2 flex cursor-pointer flex-row items-start [transform-style:preserve-3d] [transform-origin:50%_50%] will-change-transform"
       >
         {columnItems.map((col, c) => {
           const meta = columnMeta[c];
@@ -496,7 +502,7 @@ export function DriftWall({
           const copies = Array.from({ length: meta.copies });
           return (
             <div
-              className="relative w-[calc(var(--dw-tile-w)+var(--dw-gap))] [transform-style:preserve-3d]"
+              className="relative h-full w-[calc(var(--dw-tile-w)+var(--dw-gap))] [transform-style:preserve-3d]"
               key={`col-${c}`}
             >
               <div

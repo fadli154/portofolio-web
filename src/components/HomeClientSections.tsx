@@ -58,6 +58,7 @@ import { Magnet } from "@/components/reactbits/Magnet";
 import { CustomCursor } from "@/components/reactbits/CustomCursor";
 import { DriftWall, type DriftWallItem } from "@/components/reactbits/DriftWall";
 import { LogoLoop, type LogoItem } from "@/components/reactbits/LogoLoop";
+import ScrollStack, { ScrollStackItem } from "@/components/reactbits/ScrollStack";
 import { TechText } from "@/components/reactbits/TechText";
 import type { FlexCarouselItem } from "@/components/reactbits/FlexCarousel";
 import { ExperienceFoldersSection } from "@/components/reactbits/ExperienceFoldersSection";
@@ -468,7 +469,7 @@ export function HomeClientSections({
 
   const driftWallConfig = useMemo(() => {
     if (screenWidth < 640) {
-      return { columns: 3, tileWidth: 230, tileHeight: 160, gap: 16 };
+      return { columns: 3, tileWidth: 196, tileHeight: 138, gap: 12 };
     }
     if (screenWidth < 1024) {
       return { columns: 4, tileWidth: 270, tileHeight: 185, gap: 20 };
@@ -547,6 +548,10 @@ export function HomeClientSections({
         p.slug === "hajicare" ||
         p.title.toLowerCase().includes("hajj")
     );
+  }, [dynamicProjects]);
+
+  const publishedProjectCount = useMemo(() => {
+    return dynamicProjects.filter((p) => p.status !== "draft").length;
   }, [dynamicProjects]);
 
   const handleCopyEmail = async () => {
@@ -711,7 +716,7 @@ export function HomeClientSections({
               </div>
 
               {/* Compact HRD Quick Links Row */}
-              <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-[var(--line)] w-[60%] pt-5">
+              <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-[var(--line)] lg:w-[60%] pt-5">
                 <a
                   href={profile.socials.github}
                   target="_blank"
@@ -834,12 +839,15 @@ export function HomeClientSections({
 
                 <div>
                   <div className="font-sans text-4xl font-semibold tracking-tight text-[var(--violet)] dark:text-[#c4e22e] md:text-5xl">
-                    <CountUp to={21} />
+                    <CountUp
+                      to={publishedProjectCount}
+                      prefix={publishedProjectCount < 10 ? "0" : ""}
+                    />
                   </div>
                   <div className="mt-2 font-mono text-xs uppercase tracking-wider text-[var(--mute)]">
                     {locale === "id"
-                      ? "Titik Tangan MediaPipe AI"
-                      : "MediaPipe Hand Landmarks"}
+                      ? "Proyek Diselesaikan"
+                      : "Projects Completed"}
                   </div>
                 </div>
 
@@ -909,16 +917,26 @@ export function HomeClientSections({
             </p>
           </div>
 
-          {/* STICKY STACKING CARDS (.svc) */}
-          <div className="stack-list">
+          {/* REACT BITS SCROLL STACK CARDS (.svc) */}
+          <ScrollStack
+            className="svc-scroll-stack mt-8"
+            useWindowScroll={true}
+            smoothScroll={false}
+            itemDistance={isMobile ? 28 : 56}
+            itemStackDistance={isMobile ? 14 : 24}
+            stackPosition={isMobile ? "10%" : "14%"}
+            itemScale={isMobile ? 0.035 : 0.045}
+            baseScale={0.84}
+            dimAmount={0.2}
+            blurAmount={0}
+            tiltAmount={0}
+            rotationAmount={0}
+            holdDistance={isMobile ? 40 : 120}
+          >
             {SKILL_GROUP_CARDS.map((group, idx) => {
               const variant = SVC_VARIANTS[idx % SVC_VARIANTS.length]!;
               return (
-                <article
-                  key={group.id}
-                  style={{ "--i": idx } as React.CSSProperties}
-                  className={`svc ${variant}`}
-                >
+                <ScrollStackItem key={group.id} itemClassName={`svc ${variant}`}>
                   <div className="keffi-grid items-center">
                     {/* Left 5 Columns: Editorial Stack Info */}
                     <div className="col-span-12 lg:col-span-5">
@@ -966,10 +984,10 @@ export function HomeClientSections({
                       <KeffiStackFigure id={group.id} />
                     </div>
                   </div>
-                </article>
+                </ScrollStackItem>
               );
             })}
-          </div>
+          </ScrollStack>
         </div>
       </section>
 
@@ -1188,10 +1206,10 @@ export function HomeClientSections({
           </div>
         </div>
 
-        {/* 3D PERSPECTIVE DRIFT WALL - SEAMLESS, CENTERED, WITH INNER SHADOW MASKS */}
-        <div className="relative mt-8 h-[380px] w-full overflow-hidden sm:h-[460px] md:h-[560px]">
-          {/* Top Fade Gradient Shadow */}
-          <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-24 bg-gradient-to-b from-[#0c0d12] via-[#0c0d12]/70 to-transparent" />
+        {/* 3D PERSPECTIVE DRIFT WALL - SEAMLESS, CENTERED, WITH SMOOTH EDGE FADES */}
+        <div className="relative mt-6 h-[380px] w-full overflow-hidden sm:mt-8 sm:h-[460px] md:h-[560px]">
+          {/* Top Fade Gradient Shadow - Smooth Seamless Blend */}
+          <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-16 bg-gradient-to-b from-[#0c0d12] via-[#0c0d12]/60 to-transparent sm:h-20" />
 
           {/* 3D Drift Wall Component with responsive columns and balanced centering */}
           <DriftWall
@@ -1200,13 +1218,13 @@ export function HomeClientSections({
             tileWidth={driftWallConfig.tileWidth}
             tileHeight={driftWallConfig.tileHeight}
             gap={driftWallConfig.gap}
-            radius={18}
+            radius={16}
             tilt={12}
             turn={-7}
             perspective={1250}
             depth={90}
             speed={28}
-            fade={0.06}
+            fade={0}
             pauseOnHover={true}
             onTileClick={(item) => {
               const found = dynamicCertificates.find((c) => c.id === item.id);
@@ -1218,8 +1236,8 @@ export function HomeClientSections({
             }}
           />
 
-          {/* Bottom Inner Gradient Shadow - Soft Vault Fade */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-12 bg-gradient-to-t from-[#0c0d12] to-transparent" />
+          {/* Bottom Inner Gradient Shadow - Matches Top Fade Seamlessly */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-16 bg-gradient-to-t from-[#0c0d12] via-[#0c0d12]/60 to-transparent sm:h-20" />
         </div>
       </section>
 
