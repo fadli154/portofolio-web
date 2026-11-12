@@ -1229,7 +1229,7 @@ export function HomeClientSections({
          ===================================================================== */}
       <section
         id="coursework"
-        className="scroll-mt-24 relative overflow-hidden bg-white pt-14 pb-16 md:pt-24 md:pb-24 dark:bg-[#0a0a0c]"
+        className="scroll-mt-24 relative overflow-hidden bg-white pt-14 md:pt-24 dark:bg-[#0a0a0c]"
       >
         <div className="keffi-wrap">
           <div className="sec-head">
@@ -1383,18 +1383,19 @@ export function HomeClientSections({
             </div>
 
             {pertemuanViewMode === "carousel" ? (
-              <div className="relative mt-4 h-[460px] w-full overflow-hidden text-[var(--ink)] sm:h-[520px] md:h-[580px]">
+              <div className="relative h-[460px] w-full overflow-hidden text-[var(--ink)] sm:h-[520px] md:h-[580px]">
                 <FlexCarousel
                   items={courseworkFlexItems}
                   preset="liquid"
-                  intro="none"
+                  intro="rise"
                   cardHeight={0.48}
                   gap={14}
                   radius={14}
-                  fit="portrait"
+                  fit="natural"
                   focusOnClick={false}
                   captions={true}
                   captureWheel={false}
+                  autoplay={true}
                   onSelect={(index) => {
                     const matched = courseworkFlexItems[index]?.raw;
                     if (matched) {
@@ -1406,7 +1407,7 @@ export function HomeClientSections({
                 />
               </div>
             ) : (
-              <div className="keffi-wrap mt-8">
+              <div className="keffi-wrap mt-10">
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {courseworkSessions.map((session) => {
                     const status = session.attendanceStatus || "Hadir";
