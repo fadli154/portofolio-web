@@ -13,7 +13,7 @@ const LanyardComponent = dynamic(() => import('./Lanyard'), {
   ),
 });
 
-export default function LanyardWrapper(props: LanyardProps) {
+export default React.memo(function LanyardWrapper(props: LanyardProps) {
   return <LanyardComponent {...props} />;
-}
+});
 

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import {
@@ -57,6 +57,7 @@ import { CountUp } from "@/components/reactbits/CountUp";
 import { Magnet } from "@/components/reactbits/Magnet";
 import { CustomCursor } from "@/components/reactbits/CustomCursor";
 import { DriftWall, type DriftWallItem } from "@/components/reactbits/DriftWall";
+import FadeContent from "@/components/reactbits/FadeContent";
 import { LogoLoop, type LogoItem } from "@/components/reactbits/LogoLoop";
 import ScrollStack, { ScrollStackItem } from "@/components/reactbits/ScrollStack";
 import { TechText } from "@/components/reactbits/TechText";
@@ -523,12 +524,34 @@ export function HomeClientSections({
       issueDate: c.issueDate,
       credentialId: c.credentialId,
       category: c.category,
-      summary: locale === "id" ? c.summaryId : c.summaryEn,
       fileUrl: c.fileUrl,
       verifyUrl: c.verifyUrl,
       raw: c,
     }));
-  }, [dynamicCertificates, locale]);
+  }, [dynamicCertificates]);
+
+  const handleDriftTileClick = useCallback(
+    (item: DriftWallItem) => {
+      const found = dynamicCertificates.find((c) => c.id === item.id);
+      if (found) {
+        setSelectedCertModal(found);
+      } else if (item.raw) {
+        setSelectedCertModal(item.raw as CertificateItem);
+      }
+    },
+    [dynamicCertificates]
+  );
+
+  const handleFlexSelect = useCallback(
+    (index: number) => {
+      const matched = courseworkFlexItems[index]?.raw;
+      if (matched) {
+        playMechanicalClick(680);
+        setSelectedSessionModal(matched);
+      }
+    },
+    [courseworkFlexItems]
+  );
 
   // Featured Crown Achievement: Juara II OASE III PTKIN 2026 (Kemenag RI)
   const featuredOaseCert = useMemo(() => {
@@ -780,7 +803,8 @@ export function HomeClientSections({
           2. STUDIO KEFFI EDITORIAL ABOUT & ANIMATED COUNTUP METRICS (#about)
          ===================================================================== */}
       <section id="about" className="scroll-mt-24 pt-12 pb-14 md:pt-20 md:pb-24">
-        <div className="keffi-wrap">
+        <FadeContent blur={6} duration={0.7} ease="power2.out" threshold={0.08} initialOpacity={0} once={true}>
+          <div className="keffi-wrap">
           <div className="keffi-grid items-start">
             {/* Left 3 Columns: Studio Keffi Metadata Definition List */}
             <dl className="col-span-12 grid grid-cols-2 gap-5 border-t border-[var(--line)] pt-5 sm:grid-cols-4 lg:col-span-3 lg:grid-cols-1">
@@ -878,7 +902,8 @@ export function HomeClientSections({
               </div>
             </div>
           </div>
-        </div>
+          </div>
+        </FadeContent>
       </section>
 
       {/* =====================================================================
@@ -997,9 +1022,10 @@ export function HomeClientSections({
          ===================================================================== */}
       <section
         id="certificates"
-        className="scroll-mt-24 relative overflow-hidden border-t border-white/10 bg-[#0c0d12] pt-16 pb-12 text-[#f5f5f2] md:pt-24 md:pb-16"
+        className="scroll-mt-24 relative overflow-hidden border-t border-white/10 bg-[#0c0d12] pt-16 pb-0 text-[#f5f5f2] md:pt-24"
       >
-        <div className="keffi-wrap">
+        <FadeContent blur={6} duration={0.7} ease="power2.out" threshold={0.08} initialOpacity={0} once={true}>
+          <div className="keffi-wrap">
           <div className="sec-head sec-head--dark">
             <div>
               <div className="mb-7 flex flex-wrap items-center gap-4">
@@ -1205,14 +1231,23 @@ export function HomeClientSections({
             </div>
           </div>
         </div>
+        </FadeContent>
 
         {/* 3D PERSPECTIVE DRIFT WALL - SEAMLESS, CENTERED, WITH SMOOTH EDGE FADES */}
-        <div className="relative mt-6 h-[380px] w-full overflow-hidden sm:mt-8 sm:h-[460px] md:h-[560px]">
+        <FadeContent blur={false} duration={0.7} ease="power2.out" threshold={0.08} initialOpacity={0} once={true}>
+        <div className="relative isolate mt-6 h-[400px] w-full overflow-hidden sm:mt-8 sm:h-[480px] md:h-[580px]">
           {/* Top Fade Gradient Shadow - Smooth Seamless Blend */}
-          <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-16 bg-gradient-to-b from-[#0c0d12] via-[#0c0d12]/60 to-transparent sm:h-20" />
+          <div
+            className="pointer-events-none absolute inset-x-0 -top-px z-20 h-20 sm:h-24"
+            style={{
+              background:
+                "linear-gradient(to bottom, #0c0d12 0%, rgba(12, 13, 18, 0.72) 48%, rgba(12, 13, 18, 0) 100%)",
+            }}
+          />
 
           {/* 3D Drift Wall Component with responsive columns and balanced centering */}
           <DriftWall
+            className="isolate"
             items={driftWallItems}
             columns={driftWallConfig.columns}
             tileWidth={driftWallConfig.tileWidth}
@@ -1226,19 +1261,19 @@ export function HomeClientSections({
             speed={28}
             fade={0}
             pauseOnHover={true}
-            onTileClick={(item) => {
-              const found = dynamicCertificates.find((c) => c.id === item.id);
-              if (found) {
-                setSelectedCertModal(found);
-              } else if (item.raw) {
-                setSelectedCertModal(item.raw as CertificateItem);
-              }
-            }}
+            onTileClick={handleDriftTileClick}
           />
 
-          {/* Bottom Inner Gradient Shadow - Matches Top Fade Seamlessly */}
-          <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 h-16 bg-gradient-to-t from-[#0c0d12] via-[#0c0d12]/60 to-transparent sm:h-20" />
+          {/* Bottom Inner Gradient Shadow - Seamless Flush Dissolve into Section Bottom */}
+          <div
+            className="pointer-events-none absolute inset-x-0 -bottom-px z-20 h-28 sm:h-32"
+            style={{
+              background:
+                "linear-gradient(to top, #0c0d12 0%, #0c0d12 18%, rgba(12, 13, 18, 0.78) 54%, rgba(12, 13, 18, 0) 100%)",
+            }}
+          />
         </div>
+        </FadeContent>
       </section>
 
       {/* =====================================================================
@@ -1249,6 +1284,7 @@ export function HomeClientSections({
         id="coursework"
         className="scroll-mt-24 relative overflow-hidden bg-white pt-14 md:pt-24 dark:bg-[#0a0a0c]"
       >
+        <FadeContent blur={6} duration={0.7} ease="power2.out" threshold={0.08} initialOpacity={0} once={true}>
         <div className="keffi-wrap">
           <div className="sec-head">
             <div>
@@ -1332,7 +1368,9 @@ export function HomeClientSections({
             </div>
           </div>
         </div>
+        </FadeContent>
 
+        <FadeContent blur={false} duration={0.7} ease="power2.out" threshold={0.08} initialOpacity={0} once={true}>
         {/* TAB 1: DYNAMIC PERTEMUAN, ABSEN, BUKTI KEHADIRAN & TUGAS */}
         {activeHubTab === "pertemuan" && (
           <div className="mt-8">
@@ -1414,13 +1452,7 @@ export function HomeClientSections({
                   captions={true}
                   captureWheel={false}
                   autoplay={true}
-                  onSelect={(index) => {
-                    const matched = courseworkFlexItems[index]?.raw;
-                    if (matched) {
-                      playMechanicalClick(680);
-                      setSelectedSessionModal(matched);
-                    }
-                  }}
+                  onSelect={handleFlexSelect}
                   className="h-full w-full"
                 />
               </div>
@@ -1796,12 +1828,14 @@ export function HomeClientSections({
             )}
           </div>
         )}
+        </FadeContent>
       </section>
 
       {/* =====================================================================
           6. STUDIO KEFFI CLOSING CONTACT & COLLABORATION SECTION (#contact)
          ===================================================================== */}
       <section id="contact" className="scroll-mt-24 border-t border-[var(--line)] bg-[var(--bg)] pt-16 pb-16 md:pt-24 md:pb-24">
+        <FadeContent blur={6} duration={0.7} ease="power2.out" threshold={0.08} initialOpacity={0} once={true}>
         <div className="keffi-wrap">
           <div className="keffi-grid items-end">
             <div className="col-span-12 lg:col-span-8">
@@ -1868,6 +1902,7 @@ export function HomeClientSections({
             </div>
           </div>
         </div>
+        </FadeContent>
       </section>
 
       {/* =====================================================================

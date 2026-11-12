@@ -33,8 +33,8 @@ import { follow, spring, useLoop, type Spring } from "../iso/react/live";
 import "../iso/iso.css";
 import { playMechanicalClick } from "@/lib/audio/sound-effects";
 
-const WIDTH = 660;
-const HEIGHT = 380;
+const WIDTH = 490;
+const HEIGHT = 330;
 
 const BASE: Plan = { x: 0, y: 0, w: 120, d: 68, r: 8 };
 const BASE_Z = 0;
@@ -79,10 +79,10 @@ const PLUNGER_H = 5.0;
 const PLUNGER_TRAVEL = 3.0;
 
 const PROJECTION = fitProjection(
-  boxCorners(BASE, BASE_Z - 3.5, CAR_Z + CAR_H + PLUNGER_H + 14),
+  boxCorners(BASE, BASE_Z - 3.2, CAR_Z + CAR_H + PLUNGER_H + 8.8),
   WIDTH,
   HEIGHT,
-  { pad: 24, headroom: 8 }
+  { pad: 10, headroom: 2 }
 );
 
 const AXIS_X = axisVector(PROJECTION, [1, 0, 0]);
@@ -924,7 +924,7 @@ export function KeffiStackFigure({ id }: { id: string }) {
       </IsoFigure>
 
       {/* Background-Free Interactive Station Pills & Live Telemetry Readout */}
-      <div className="mt-2 flex flex-wrap items-center justify-between gap-2 border-t border-current/15 pt-3 font-mono text-[11px]">
+      <div className="mt-1 flex flex-wrap items-center justify-between gap-2 border-t border-current/15 pt-2.5 font-mono text-[11px]">
         <div className="flex flex-wrap gap-1.5">
           {spec.stations.map((st, idx) => {
             const active = idx === activeIdx;

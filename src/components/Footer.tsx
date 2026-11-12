@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { usePortfolioState } from "@/lib/i18n/context";
 import { SITE_PROFILE } from "@/data/site";
+import FadeContent from "@/components/reactbits/FadeContent";
 
 export function Footer() {
   const pathname = usePathname();
@@ -17,7 +18,8 @@ export function Footer() {
 
   return (
     <footer className="bg-[#111213] py-16 text-[#f5f5f2]">
-      <div className="keffi-wrap">
+      <FadeContent blur={6} duration={0.7} ease="power2.out" threshold={0.08} initialOpacity={0} once={true}>
+        <div className="keffi-wrap">
         <div className="keffi-grid items-start border-b border-white/12 pb-14">
           <div className="col-span-12 lg:col-span-6">
             <Link
@@ -145,7 +147,8 @@ export function Footer() {
           </span>
           <span>@fadli154 · Next.js 15 · ReactBits · Supabase</span>
         </div>
-      </div>
+        </div>
+      </FadeContent>
     </footer>
   );
 }

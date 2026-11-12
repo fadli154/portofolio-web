@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { gsap } from "gsap";
 import {
   initSoundPreference,
   playMechanicalClick,
@@ -50,6 +51,7 @@ export function PortfolioStateProvider({ children }: { children: React.ReactNode
       const savedLocale = window.localStorage.getItem("fadli_locale") as Locale | null;
       if (savedLocale === "en" || savedLocale === "id") {
         setLocaleState(savedLocale);
+        document.documentElement.lang = savedLocale;
       }
       document.documentElement.setAttribute("data-theme", "light");
     } catch {
@@ -70,8 +72,29 @@ export function PortfolioStateProvider({ children }: { children: React.ReactNode
   }, []);
 
   const setLocale = (next: Locale) => {
+    if (next === locale) return;
     playMechanicalClick(660);
     setLocaleState(next);
+
+    if (typeof document !== "undefined") {
+      document.documentElement.lang = next;
+      const prefersReducedMotion =
+        typeof window !== "undefined" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (!prefersReducedMotion) {
+        const main = document.getElementById("main-content");
+        if (main) {
+          gsap.killTweensOf(main, "opacity");
+          gsap.fromTo(
+            main,
+            { opacity: 0.85 },
+            { opacity: 1, duration: 0.22, ease: "power2.out", clearProps: "opacity" }
+          );
+        }
+      }
+    }
+
     try {
       window.localStorage.setItem("fadli_locale", next);
     } catch {

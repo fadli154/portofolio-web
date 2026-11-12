@@ -18,6 +18,7 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { BlurText } from "@/components/reactbits/BlurText";
+import FadeContent from "@/components/reactbits/FadeContent";
 import CircularGalleryWrapper, { type GalleryItem } from "@/components/reactbits/CircularGalleryWrapper";
 import Folder, { type FolderItem } from "@/components/reactbits/Folder";
 import {
@@ -162,6 +163,29 @@ export function ExperienceFoldersSection({
     setIsDraggingTabs(false);
   };
 
+  const handleGalleryActiveChange = useCallback((idx: number) => {
+    const normalized =
+      ((idx % EXPERIENCE_FOLDERS.length) + EXPERIENCE_FOLDERS.length) %
+      EXPERIENCE_FOLDERS.length;
+    setActiveCircularIndex(normalized);
+  }, []);
+
+  const handleGalleryItemClick = useCallback((item: GalleryItem, index: number) => {
+    const found =
+      EXPERIENCE_FOLDERS[index % EXPERIENCE_FOLDERS.length] ||
+      EXPERIENCE_FOLDERS.find(
+        (f) =>
+          f.tab === item.text ||
+          f.title === item.description ||
+          f.slug === item.text
+      );
+    if (found) {
+      setSelectedFolder(found);
+      setActivePaperIndex(0);
+      playMechanicalClick(720);
+    }
+  }, []);
+
   // Gallery items for CircularGallery
   const galleryItems: GalleryItem[] = useMemo(() => {
     return EXPERIENCE_FOLDERS.map((f) => ({
@@ -241,8 +265,9 @@ export function ExperienceFoldersSection({
 
   return (
     <section id="work" className="scroll-mt-28 overflow-hidden bg-white pb-12 md:pb-20 dark:bg-[#0a0a0c]">
-      <div className="keffi-wrap">
-        {/* Section Header */}
+      <FadeContent blur={6} duration={0.7} ease="power2.out" threshold={0.08} initialOpacity={0} once={true}>
+        <div className="keffi-wrap">
+          {/* Section Header */}
         <div className="sec-head dark:border-white/10 pt-14">
           <div>
             <div className="flex mb-10 items-center gap-2 font-mono text-xs font-semibold tracking-wider text-[var(--mute)] dark:text-gray-300">
@@ -301,11 +326,13 @@ export function ExperienceFoldersSection({
             </Link>
           </div>
         </div>
-      </div>
+        </div>
+      </FadeContent>
 
       {/* ===================================================================
           VIEW MODE A: 3D CIRCULAR GALLERY (WebGL Curved Cylinder) - FULL BLEED
           =================================================================== */}
+      <FadeContent blur={false} duration={0.7} ease="power2.out" threshold={0.08} initialOpacity={0} once={true}>
       {viewMode === "circular" && (
         <div className="relative mt-6 h-[340px] w-full overflow-hidden sm:h-[440px] md:mt-8 md:h-[520px]">
           {/* Circular Gallery WebGL Component */}
@@ -325,27 +352,8 @@ export function ExperienceFoldersSection({
             snap={true}
             autoScroll={0}
             openOnClick={false}
-            onActiveChange={(idx) => {
-              const normalized =
-                ((idx % EXPERIENCE_FOLDERS.length) + EXPERIENCE_FOLDERS.length) %
-                EXPERIENCE_FOLDERS.length;
-              setActiveCircularIndex(normalized);
-            }}
-            onItemClick={(item, index) => {
-              const found =
-                EXPERIENCE_FOLDERS[index % EXPERIENCE_FOLDERS.length] ||
-                EXPERIENCE_FOLDERS.find(
-                  (f) =>
-                    f.tab === item.text ||
-                    f.title === item.description ||
-                    f.slug === item.text
-                );
-              if (found) {
-                setSelectedFolder(found);
-                setActivePaperIndex(0);
-                playMechanicalClick(720);
-              }
-            }}
+            onActiveChange={handleGalleryActiveChange}
+            onItemClick={handleGalleryItemClick}
           />
 
           {/* Bottom Folder Quick Launcher */}
@@ -583,6 +591,7 @@ export function ExperienceFoldersSection({
           </div>
         </div>
       )}
+      </FadeContent>
 
       {/* ===================================================================
             MODAL INSPECTION STAGE (Triggered on click from Circular Gallery)

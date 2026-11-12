@@ -144,7 +144,7 @@
 
 .svc-anatomy.iso .iso-svg {
   background: transparent !important;
-  max-height: 330px;
+  max-height: clamp(280px, 33vw, 420px);
 }
 
 /* Light-surface cards: .svc--lime (#c4e22e), .svc--bone (#e6e4de), .svc--white (#ffffff) */

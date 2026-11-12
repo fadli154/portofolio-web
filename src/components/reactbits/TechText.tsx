@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import type { CSSProperties } from 'react';
 
 import './TechText.css';
@@ -97,7 +97,7 @@ const noise = (...values: number[]) => {
 
 const signed = (value: number) => (value > 0 ? `+${value}` : value < 0 ? `−${-value}` : '0');
 
-const TechText = ({
+const TechText = memo(({
   text = 'React Bits',
   fontFamily = '',
   fontWeight = 600,
@@ -1075,7 +1075,9 @@ const TechText = ({
       <canvas ref={canvasRef} className="tech-text-canvas" />
     </div>
   );
-};
+});
+
+TechText.displayName = 'TechText';
 
 export { TechText };
 export default TechText;

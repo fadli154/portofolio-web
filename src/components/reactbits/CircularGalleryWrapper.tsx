@@ -15,7 +15,7 @@ const CircularGalleryComponent = dynamic(() => import('./CircularGallery'), {
   ),
 });
 
-export default function CircularGalleryWrapper(props: CircularGalleryProps) {
+export default React.memo(function CircularGalleryWrapper(props: CircularGalleryProps) {
   return <CircularGalleryComponent {...props} />;
-}
+});
 

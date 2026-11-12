@@ -70,7 +70,7 @@ const columnFactor = (index: number, variance: number): number => {
   return 1 + variance * pseudo;
 };
 
-export function DriftWall({
+export const DriftWall = React.memo(function DriftWall({
   items = [],
   columns = 4,
   tileWidth = 260,
@@ -523,6 +523,6 @@ export function DriftWall({
       </div>
     </div>
   );
-}
+});
 export default DriftWall;
 
