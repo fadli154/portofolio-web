@@ -240,17 +240,16 @@ export function ExperienceFoldersSection({
   const currentFolderForDeck = EXPERIENCE_FOLDERS[activeDeckIndex];
 
   return (
-    <section id="work" className="scroll-mt-28 overflow-hidden bg-white pt-28 pb-20 md:pt-36 md:pb-28 dark:bg-[#0a0a0c]">
+    <section id="work" className="scroll-mt-28 overflow-hidden bg-white pb-12 md:pb-20 dark:bg-[#0a0a0c]">
       <div className="keffi-wrap">
         {/* Section Header */}
-        <div className="sec-head dark:border-white/10">
+        <div className="sec-head dark:border-white/10 pt-14">
           <div>
-            <div className="flex items-center gap-2 font-mono text-xs font-semibold tracking-wider text-gray-800 dark:text-gray-200">
-              <span className="h-2 w-2 rounded-full bg-[var(--violet)] dark:bg-[#c4e22e]" />
+            <div className="flex mb-10 items-center gap-2 font-mono text-xs font-semibold tracking-wider text-[var(--mute)] dark:text-gray-300">
               <span>
                 {locale === "id"
-                  ? "REKAM JEJAK & KARYA UNGGULAN · 3D FOLDER CIRCULAR GALLERY"
-                  : "SELECTED WORK & REAL EXPERIENCE · 3D FOLDER CIRCULAR GALLERY"}
+                  ? "REKAM JEJAK & KARYA UNGGULAN · GALERI 3D"
+                  : "SELECTED WORK & EXPERIENCE · 3D GALLERY"}
               </span>
             </div>
             <h2 className="sec-title mt-3 text-[var(--ink)] dark:text-[#f5f5f2]">
@@ -273,12 +272,11 @@ export function ExperienceFoldersSection({
                   setViewMode("circular");
                   playMechanicalClick(560);
                 }}
-                className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-mono text-xs font-semibold transition-all ${viewMode === "circular"
+                className={`inline-flex min-h-[34px] items-center rounded-full px-3.5 py-1.5 font-mono text-xs font-semibold transition-all ${viewMode === "circular"
                   ? "bg-white text-[var(--ink)] shadow-xs dark:bg-[#1f2024] dark:text-white"
                   : "text-[var(--mute)] hover:text-[var(--ink)] dark:text-gray-400 dark:hover:text-white"
                   }`}
               >
-                <span>🎡</span>
                 <span>{locale === "id" ? "Galeri Melingkar" : "Circular Gallery"}</span>
               </button>
 
@@ -288,19 +286,18 @@ export function ExperienceFoldersSection({
                   setViewMode("deck");
                   playMechanicalClick(680);
                 }}
-                className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 font-mono text-xs font-semibold transition-all ${viewMode === "deck"
+                className={`inline-flex min-h-[34px] items-center rounded-full px-3.5 py-1.5 font-mono text-xs font-semibold transition-all ${viewMode === "deck"
                   ? "bg-white text-[var(--ink)] shadow-xs dark:bg-[#1f2024] dark:text-white"
                   : "text-[var(--mute)] hover:text-[var(--ink)] dark:text-gray-400 dark:hover:text-white"
                   }`}
               >
-                <span>📂</span>
                 <span>{locale === "id" ? "Meja Berkas 3D" : "3D Folder Deck"}</span>
               </button>
             </div>
 
             <Link href="/projects" className="keffi-pill-outline dark:border-white/20 dark:text-white dark:hover:bg-white/10">
               <span>{locale === "id" ? "Lihat Arsip Lengkap" : "View Full Archive"}</span>
-              <ArrowUpRight className="h-4 w-4" />
+              <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
             </Link>
           </div>
         </div>
@@ -310,7 +307,7 @@ export function ExperienceFoldersSection({
           VIEW MODE A: 3D CIRCULAR GALLERY (WebGL Curved Cylinder) - FULL BLEED
           =================================================================== */}
       {viewMode === "circular" && (
-        <div className="relative mt-8 h-[580px] w-full overflow-hidden md:h-[680px]">
+        <div className="relative mt-6 h-[340px] w-full overflow-hidden sm:h-[440px] md:mt-8 md:h-[520px]">
           {/* Circular Gallery WebGL Component */}
           <CircularGalleryWrapper
             items={galleryItems}
@@ -351,22 +348,9 @@ export function ExperienceFoldersSection({
             }}
           />
 
-          {/* Tactical Overlay: Bottom Controls & Folder Quick Launcher */}
+          {/* Bottom Folder Quick Launcher */}
           <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30">
-            <div className="keffi-wrap flex flex-col items-center justify-between gap-2.5 p-4 md:p-6 md:flex-row md:items-end">
-              <div className="pointer-events-auto flex max-w-[90vw] items-center gap-2 rounded-full border border-[var(--line)] bg-white/90 px-3.5 py-1.5 font-mono text-[10px] md:text-xs text-[var(--ink)] backdrop-blur-md dark:border-white/15 dark:bg-black/80 dark:text-white">
-                <span className="h-1.5 w-1.5 md:h-2 md:w-2 shrink-0 rounded-full bg-[var(--violet)] animate-pulse" />
-                <span className="truncate md:overflow-visible md:whitespace-nowrap">
-                  {isMobile
-                    ? (locale === "id"
-                      ? "Putar galeri 3D · Ketuk folder untuk buka"
-                      : "Spin 3D gallery · Tap folder to open")
-                    : (locale === "id"
-                      ? "Geser kiri / kanan untuk memutar galeri · Klik folder untuk membuka berkas 3D"
-                      : "Drag left / right to spin gallery · Click any folder to inspect 3D papers")}
-                </span>
-              </div>
-
+            <div className="keffi-wrap flex justify-end p-4 md:p-6">
               <div className="pointer-events-auto flex items-center gap-2">
                 <button
                   type="button"
@@ -377,7 +361,7 @@ export function ExperienceFoldersSection({
                     setActivePaperIndex(0);
                     playMechanicalClick(640);
                   }}
-                  className="inline-flex items-center gap-2 rounded-full bg-[var(--violet)] px-4 py-2 md:px-5 md:py-2.5 font-mono text-[11px] md:text-xs font-bold text-white transition-transform hover:scale-105 active:scale-95"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#c4e22e] px-4 py-2 md:px-5 md:py-2.5 font-mono text-[11px] md:text-xs font-bold text-[#111213] shadow-xs transition-transform hover:scale-105 active:scale-95"
                 >
                   <FolderOpen className="h-3.5 w-3.5 md:h-4 md:w-4" />
                   <span>
@@ -405,9 +389,8 @@ export function ExperienceFoldersSection({
               onMouseMove={handleMouseMoveTabs}
               onMouseUp={handleMouseUpTabs}
               onMouseLeave={handleMouseUpTabs}
-              className={`flex max-w-full overflow-x-auto gap-2 pb-3.5 no-scrollbar select-none scroll-smooth ${
-                isDraggingTabs ? "cursor-grabbing" : "cursor-grab"
-              }`}
+              className={`flex max-w-full overflow-x-auto gap-2 pb-3.5 no-scrollbar select-none scroll-smooth ${isDraggingTabs ? "cursor-grabbing" : "cursor-grab"
+                }`}
             >
               {EXPERIENCE_FOLDERS.map((f, idx) => (
                 <button
@@ -418,11 +401,10 @@ export function ExperienceFoldersSection({
                     setActivePaperIndex(0);
                     playMechanicalClick(580 + idx * 25);
                   }}
-                  className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-4 py-2 font-mono text-xs font-semibold whitespace-nowrap transition-all ${
-                    activeDeckIndex === idx
-                      ? "bg-[var(--violet)] text-white shadow-xs"
-                      : "border border-[var(--line)] bg-white text-[var(--ink)] hover:bg-gray-100 dark:border-white/10 dark:bg-[#1a1b1e] dark:text-gray-300 dark:hover:bg-[#25272c]"
-                  }`}
+                  className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-4 py-2 font-mono text-xs font-semibold whitespace-nowrap transition-all ${activeDeckIndex === idx
+                    ? "bg-[#c4e22e] text-[#111213] shadow-xs"
+                    : "border border-[var(--line)] bg-white text-[var(--ink)] hover:bg-gray-100 dark:border-white/10 dark:bg-[#1a1b1e] dark:text-gray-300 dark:hover:bg-[#25272c]"
+                    }`}
                 >
                   <span className="opacity-70">0{idx + 1}</span>
                   <span>{f.tab}</span>
@@ -438,11 +420,10 @@ export function ExperienceFoldersSection({
                   type="button"
                   onClick={() => scrollTabs("left")}
                   disabled={!canScrollLeft}
-                  className={`inline-flex h-7 w-7 items-center justify-center rounded-full border transition-all ${
-                    canScrollLeft
-                      ? "border-[var(--line)] bg-white text-[var(--ink)] shadow-xs hover:border-[var(--violet)] hover:text-[var(--violet)] dark:border-white/15 dark:bg-[#1a1b1e] dark:text-white"
-                      : "cursor-not-allowed border-transparent opacity-25 text-[var(--mute)]"
-                  }`}
+                  className={`inline-flex h-7 w-7 items-center justify-center rounded-full border transition-all ${canScrollLeft
+                    ? "border-[var(--line)] bg-white text-[var(--ink)] shadow-xs hover:border-[var(--violet)] hover:text-[var(--violet)] dark:border-white/15 dark:bg-[#1a1b1e] dark:text-white"
+                    : "cursor-not-allowed border-transparent opacity-25 text-[var(--mute)]"
+                    }`}
                   aria-label="Geser tab pill ke kiri"
                   title="Geser tab pill ke kiri"
                 >
@@ -453,11 +434,10 @@ export function ExperienceFoldersSection({
                   type="button"
                   onClick={() => scrollTabs("right")}
                   disabled={!canScrollRight}
-                  className={`inline-flex h-7 w-7 items-center justify-center rounded-full border transition-all ${
-                    canScrollRight
-                      ? "border-[var(--line)] bg-white text-[var(--ink)] shadow-xs hover:border-[var(--violet)] hover:text-[var(--violet)] dark:border-white/15 dark:bg-[#1a1b1e] dark:text-white"
-                      : "cursor-not-allowed border-transparent opacity-25 text-[var(--mute)]"
-                  }`}
+                  className={`inline-flex h-7 w-7 items-center justify-center rounded-full border transition-all ${canScrollRight
+                    ? "border-[var(--line)] bg-white text-[var(--ink)] shadow-xs hover:border-[var(--violet)] hover:text-[var(--violet)] dark:border-white/15 dark:bg-[#1a1b1e] dark:text-white"
+                    : "cursor-not-allowed border-transparent opacity-25 text-[var(--mute)]"
+                    }`}
                   aria-label="Geser tab pill ke kanan"
                   title="Geser tab pill ke kanan"
                 >
@@ -477,7 +457,7 @@ export function ExperienceFoldersSection({
 
                 {/* Animated Slider Capsule Dot / Thumb */}
                 <div
-                  className="absolute h-3 w-10 -translate-x-1/2 rounded-full bg-[var(--violet)] shadow-sm transition-all duration-100 group-hover:h-3.5 group-hover:w-12 dark:bg-[#c4e22e] dark:shadow-[0_0_10px_rgba(196,226,46,0.45)]"
+                  className="absolute h-3 w-10 -translate-x-1/2 rounded-full bg-[#c4e22e] border border-[#111213]/20 shadow-sm transition-all duration-100 group-hover:h-3.5 group-hover:w-12 dark:border-transparent"
                   style={{
                     left: `${Math.max(4, Math.min(96, scrollProgress * 100))}%`,
                   }}
@@ -522,7 +502,7 @@ export function ExperienceFoldersSection({
               {/* Right Column: Case Study Breakdown & Documentation */}
               <div className="space-y-6 lg:col-span-6">
                 <div className="flex items-center justify-between border-b border-[var(--line)] pb-3 dark:border-white/10">
-                  <span className="rounded-full bg-[var(--violet)]/15 px-3 py-1 font-mono text-xs font-bold uppercase text-[var(--violet)] dark:bg-[var(--violet)]/25 dark:text-[#a5b4fc]">
+                  <span className="rounded-full bg-[#c4e22e] px-3 py-1 font-mono text-xs font-bold uppercase text-[#111213]">
                     {currentFolderForDeck.badge}
                   </span>
                   <span className="font-mono text-xs text-[var(--mute)] dark:text-gray-400">
@@ -562,7 +542,7 @@ export function ExperienceFoldersSection({
                           playMechanicalClick(650);
                         }}
                         className={`flex flex-col items-start rounded-xl p-3 text-left transition-all ${activePaperIndex === pIdx
-                          ? "border border-[var(--violet)] bg-[var(--violet)]/10 text-[var(--violet)] dark:border-[var(--violet)] dark:bg-[var(--violet)]/25 dark:text-white"
+                          ? "border border-[#9ab818] bg-[#c4e22e]/25 text-[#111213] dark:border-[#c4e22e] dark:bg-[#c4e22e]/20 dark:text-[#c4e22e]"
                           : "border border-[var(--line)] bg-[#f5f5f2] text-[var(--ink)] hover:border-gray-400 dark:border-white/10 dark:bg-black/30 dark:text-gray-300 dark:hover:border-white/30"
                           }`}
                       >
@@ -620,7 +600,7 @@ export function ExperienceFoldersSection({
             {/* Modal Top Bar */}
             <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
               <div className="flex items-center gap-3">
-                <span className="rounded-full bg-[var(--violet)] px-3 py-1 font-mono text-xs font-bold text-white">
+                <span className="rounded-full bg-[#c4e22e] px-3 py-1 font-mono text-xs font-bold text-[#111213]">
                   {selectedFolder.badge}
                 </span>
                 <span className="font-mono text-xs font-medium text-white/70">
@@ -713,7 +693,7 @@ export function ExperienceFoldersSection({
                   <h3 className="text-2xl font-bold tracking-tight text-white md:text-3xl">
                     {selectedFolder.title}
                   </h3>
-                  <p className="mt-1 font-mono text-sm text-[var(--violet)]">
+                  <p className="mt-1 font-mono text-sm text-[#c4e22e]">
                     {selectedFolder.subtitle}
                   </p>
 

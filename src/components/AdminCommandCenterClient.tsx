@@ -532,7 +532,7 @@ export function AdminCommandCenterClient({
         .filter(Boolean),
       liveUrl: projUrl.trim() || "https://github.com/fadli154",
       repoUrl: projUrl.trim() || "https://github.com/fadli154",
-      accentColor: "#5b31c8",
+      accentColor: "#546800",
       diagramSpec: {
         inputNode: "Client Input",
         edgeNode: "API & Logic",
@@ -699,7 +699,7 @@ export function AdminCommandCenterClient({
               <div className="rounded-[28px] border border-black/10 bg-white p-6 md:p-8">
                 <div className="flex flex-wrap items-center justify-between gap-4 border-b border-black/10 pb-5">
                   <div>
-                    <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#5b31c8]">
+                    <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#546800]">
                       CMS MATA KULIAH KEWIRAUSAHAAN · KELOMPOK K-1
                     </span>
                     <h1 className="mt-1 text-2xl font-medium tracking-tight">
@@ -827,13 +827,13 @@ export function AdminCommandCenterClient({
 
                   {/* Bukti Kehadiran Upload & URL */}
                   <div className="rounded-2xl border border-black/12 bg-[#f5f5f2] p-5">
-                    <div className="font-mono text-xs font-bold uppercase text-[#5b31c8]">
+                    <div className="font-mono text-xs font-bold uppercase text-[#546800]">
                       BUKTI KEHADIRAN (UPLOAD FOTO / SCREENSHOT ATAU TEMPEL URL)
                     </div>
                     <div className="mt-3 grid grid-cols-1 gap-4 md:grid-cols-2">
                       <div>
-                        <label className="flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-black/20 bg-white p-4 text-center transition hover:border-[#5b31c8]">
-                          <Upload className="h-5 w-5 text-[#5b31c8]" />
+                        <label className="flex cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-black/20 bg-white p-4 text-center transition hover:border-[#546800]">
+                          <Upload className="h-5 w-5 text-[#546800]" />
                           <span className="mt-1.5 text-xs font-semibold">
                             Pilih File Foto / Screenshot Bukti Hadir
                           </span>
@@ -890,7 +890,7 @@ export function AdminCommandCenterClient({
                       <span className="font-mono text-xs font-bold uppercase text-[#111213]">
                         RINCIAN TUGAS PERTEMUAN {sessionNumInput}
                       </span>
-                      <ClipboardCheck className="h-4 w-4 text-[#5b31c8]" />
+                      <ClipboardCheck className="h-4 w-4 text-[#546800]" />
                     </div>
 
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -960,7 +960,7 @@ export function AdminCommandCenterClient({
                   <div className="flex flex-wrap items-center justify-between gap-4 pt-2">
                     <button
                       type="submit"
-                      className="inline-flex items-center gap-2 rounded-full bg-[#111213] px-6 py-3 text-xs font-semibold text-[#c4e22e] transition hover:bg-[#5b31c8] hover:text-white"
+                      className="inline-flex items-center gap-2 rounded-full bg-[#111213] px-6 py-3 text-xs font-semibold text-[#c4e22e] transition hover:bg-[#c4e22e] hover:text-[#111213]"
                     >
                       <Save className="h-4 w-4" />
                       <span>
@@ -994,7 +994,7 @@ export function AdminCommandCenterClient({
               <div className="rounded-[28px] border border-black/10 bg-white p-6 md:p-8">
                 <div className="flex flex-wrap items-center justify-between gap-4 border-b border-black/10 pb-5">
                   <div>
-                    <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#5b31c8]">
+                    <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[#546800]">
                       MANAJEMEN SERTIFIKAT · 3D DRIFT WALL &amp; SUPABASE POSTGRESQL
                     </span>
                     <h2 className="mt-1 text-2xl font-bold tracking-tight">
@@ -1012,7 +1012,7 @@ export function AdminCommandCenterClient({
                         playMechanicalClick(620);
                         handlePrepareNewCert();
                       }}
-                      className="inline-flex items-center gap-1.5 rounded-full bg-[#111213] px-4 py-2 font-mono text-xs font-bold text-[#c4e22e] hover:bg-[#5b31c8]"
+                      className="inline-flex items-center gap-1.5 rounded-full bg-[#111213] px-4 py-2 font-mono text-xs font-bold text-[#c4e22e] hover:bg-[#546800]"
                     >
                       <Plus className="h-4 w-4" />
                       <span>Tambah Sertifikat Baru</span>
@@ -1033,7 +1033,7 @@ export function AdminCommandCenterClient({
                         }}
                         className={`cursor-pointer rounded-2xl border p-4 transition ${
                           isSelected
-                            ? "border-[#5b31c8] bg-[#5b31c8]/5 ring-2 ring-[#5b31c8]/20"
+                            ? "border-[#546800] bg-[#546800]/5 ring-2 ring-[#546800]/20"
                             : "border-black/10 bg-[#f5f5f2] hover:border-black/30"
                         }`}
                       >
@@ -1096,7 +1096,7 @@ export function AdminCommandCenterClient({
               >
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-black/10 pb-4">
                   <div>
-                    <span className="font-mono text-xs font-bold uppercase text-[#5b31c8]">
+                    <span className="font-mono text-xs font-bold uppercase text-[#546800]">
                       {selectedCertId
                         ? `EDIT SERTIFIKAT: ${certTitle || "Tanpa Judul"}`
                         : "FORMULIR PENAMBAHAN SERTIFIKAT BARU"}
@@ -1109,7 +1109,7 @@ export function AdminCommandCenterClient({
                     <button
                       type="button"
                       onClick={handlePrepareNewCert}
-                      className="font-mono text-xs text-[#5b31c8] hover:underline"
+                      className="font-mono text-xs text-[#546800] hover:underline"
                     >
                       Batal Edit / Buat Baru
                     </button>
@@ -1127,7 +1127,7 @@ export function AdminCommandCenterClient({
                       value={certTitle}
                       onChange={(e) => setCertTitle(e.target.value)}
                       placeholder="Contoh: Juara II Literasi Inovasi Teknologi · OASE III PTKIN 2026"
-                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 text-sm focus:border-[#5b31c8] focus:outline-none"
+                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 text-sm focus:border-[#546800] focus:outline-none"
                     />
                   </div>
 
@@ -1141,7 +1141,7 @@ export function AdminCommandCenterClient({
                       value={certIssuer}
                       onChange={(e) => setCertIssuer(e.target.value)}
                       placeholder="Contoh: Kementerian Agama Republik Indonesia"
-                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 text-sm focus:border-[#5b31c8] focus:outline-none"
+                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 text-sm focus:border-[#546800] focus:outline-none"
                     />
                   </div>
 
@@ -1155,7 +1155,7 @@ export function AdminCommandCenterClient({
                       value={certIssueDate}
                       onChange={(e) => setCertIssueDate(e.target.value)}
                       placeholder="Contoh: 7 November 2026"
-                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 text-sm focus:border-[#5b31c8] focus:outline-none"
+                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 text-sm focus:border-[#546800] focus:outline-none"
                     />
                   </div>
 
@@ -1168,7 +1168,7 @@ export function AdminCommandCenterClient({
                       value={certCategory}
                       onChange={(e) => setCertCategory(e.target.value)}
                       placeholder="Contoh: Kompetisi / Frontend & Web / AI & Data"
-                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 text-sm focus:border-[#5b31c8] focus:outline-none"
+                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 text-sm focus:border-[#546800] focus:outline-none"
                     />
                   </div>
 
@@ -1181,7 +1181,7 @@ export function AdminCommandCenterClient({
                       value={certCredentialId}
                       onChange={(e) => setCertCredentialId(e.target.value)}
                       placeholder="Contoh: 712/Dt.I.III/PP.01/11/2026"
-                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 text-sm focus:border-[#5b31c8] focus:outline-none"
+                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 text-sm focus:border-[#546800] focus:outline-none"
                     />
                   </div>
                 </div>
@@ -1190,7 +1190,7 @@ export function AdminCommandCenterClient({
                 <div className="rounded-2xl border border-dashed border-black/20 bg-[#f5f5f2] p-5">
                   <div className="flex flex-wrap items-center justify-between gap-3">
                     <div>
-                      <div className="font-mono text-xs font-bold uppercase text-[#5b31c8]">
+                      <div className="font-mono text-xs font-bold uppercase text-[#546800]">
                         UNGAH BERKAS SERTIFIKAT (FOTO ATAU PDF)
                       </div>
                       <p className="mt-0.5 text-xs text-black/60">
@@ -1198,7 +1198,7 @@ export function AdminCommandCenterClient({
                       </p>
                     </div>
 
-                    <label className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-[#111213] px-4 py-2 font-mono text-xs font-semibold text-[#c4e22e] hover:bg-[#5b31c8]">
+                    <label className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-[#111213] px-4 py-2 font-mono text-xs font-semibold text-[#c4e22e] hover:bg-[#546800]">
                       <Upload className="h-4 w-4" />
                       <span>{certUploading ? "Mengunggah..." : "Pilih Berkas..."}</span>
                       <input
@@ -1245,7 +1245,7 @@ export function AdminCommandCenterClient({
                       value={certImageUrl}
                       onChange={(e) => setCertImageUrl(e.target.value)}
                       placeholder="https://... atau /sertif/nama-file.webp"
-                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 font-mono text-xs focus:border-[#5b31c8] focus:outline-none"
+                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 font-mono text-xs focus:border-[#546800] focus:outline-none"
                     />
                   </div>
 
@@ -1258,7 +1258,7 @@ export function AdminCommandCenterClient({
                       value={certFileUrl}
                       onChange={(e) => setCertFileUrl(e.target.value)}
                       placeholder="https://... atau /sertif/nama-file.pdf"
-                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 font-mono text-xs focus:border-[#5b31c8] focus:outline-none"
+                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 font-mono text-xs focus:border-[#546800] focus:outline-none"
                     />
                   </div>
 
@@ -1271,7 +1271,7 @@ export function AdminCommandCenterClient({
                       value={certVerifyUrl}
                       onChange={(e) => setCertVerifyUrl(e.target.value)}
                       placeholder="https://verifikasi-sertifikat.example.com"
-                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 font-mono text-xs focus:border-[#5b31c8] focus:outline-none"
+                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 font-mono text-xs focus:border-[#546800] focus:outline-none"
                     />
                   </div>
 
@@ -1286,7 +1286,7 @@ export function AdminCommandCenterClient({
                         max="99"
                         value={certSortOrder}
                         onChange={(e) => setCertSortOrder(Number(e.target.value))}
-                        className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 text-sm focus:border-[#5b31c8] focus:outline-none"
+                        className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 text-sm focus:border-[#546800] focus:outline-none"
                       />
                     </div>
                     <div className="flex flex-col justify-end">
@@ -1295,7 +1295,7 @@ export function AdminCommandCenterClient({
                           type="checkbox"
                           checked={certIsVisible}
                           onChange={(e) => setCertIsVisible(e.target.checked)}
-                          className="h-4 w-4 rounded accent-[#5b31c8]"
+                          className="h-4 w-4 rounded accent-[#546800]"
                         />
                         <span>Tampilkan di Publik</span>
                       </label>
@@ -1311,7 +1311,7 @@ export function AdminCommandCenterClient({
                       value={certSummaryId}
                       onChange={(e) => setCertSummaryId(e.target.value)}
                       placeholder="Rincian mengenai perlombaan, cabang yang dijuarai, instansi, atau keahlian yang diakui..."
-                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 text-sm focus:border-[#5b31c8] focus:outline-none"
+                      className="mt-1 w-full rounded-2xl border border-black/15 bg-[#f5f5f2] px-4 py-2.5 text-sm focus:border-[#546800] focus:outline-none"
                     />
                   </div>
                 </div>
@@ -1319,7 +1319,7 @@ export function AdminCommandCenterClient({
                 <div className="flex flex-wrap items-center justify-between gap-4 border-t border-black/10 pt-5">
                   <button
                     type="submit"
-                    className="inline-flex items-center gap-2 rounded-full bg-[#111213] px-6 py-3 font-mono text-xs font-bold text-[#c4e22e] shadow-md transition hover:bg-[#5b31c8]"
+                    className="inline-flex items-center gap-2 rounded-full bg-[#111213] px-6 py-3 font-mono text-xs font-bold text-[#c4e22e] shadow-md transition hover:bg-[#546800]"
                   >
                     <Save className="h-4 w-4" />
                     <span>
@@ -1353,7 +1353,7 @@ export function AdminCommandCenterClient({
                 onSubmit={handleAddExperience}
                 className="rounded-[28px] border border-black/10 bg-white p-6 md:p-8 space-y-4"
               >
-                <div className="font-mono text-xs font-bold uppercase text-[#5b31c8]">
+                <div className="font-mono text-xs font-bold uppercase text-[#546800]">
                   + TAMBAH PENGALAMAN NYATA BARU KE WEBSITE &amp; SUPABASE
                 </div>
 
@@ -1479,7 +1479,7 @@ export function AdminCommandCenterClient({
 
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-2 rounded-full bg-[#111213] px-6 py-3 text-xs font-semibold text-[#c4e22e] hover:bg-[#5b31c8] hover:text-white"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#111213] px-6 py-3 text-xs font-semibold text-[#c4e22e] hover:bg-[#c4e22e] hover:text-[#111213]"
                 >
                   <Plus className="h-4 w-4" />
                   <span>Simpan &amp; Tampilkan Pengalaman</span>
@@ -1498,7 +1498,7 @@ export function AdminCommandCenterClient({
                       className="flex flex-wrap items-center justify-between gap-4 py-4"
                     >
                       <div>
-                        <div className="font-mono text-xs text-[#5b31c8]">
+                        <div className="font-mono text-xs text-[#546800]">
                           (0{idx + 1}) · {exp.employmentType} · {exp.period}
                         </div>
                         <div className="mt-0.5 text-lg font-semibold">
@@ -1532,7 +1532,7 @@ export function AdminCommandCenterClient({
                 onSubmit={handleAddProject}
                 className="rounded-[28px] border border-black/10 bg-white p-6 md:p-8 space-y-4"
               >
-                <div className="font-mono text-xs font-bold uppercase text-[#5b31c8]">
+                <div className="font-mono text-xs font-bold uppercase text-[#546800]">
                   + TAMBAH DOKUMENTASI STUDI KASUS PROYEK BARU
                 </div>
 
@@ -1641,7 +1641,7 @@ export function AdminCommandCenterClient({
 
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-2 rounded-full bg-[#111213] px-6 py-3 text-xs font-semibold text-[#c4e22e] hover:bg-[#5b31c8] hover:text-white"
+                  className="inline-flex items-center gap-2 rounded-full bg-[#111213] px-6 py-3 text-xs font-semibold text-[#c4e22e] hover:bg-[#c4e22e] hover:text-[#111213]"
                 >
                   <Plus className="h-4 w-4" />
                   <span>Publikasikan Studi Kasus Proyek</span>
@@ -1659,7 +1659,7 @@ export function AdminCommandCenterClient({
                       className="flex flex-wrap items-center justify-between gap-4 py-4"
                     >
                       <div>
-                        <div className="font-mono text-xs text-[#5b31c8]">
+                        <div className="font-mono text-xs text-[#546800]">
                           (0{idx + 1}) · {p.category} · {p.year}
                         </div>
                         <div className="mt-0.5 text-lg font-semibold">
@@ -1705,7 +1705,7 @@ export function AdminCommandCenterClient({
                     className="rounded-2xl border border-black/10 bg-[#f5f5f2] p-5"
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2 border-b border-black/10 pb-3 font-mono text-xs">
-                      <span className="font-bold text-[#5b31c8]">
+                      <span className="font-bold text-[#546800]">
                         [{item.scope.toUpperCase()}] {item.senderName} ({item.senderEmail})
                       </span>
                       <span className="text-black/50">{item.receivedAt}</span>
@@ -1725,7 +1725,7 @@ export function AdminCommandCenterClient({
                           );
                           notify(`Pesan dari ${item.senderName} ditandai selesai.`);
                         }}
-                        className="rounded-full bg-[#111213] px-4 py-1.5 text-white hover:bg-[#5b31c8]"
+                        className="rounded-full bg-[#111213] px-4 py-1.5 text-white hover:bg-[#546800]"
                       >
                         {item.status === "replied" ? "SUDAH DIBALAS ✓" : "TANDAI DIBALAS"}
                       </button>

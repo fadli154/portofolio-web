@@ -8,6 +8,10 @@ import { Footer } from "@/components/Footer";
 import { CommandPalette } from "@/components/CommandPalette";
 import { SmartInquiryModal } from "@/components/SmartInquiryModal";
 import { SITE_PROFILE } from "@/data/site";
+import { Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
@@ -16,7 +20,7 @@ export const metadata: Metadata = {
     template: `%s · ${SITE_PROFILE.shortName}`,
   },
   description:
-    "Portofolio rekayasa perangkat lunak Fadli Hifziansyah (@fadli154): Mahasiswa Informatika (K-1), Web Developer Project Warga Dinas Kominfo, Kopmas GovTech, serta HajiCare & Sign2Speech AI.",
+    "Portofolio Software Engineer Fadli Hifziansyah: proyek Web, Flutter Mobile, Vision AI (HajiCare, Sign2Speech), dan aplikasi pemerintahan Kominfo.",
   alternates: {
     canonical: "/",
   },
@@ -55,18 +59,9 @@ export default function RootLayout({
     <html
       lang="id"
       data-theme="light"
-      className={`${display.variable} ${sans.variable} ${mono.variable}`}
+      className={cn(display.variable, sans.variable, mono.variable, "font-sans", geist.variable)}
       suppressHydrationWarning
     >
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        {/* eslint-disable-next-line @next/next/no-page-custom-font */}
-        <link
-          href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
       <body>
         <a
           href="#main-content"
@@ -74,20 +69,6 @@ export default function RootLayout({
         >
           Lewati ke konten utama
         </a>
-
-        {/* Choreographed Preloader (Session-Gated, singkat & minimalis) */}
-        <div id="loader" data-loader="" aria-hidden="true">
-          <div className="flex items-center justify-between font-mono text-xs uppercase tracking-widest text-[var(--ink-muted)]">
-            <span>FADLI HIFZIANSYAH · DEVELOPER PORTFOLIO</span>
-            <span>NEXT.JS · TYPESCRIPT · SUPABASE</span>
-          </div>
-          <div>
-            <div data-loader-count="">000</div>
-            <div className="mt-4 w-full bg-[var(--rule)]">
-              <div data-loader-bar="" />
-            </div>
-          </div>
-        </div>
 
         {/* Route Transition Curtain */}
         <div data-transition="" aria-hidden="true" />

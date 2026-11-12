@@ -20,12 +20,12 @@ export function ProjectsArchiveClient({ projects }: { projects: ProjectCaseStudy
         );
 
   return (
-    <section className="section-shell bg-[var(--bg)]">
+    <section className="section-shell bg-[var(--bg)] pt-24 md:pt-32">
       <div className="page-grid">
         <div className="col-span-12">
           <Link
             href="/"
-            className="inline-flex min-h-[34px] items-center gap-2 py-1 text-xs font-semibold text-[var(--ink-muted)] hover:text-[var(--accent)]"
+            className="inline-flex min-h-[36px] items-center gap-2 py-1 text-xs font-semibold text-[var(--ink-muted)] transition hover:-translate-x-0.5 hover:text-[var(--accent)]"
           >
             <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
             <span>{locale === "id" ? "Kembali ke Beranda" : "Back to Home"}</span>
@@ -34,7 +34,6 @@ export function ProjectsArchiveClient({ projects }: { projects: ProjectCaseStudy
           <div className="mt-5 flex flex-wrap items-end justify-between gap-6 border-b border-[var(--rule)] pb-6">
             <div>
               <span className="eyebrow">
-                <span className="eyebrow-dot" />
                 {locale === "id" ? "Daftar Proyek & Studi Kasus" : "Projects & Case Studies"}
               </span>
               <h1 className="page-display-title mt-2">
@@ -54,10 +53,10 @@ export function ProjectsArchiveClient({ projects }: { projects: ProjectCaseStudy
                     key={tag}
                     type="button"
                     onClick={() => setSelectedStack(tag)}
-                    className={`min-h-[34px] rounded-lg border px-3 py-1 font-mono text-xs transition-colors ${
+                    className={`min-h-[34px] rounded-lg border px-3 py-1 font-mono text-xs transition hover:-translate-y-0.5 ${
                       active
                         ? "border-[var(--ink)] bg-[var(--ink)] text-white font-semibold"
-                        : "border-[var(--rule-strong)] bg-white text-[var(--ink-muted)] hover:text-[var(--ink)]"
+                        : "border-[var(--rule-strong)] bg-white text-[var(--ink-muted)] hover:border-[var(--ink)] hover:text-[var(--ink)]"
                     }`}
                   >
                     {tag === "ALL" ? (locale === "id" ? "Semua" : "All") : tag}
@@ -82,7 +81,7 @@ export function ProjectsArchiveClient({ projects }: { projects: ProjectCaseStudy
                 <h2 className="card-display-title mt-4">
                   <Link
                     href={`/projects/${project.slug}`}
-                    className="inline-flex min-h-[30px] items-center py-0.5 hover:text-[var(--accent)]"
+                    className="inline-flex min-h-[30px] items-center py-0.5 transition hover:-translate-y-0.5 hover:text-[var(--accent)] hover:underline"
                   >
                     {project.title}
                   </Link>
@@ -123,7 +122,7 @@ export function ProjectsArchiveClient({ projects }: { projects: ProjectCaseStudy
               <div className="mt-6 flex items-center justify-between border-t border-[var(--rule)] pt-4">
                 <Link
                   href={`/projects/${project.slug}`}
-                  className="inline-flex min-h-[34px] items-center gap-1.5 text-xs font-semibold text-[var(--accent)] hover:underline"
+                  className="inline-flex min-h-[34px] items-center gap-1.5 text-xs font-semibold text-[var(--accent)] transition hover:-translate-y-0.5 hover:underline"
                 >
                   <span>{locale === "id" ? "Baca Detail Proyek" : "Read Case Study"}</span>
                   <ArrowUpRight className="arrow-icon h-3.5 w-3.5" aria-hidden="true" />
@@ -134,7 +133,7 @@ export function ProjectsArchiveClient({ projects }: { projects: ProjectCaseStudy
                     href={project.repoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex min-h-[34px] items-center gap-1 font-mono text-xs text-[var(--ink-muted)] hover:text-[var(--ink)]"
+                    className="inline-flex min-h-[34px] items-center gap-1 font-mono text-xs text-[var(--ink-muted)] transition hover:-translate-y-0.5 hover:text-[var(--ink)]"
                   >
                     <span>GitHub</span>
                     <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
@@ -143,7 +142,7 @@ export function ProjectsArchiveClient({ projects }: { projects: ProjectCaseStudy
                     href={project.liveUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex min-h-[34px] items-center gap-1 font-mono text-xs text-[var(--ink-muted)] hover:text-[var(--ink)]"
+                    className="inline-flex min-h-[34px] items-center gap-1 font-mono text-xs text-[var(--ink-muted)] transition hover:-translate-y-0.5 hover:text-[var(--ink)]"
                   >
                     <span>Demo</span>
                     <ArrowUpRight className="h-3 w-3" aria-hidden="true" />

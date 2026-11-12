@@ -13,7 +13,7 @@ interface SpotlightCardProps {
 export function SpotlightCard({
   children,
   className = "",
-  spotlightColor = "rgba(91, 49, 200, 0.14)",
+  spotlightColor = "rgba(196, 226, 46, 0.2)",
   cursorLabel,
   onClick,
 }: SpotlightCardProps) {

@@ -18,6 +18,20 @@ export function CustomCursor() {
     let currentY = -100;
     let rafId = 0;
 
+    const tick = () => {
+      rafId = 0;
+      const dx = targetX - currentX;
+      const dy = targetY - currentY;
+      currentX += dx * 0.22;
+      currentY += dy * 0.22;
+      if (cursorRef.current) {
+        cursorRef.current.style.transform = `translate3d(${currentX.toFixed(1)}px, ${currentY.toFixed(1)}px, 0) translate(-50%, -50%)`;
+      }
+      if (Math.abs(dx) > 0.15 || Math.abs(dy) > 0.15) {
+        rafId = window.requestAnimationFrame(tick);
+      }
+    };
+
     const onMove = (e: MouseEvent) => {
       targetX = e.clientX;
       targetY = e.clientY;
@@ -26,27 +40,27 @@ export function CustomCursor() {
       const el = (e.target as HTMLElement | null)?.closest("[data-cursor]");
       const attr = el?.getAttribute("data-cursor") || "";
       setLabel(attr);
+
+      if (!rafId) {
+        rafId = window.requestAnimationFrame(tick);
+      }
     };
 
-    const onLeave = () => setVisible(false);
-
-    const tick = () => {
-      currentX += (targetX - currentX) * 0.22;
-      currentY += (targetY - currentY) * 0.22;
-      if (cursorRef.current) {
-        cursorRef.current.style.transform = `translate3d(${currentX.toFixed(1)}px, ${currentY.toFixed(1)}px, 0) translate(-50%, -50%)`;
+    const onLeave = () => {
+      setVisible(false);
+      if (rafId) {
+        window.cancelAnimationFrame(rafId);
+        rafId = 0;
       }
-      rafId = window.requestAnimationFrame(tick);
     };
 
     window.addEventListener("mousemove", onMove, { passive: true });
     document.addEventListener("mouseleave", onLeave);
-    rafId = window.requestAnimationFrame(tick);
 
     return () => {
       window.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseleave", onLeave);
-      window.cancelAnimationFrame(rafId);
+      if (rafId) window.cancelAnimationFrame(rafId);
     };
   }, [visible]);
 

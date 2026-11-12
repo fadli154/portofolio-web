@@ -122,9 +122,9 @@
   --anatomy-mid: #9ca3af;
   --anatomy-lo: #525866;
   --anatomy-faint: #323642;
-  --anatomy-lit: #c4e22e;
+  --anatomy-lit: #f5f5f2;
   --anatomy-text: rgba(245, 245, 242, 0.72);
-  --anatomy-strong: #c4e22e;
+  --anatomy-strong: #f5f5f2;
   --anatomy-muted: rgba(245, 245, 242, 0.5);
   --anatomy-green: #c4e22e;
   --anatomy-halo: #000000;
@@ -164,16 +164,16 @@
   --anatomy-mid: #3a3f4a;
   --anatomy-lo: #636b7a;
   --anatomy-faint: #8e96a6;
-  --anatomy-lit: #5b31c8;
+  --anatomy-lit: #546800;
   --anatomy-red: #dc2626;
-  --anatomy-green: #5b31c8;
+  --anatomy-green: #546800;
   --anatomy-blue: #1d4ed8;
   --anatomy-halo: #111213;
   --anatomy-halo-opacity: 0.22;
   --anatomy-dot: #111213;
 }
 
-/* Dark-surface cards: .svc--violet (#5b31c8), .svc--obsidian (#17191d) */
+/* Dark-surface cards: .svc--violet (#1c1e24), .svc--obsidian (#111213) */
 .svc-anatomy.iso.dark-machine {
   --anatomy-page: transparent;
   --anatomy-card: transparent;
@@ -190,13 +190,13 @@
   --anatomy-mid: #b2bac9;
   --anatomy-lo: #727b8f;
   --anatomy-faint: #464d5e;
-  --anatomy-lit: #c4e22e;
+  --anatomy-lit: #f5f5f2;
   --anatomy-red: #fb7185;
   --anatomy-green: #c4e22e;
   --anatomy-blue: #60a5fa;
   --anatomy-halo: #050608;
   --anatomy-halo-opacity: 0.55;
-  --anatomy-dot: #c4e22e;
+  --anatomy-dot: #f5f5f2;
 }
 
 

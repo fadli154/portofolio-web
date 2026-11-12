@@ -193,7 +193,25 @@ export function DriftWall({
   );
 
   useEffect(() => {
+    if (reduced) {
+      applyPlaneTransform(0, 0);
+      for (let c = 0; c < trackRefs.current.length; c++) {
+        const el = trackRefs.current[c];
+        const meta = columnMeta[c];
+        if (el && meta) {
+          el.style.transform = `translate3d(0, ${-(offsetsRef.current[c] ?? 0)}px, 0)`;
+        }
+      }
+      return;
+    }
+
+    let isVisible = true;
+    const node = containerRef.current;
+
     const animate = (ts: number) => {
+      rafRef.current = null;
+      if (!isVisible) return;
+
       if (lastTsRef.current === null) lastTsRef.current = ts;
       const dt = Math.min(0.05, Math.max(0, ts - lastTsRef.current) / 1000);
       lastTsRef.current = ts;
@@ -211,40 +229,47 @@ export function DriftWall({
         pointerDampedRef.current.y
       );
 
-      if (!reduced) {
-        for (let c = 0; c < trackRefs.current.length; c++) {
-          const meta = columnMeta[c];
-          if (!meta) continue;
-          const paused = wallHoveredRef.current && pauseOnHover;
-          const factor = paused || hoveredColRef.current === c ? 0 : 1;
-          const target = (baseVelocities[c] ?? 0) * factor;
+      for (let c = 0; c < trackRefs.current.length; c++) {
+        const meta = columnMeta[c];
+        if (!meta) continue;
+        const paused = wallHoveredRef.current && pauseOnHover;
+        const factor = paused || hoveredColRef.current === c ? 0 : 1;
+        const target = (baseVelocities[c] ?? 0) * factor;
 
-          const ease = 1 - Math.exp(-dt / (target === 0 ? 0.16 : 0.28));
-          velocitiesRef.current[c] =
-            (velocitiesRef.current[c] ?? 0) +
-            (target - (velocitiesRef.current[c] ?? 0)) * ease;
-          let next =
-            (offsetsRef.current[c] ?? 0) + (velocitiesRef.current[c] ?? 0) * dt;
-          next = ((next % meta.copyHeight) + meta.copyHeight) % meta.copyHeight;
-          offsetsRef.current[c] = next;
+        const ease = 1 - Math.exp(-dt / (target === 0 ? 0.16 : 0.28));
+        velocitiesRef.current[c] =
+          (velocitiesRef.current[c] ?? 0) +
+          (target - (velocitiesRef.current[c] ?? 0)) * ease;
+        let next =
+          (offsetsRef.current[c] ?? 0) + (velocitiesRef.current[c] ?? 0) * dt;
+        next = ((next % meta.copyHeight) + meta.copyHeight) % meta.copyHeight;
+        offsetsRef.current[c] = next;
 
-          const el = trackRefs.current[c];
-          if (el) el.style.transform = `translate3d(0, ${-next}px, 0)`;
-        }
-      } else {
-        for (let c = 0; c < trackRefs.current.length; c++) {
-          const el = trackRefs.current[c];
-          const meta = columnMeta[c];
-          if (el && meta)
-            el.style.transform = `translate3d(0, ${-(offsetsRef.current[c] ?? 0)}px, 0)`;
-        }
+        const el = trackRefs.current[c];
+        if (el) el.style.transform = `translate3d(0, ${-next}px, 0)`;
       }
 
       rafRef.current = requestAnimationFrame(animate);
     };
 
+    const observer =
+      typeof IntersectionObserver !== "undefined" && node
+        ? new IntersectionObserver(
+            ([entry]) => {
+              isVisible = entry.isIntersecting;
+              if (isVisible && rafRef.current === null) {
+                lastTsRef.current = null;
+                rafRef.current = requestAnimationFrame(animate);
+              }
+            },
+            { threshold: 0.05 }
+          )
+        : null;
+    if (observer && node) observer.observe(node);
+
     rafRef.current = requestAnimationFrame(animate);
     return () => {
+      observer?.disconnect();
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       rafRef.current = null;
       lastTsRef.current = null;
@@ -382,6 +407,8 @@ export function DriftWall({
         <img
           src={item.image}
           alt={item.title ?? "Sertifikat"}
+          width={tileWidth}
+          height={tileHeight}
           loading="lazy"
           decoding="async"
           draggable={false}
@@ -390,8 +417,9 @@ export function DriftWall({
         <span className={overlayClass} aria-hidden="true" />
         <span className={labelClass}>
           {item.issuer && (
-            <span className="font-mono text-[9px] uppercase tracking-wider text-[#c4e22e] line-clamp-1">
+            <span className="font-mono text-[9px] uppercase tracking-wider text-white/75 line-clamp-1">
               {item.issuer}
+              <span className="sr-only">, </span>
             </span>
           )}
           <span className="font-medium text-xs text-white line-clamp-1 drop-shadow-sm">
@@ -435,7 +463,6 @@ export function DriftWall({
         key={id}
         tabIndex={0}
         role="button"
-        aria-label={item.title ?? "Sertifikat"}
         {...commonProps}
       >
         {inner}

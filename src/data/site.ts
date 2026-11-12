@@ -170,7 +170,7 @@ export const SITE_PROFILE = {
   fullName: "Fadli Hifziansyah",
   shortName: "Fadli H.",
   handle: "fadli154",
-  avatarUrl: "https://github.com/fadli154.png",
+  avatarUrl: "/fadli-profile.png",
   roleTitleEn: "Informatics Student · Full-Stack Web, Mobile & Computer Vision Developer",
   roleTitleId: "Mahasiswa Informatika · Full-Stack Web, Mobile & Computer Vision Developer",
   location: "Indonesia · UTC+7",
@@ -454,7 +454,7 @@ export const PROJECTS: ProjectCaseStudy[] = [
     stack: ["Flutter", "Dart", "GetX", "TensorFlow Lite", "MediaPipe", "Dio", "Speech-to-Text", "TTS"],
     liveUrl: "https://github.com/hafizhtzy/sign2speech",
     repoUrl: "https://github.com/hafizhtzy/sign2speech",
-    accentColor: "#6366F1",
+    accentColor: "#c4e22e",
     diagramSpec: {
       inputNode: "Gesture Kamera / Suara Teman Dengar",
       edgeNode: "MediaPipe 21 Titik & Whisper STT",
@@ -809,7 +809,7 @@ export const PROJECTS: ProjectCaseStudy[] = [
     stack: ["Flutter", "Dart", "Material 3", "Provider", "Google Maps Flutter", "Firebase Auth", "Cloud Firestore"],
     liveUrl: "https://github.com/fadli154/travelease",
     repoUrl: "https://github.com/fadli154/travelease",
-    accentColor: "#7C3AED",
+    accentColor: "#a3bf1c",
     diagramSpec: {
       inputNode: "GPS Lokasi & Pencarian Destinasi",
       edgeNode: "Google Maps Flutter SDK & Provider",
@@ -1141,9 +1141,9 @@ export const CERTIFICATES: CertificateItem[] = [
     fileUrl: "/sertif/oase-juara-2-lit.pdf",
     verifyUrl: null,
     summaryId:
-      "Juara II cabang Literasi Inovasi Teknologi pada Olimpiade Agama, Sains, dan Riset (OASE) III PTKIN se-Indonesia, UIN Sunan Kalijaga Yogyakarta, 3–7 November 2026. Mewakili UIN Sultan Maulana Hasanuddin Banten dengan karya inovasi HajiCare.",
+      "Juara II cabang Literasi Inovasi Teknologi pada Olimpiade Agama, Sains, dan Riset (OASE) III PTKIN se-Indonesia, UIN Sunan Kalijaga Yogyakarta, 3 s.d. 7 November 2026. Mewakili UIN Sultan Maulana Hasanuddin Banten dengan karya inovasi HajiCare.",
     summaryEn:
-      "Second place, Technology Innovation Literacy, at the 3rd Olympiad of Religion, Science and Research (OASE) for Indonesian Islamic universities, UIN Sunan Kalijaga Yogyakarta, 3–7 November 2026 with HajiCare innovation.",
+      "Second place, Technology Innovation Literacy, at the 3rd Olympiad of Religion, Science and Research (OASE) for Indonesian Islamic universities, UIN Sunan Kalijaga Yogyakarta, 3-7 November 2026 with HajiCare innovation.",
     sortOrder: 1,
     isVisible: true,
   },

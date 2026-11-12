@@ -25,13 +25,13 @@ export function ProjectCaseStudyClient({
   const { locale } = usePortfolioState();
 
   return (
-    <article className="section-shell bg-[var(--bg)]">
+    <article className="section-shell bg-[var(--bg)] pt-24 md:pt-32">
       <div className="page-grid">
         {/* Back Breadcrumb */}
         <div className="col-span-12 flex flex-wrap items-center justify-between gap-4 border-b border-[var(--rule)] pb-4">
           <Link
             href="/projects"
-            className="inline-flex min-h-[34px] items-center gap-2 py-1 text-xs font-semibold text-[var(--ink-muted)] hover:text-[var(--accent)]"
+            className="inline-flex min-h-[36px] items-center gap-2 py-1 text-xs font-semibold text-[var(--ink-muted)] transition hover:-translate-x-0.5 hover:text-[var(--accent)]"
           >
             <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
             <span>{locale === "id" ? "Semua Proyek" : "All Projects"}</span>
@@ -45,7 +45,6 @@ export function ProjectCaseStudyClient({
         {/* Case Study Hero Header */}
         <header className="col-span-12 mt-6 lg:col-span-8">
           <span className="eyebrow">
-            <span className="eyebrow-dot" />
             {project.category}
           </span>
           <h1 className="page-display-title mt-3">{project.title}</h1>
@@ -232,7 +231,7 @@ export function ProjectCaseStudyClient({
                 <span className="font-mono text-xs font-semibold uppercase tracking-wider text-[var(--accent)]">
                   {locale === "id" ? "Proyek Berikutnya" : "Next Project"}
                 </span>
-                <h3 className="mt-1.5 text-2xl font-bold text-[var(--ink)] group-hover:text-[var(--accent)]">
+                <h3 className="mt-1.5 text-2xl font-bold text-[var(--ink)] transition group-hover:translate-x-0.5 group-hover:text-[var(--accent)]">
                   {nextProject.title}
                 </h3>
               </div>

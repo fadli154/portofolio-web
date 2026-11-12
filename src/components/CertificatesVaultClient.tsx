@@ -66,12 +66,12 @@ export function CertificatesVaultClient({
   }, [certificates, selectedCategory]);
 
   return (
-    <section className="min-h-screen bg-[#111213] py-20 text-[#f5f5f2] md:py-28">
+    <section className="min-h-screen bg-[#111213] pt-24 pb-20 text-[#f5f5f2] md:pt-32 md:pb-24">
       <div className="keffi-wrap">
         <div>
           <Link
             href="/"
-            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-2 font-mono text-xs text-white/80 transition hover:border-[#c4e22e] hover:text-[#c4e22e]"
+            className="inline-flex min-h-[36px] items-center gap-2 rounded-full border border-white/20 bg-white/5 px-4 py-2 font-mono text-xs text-white/85 transition hover:-translate-y-0.5 hover:border-white/50 hover:text-white"
           >
             <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
             <span>{locale === "id" ? "Kembali ke Beranda" : "Return to Home"}</span>
@@ -79,15 +79,14 @@ export function CertificatesVaultClient({
 
           <div className="mt-8 flex flex-wrap items-end justify-between gap-6 border-b border-white/12 pb-8">
             <div>
-              <span className="sec-kicker !text-white/60">
-                <span className="sec-kicker__dot sec-kicker__dot--lime" />
+              <span className="sec-kicker !text-white/70">
                 <span>
                   {locale === "id"
                     ? "BRANKAS LISENSI & SERTIFIKASI RESMI"
                     : "VERIFIED CREDENTIALS & AWARDS VAULT"}
                 </span>
               </span>
-              <h1 className="hero-giant mt-4">
+              <h1 className="hero-giant mt-4 !text-[#f5f5f2]">
                 {locale === "id"
                   ? "Sertifikasi Teknis & Kompetisi."
                   : "Technical Credentials & Awards."}
@@ -105,9 +104,9 @@ export function CertificatesVaultClient({
                       playMechanicalClick(650);
                       setSelectedCategory(cat);
                     }}
-                    className={`rounded-full border px-4 py-2 font-mono text-xs font-semibold transition ${active
-                      ? "border-[#c4e22e] bg-[#c4e22e] text-[#111213]"
-                      : "border-white/15 bg-white/5 text-white/70 hover:border-white/30 hover:text-white"
+                    className={`min-h-[36px] rounded-full border px-4 py-2 font-mono text-xs font-semibold transition hover:-translate-y-0.5 ${active
+                      ? "border-[#f5f5f2] bg-[#f5f5f2] text-[#111213]"
+                      : "border-white/20 bg-white/5 text-white/80 hover:border-white/40 hover:text-white"
                       }`}
                   >
                     {cat}
@@ -119,7 +118,7 @@ export function CertificatesVaultClient({
         </div>
 
         {/* Certificate Cards Grid */}
-        <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
+        <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
           {visible.map((cert) => {
             const isCrown =
               cert.category === "Prestasi Nasional" ||
@@ -131,31 +130,34 @@ export function CertificatesVaultClient({
                   key={cert.id}
                   maxTilt={3}
                   cursorLabel="CROWN ACHIEVEMENT"
-                  className="h-full rounded-[28px] md:col-span-2"
+                  className="h-full rounded-[24px] md:col-span-2"
                 >
                   <SpotlightCard
-                    spotlightColor="rgba(245, 158, 11, 0.22)"
+                    spotlightColor="rgba(255, 255, 255, 0.08)"
                     onClick={() => {
                       playMechanicalClick(750);
                       setSelectedCert(cert);
                     }}
-                    className="flex h-full cursor-pointer flex-col justify-between rounded-[28px] border-2 border-amber-400/50 bg-gradient-to-br from-[#191b26] via-[#13141d] to-[#1d1a10] p-6 shadow-[0_15px_50px_rgba(245,158,11,0.2)] transition-all duration-300 hover:border-amber-400/80 md:p-8"
+                    className="flex h-full cursor-pointer flex-col justify-between rounded-[24px] border border-amber-300/35 bg-[#17181d] p-6 transition-all duration-300 hover:border-amber-300/60 md:p-8"
                   >
-                    <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-12">
+                    <div className="grid grid-cols-1 items-center gap-6 md:grid-cols-12 md:gap-8">
                       {/* Left: Certificate Preview Frame */}
-                      <div className="relative h-64 w-full overflow-hidden rounded-2xl border-2 border-amber-400/30 bg-[#0d0f14] md:col-span-5 md:h-80">
+                      <div className="relative h-60 w-full overflow-hidden rounded-2xl border border-white/12 bg-[#0d0f14] md:col-span-5 md:h-80">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={cert.imageUrl}
                           alt={cert.title}
-                          loading="lazy"
-                          className="h-full w-full object-contain transition-transform duration-500 hover:scale-105"
+                          width={800}
+                          height={600}
+                          loading="eager"
+                          fetchPriority="high"
+                          className="h-full w-full object-contain transition-transform duration-500 hover:scale-[1.03]"
                         />
-                        <div className="absolute top-3 right-3 flex items-center gap-1.5 rounded-full border border-amber-400/50 bg-black/85 px-3 py-1 font-mono text-[10px] font-bold text-amber-300 backdrop-blur-md">
-                          <Star className="h-3 w-3 fill-amber-300 text-amber-300" />
+                        <div className="absolute top-3 right-3 flex items-center gap-1.5 rounded-full border border-amber-300/40 bg-black/85 px-3 py-1 font-mono text-[10px] font-bold text-amber-200 backdrop-blur-md">
+                          <Star className="h-3 w-3 fill-amber-200 text-amber-200" aria-hidden="true" />
                           <span>JUARA II NASIONAL</span>
                         </div>
-                        <span className="absolute bottom-3 left-3 rounded-full bg-black/80 px-3 py-1 font-mono text-[10px] text-white/75 backdrop-blur-sm">
+                        <span className="absolute bottom-3 left-3 rounded-full bg-black/80 px-3 py-1 font-mono text-[10px] text-white/80 backdrop-blur-sm">
                           {cert.issueDate}
                         </span>
                       </div>
@@ -164,27 +166,27 @@ export function CertificatesVaultClient({
                       <div className="flex flex-col justify-between space-y-4 md:col-span-7">
                         <div>
                           <div className="flex flex-wrap items-center gap-2">
-                            <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-400/15 px-3 py-1 font-mono text-[11px] font-bold text-amber-300 shadow-[0_0_18px_rgba(251,191,36,0.25)]">
-                              <Trophy className="h-3.5 w-3.5 text-amber-300" />
-                              <span>★ PRESTASI UTAMA TINGKAT NASIONAL</span>
+                            <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-300/35 bg-amber-400/10 px-3 py-1 font-mono text-[11px] font-semibold text-amber-200">
+                              <Trophy className="h-3.5 w-3.5 text-amber-200" aria-hidden="true" />
+                              <span>PRESTASI UTAMA NASIONAL</span>
                             </span>
-                            <span className="rounded-full bg-black/50 px-3 py-1 font-mono text-[11px] text-white/70 border border-white/10">
+                            <span className="rounded-full border border-white/12 bg-black/40 px-3 py-1 font-mono text-[11px] text-white/75">
                               Kemenag RI · OASE III PTKIN
                             </span>
                           </div>
 
-                          <h2 className="mt-3 text-2xl font-bold tracking-tight text-white md:text-3xl">
+                          <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white md:text-3xl">
                             {cert.title}
                           </h2>
 
-                          <div className="mt-2 flex flex-wrap items-center gap-3 font-mono text-xs text-white/70">
-                            <span className="inline-flex items-center gap-1.5 text-amber-300">
+                          <div className="mt-2 flex flex-wrap items-center gap-3 font-mono text-xs text-white/75">
+                            <span className="inline-flex items-center gap-1.5 text-amber-200">
                               <Award className="h-4 w-4" aria-hidden="true" />
                               <span>{cert.issuer}</span>
                             </span>
                             {cert.credentialId && (
-                              <span className="inline-flex items-center gap-1 rounded bg-white/5 px-2 py-0.5 text-[11px]">
-                                <ShieldCheck className="h-3.5 w-3.5 text-[#c4e22e]" />
+                              <span className="inline-flex items-center gap-1 rounded bg-white/5 px-2 py-0.5 text-[11px] text-white/80">
+                                <ShieldCheck className="h-3.5 w-3.5 text-emerald-300" aria-hidden="true" />
                                 No. SK: {cert.credentialId}
                               </span>
                             )}
@@ -198,8 +200,8 @@ export function CertificatesVaultClient({
                         </div>
 
                         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-4 font-mono text-xs">
-                          <span className="text-amber-300 font-semibold">
-                            Klik kartu untuk inspeksi modal
+                          <span className="font-semibold text-white/70">
+                            Klik kartu untuk memperbesar
                           </span>
                           <div className="flex items-center gap-3">
                             {cert.fileUrl && (
@@ -208,11 +210,11 @@ export function CertificatesVaultClient({
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 onClick={(e) => e.stopPropagation()}
-                                className="keffi-pill-btn keffi-pill-btn--lime !py-1.5 !px-4 !text-xs font-bold"
+                                className="inline-flex min-h-[36px] items-center gap-1.5 rounded-full bg-[#f5f5f2] px-4 py-1.5 font-sans text-xs font-semibold text-[#111213] transition hover:-translate-y-0.5 hover:bg-white"
                               >
-                                <FileText className="h-3.5 w-3.5" />
+                                <FileText className="h-3.5 w-3.5" aria-hidden="true" />
                                 <span>Buka Dokumen PDF Resmi</span>
-                                <ArrowUpRight className="h-3 w-3" />
+                                <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
                               </a>
                             )}
                           </div>
@@ -229,15 +231,15 @@ export function CertificatesVaultClient({
                 key={cert.id}
                 maxTilt={4}
                 cursorLabel="INSPECT"
-                className="h-full rounded-[28px]"
+                className="h-full rounded-[24px]"
               >
                 <SpotlightCard
-                  spotlightColor="rgba(196, 226, 46, 0.14)"
+                  spotlightColor="rgba(255, 255, 255, 0.08)"
                   onClick={() => {
                     playMechanicalClick(720);
                     setSelectedCert(cert);
                   }}
-                  className="flex h-full cursor-pointer flex-col justify-between rounded-[28px] border border-white/12 bg-[#171920] p-6 shadow-md transition hover:border-[#c4e22e]/40 md:p-8"
+                  className="flex h-full cursor-pointer flex-col justify-between rounded-[24px] border border-white/12 bg-[#171920] p-6 shadow-md transition hover:border-white/30 md:p-8"
                 >
                   <div>
                     {/* Certificate Image Frame */}
@@ -246,24 +248,26 @@ export function CertificatesVaultClient({
                       <img
                         src={cert.imageUrl}
                         alt={cert.title}
+                        width={800}
+                        height={600}
                         loading="lazy"
-                        className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                        className="h-full w-full object-cover transition-transform duration-500 hover:scale-[1.03]"
                       />
-                      <span className="absolute bottom-3 left-3 rounded-full bg-black/80 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-wider text-[#c4e22e] backdrop-blur-sm">
+                      <span className="absolute bottom-3 left-3 rounded-full bg-black/85 px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-white/90 backdrop-blur-sm">
                         {cert.category}
                       </span>
-                      <span className="absolute bottom-3 right-3 rounded-full bg-black/80 px-3 py-1 font-mono text-[10px] text-white/75 backdrop-blur-sm">
+                      <span className="absolute bottom-3 right-3 rounded-full bg-black/85 px-3 py-1 font-mono text-[10px] text-white/80 backdrop-blur-sm">
                         {cert.issueDate}
                       </span>
                     </div>
 
-                    <div className="mt-6 flex items-center justify-between font-mono text-xs text-white/60">
-                      <span className="inline-flex items-center gap-1.5 text-[#c4e22e]">
+                    <div className="mt-6 flex items-center justify-between font-mono text-xs text-white/75">
+                      <span className="inline-flex items-center gap-1.5 text-white/85">
                         <Award className="h-4 w-4" aria-hidden="true" />
                         <span>{cert.issuer}</span>
                       </span>
                       {cert.credentialId && (
-                        <span className="line-clamp-1 text-[11px]">
+                        <span className="line-clamp-1 text-[11px] text-white/65">
                           ID: {cert.credentialId}
                         </span>
                       )}
@@ -274,14 +278,14 @@ export function CertificatesVaultClient({
                     </h2>
 
                     {(cert.summaryId || cert.summaryEn) && (
-                      <p className="mt-3 text-sm leading-relaxed text-white/70">
+                      <p className="mt-3 text-sm leading-relaxed text-white/75">
                         {locale === "id" ? cert.summaryId : cert.summaryEn}
                       </p>
                     )}
                   </div>
 
                   <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-5 font-mono text-xs">
-                    <span className="text-[#c4e22e] font-semibold">
+                    <span className="font-semibold text-white/75">
                       Klik untuk memperbesar
                     </span>
                     <div className="flex items-center gap-3">
@@ -291,11 +295,11 @@ export function CertificatesVaultClient({
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={(e) => e.stopPropagation()}
-                          className="inline-flex items-center gap-1 text-white/80 hover:text-[#c4e22e]"
+                          className="inline-flex min-h-[32px] items-center gap-1 text-white/85 transition hover:-translate-y-0.5 hover:text-white"
                         >
-                          <FileText className="h-3.5 w-3.5" />
+                          <FileText className="h-3.5 w-3.5" aria-hidden="true" />
                           <span>Dokumen</span>
-                          <ArrowUpRight className="h-3 w-3" />
+                          <ArrowUpRight className="h-3 w-3" aria-hidden="true" />
                         </a>
                       )}
                       {cert.verifyUrl && (
@@ -304,10 +308,10 @@ export function CertificatesVaultClient({
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={(e) => e.stopPropagation()}
-                          className="inline-flex items-center gap-1 text-[#c4e22e] hover:underline"
+                          className="inline-flex min-h-[32px] items-center gap-1 text-white/85 transition hover:-translate-y-0.5 hover:text-white hover:underline"
                         >
                           <span>Verifikasi</span>
-                          <ExternalLink className="h-3 w-3" />
+                          <ExternalLink className="h-3 w-3" aria-hidden="true" />
                         </a>
                       )}
                     </div>

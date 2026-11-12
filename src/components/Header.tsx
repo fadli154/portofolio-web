@@ -89,18 +89,18 @@ export function Header() {
     },
   ];
 
+  const isDarkRoute = pathname === "/certificates";
+
   return (
     <>
-      <header className={`hdr ${isCompact ? "is-compact" : ""}`}>
+      <header className={`hdr ${isCompact ? "is-compact" : ""} ${isDarkRoute ? "hdr--dark" : ""}`}>
         <div className="hdr__bar">
-          {/* Left: Studio Keffi Minimal Brand */}
+          {/* Left: Minimal Brand */}
           <Link
             href="/"
-            className="hdr__brand"
-            aria-label={SITE_PROFILE.fullName}
+            className="hdr__brand min-h-[40px]"
             onClick={() => playMechanicalClick(520)}
           >
-            <span className="hdr__brand-dot" aria-hidden="true" />
             <span>{SITE_PROFILE.shortName}</span>
           </Link>
 
@@ -121,16 +121,12 @@ export function Header() {
                 playMechanicalClick(480);
                 toggleLocale();
               }}
-              aria-label={
-                locale === "id"
-                  ? "Switch language to English"
-                  : "Ubah bahasa ke Indonesia"
-              }
-              className="hdr__lang"
+              aria-label={`ID / EN (${locale === "id" ? "Switch language to English" : "Ubah bahasa ke Indonesia"})`}
+              className="hdr__lang min-h-[40px]"
             >
-              <span className={locale === "id" ? "opacity-100" : "opacity-45"}>ID</span>
-              <span className="opacity-30">/</span>
-              <span className={locale === "en" ? "opacity-100" : "opacity-45"}>EN</span>
+              <span className={locale === "id" ? "opacity-100" : "opacity-75"}>ID</span>
+              <span aria-hidden="true" className="opacity-45">/</span>
+              <span className={locale === "en" ? "opacity-100" : "opacity-75"}>EN</span>
             </button>
 
             {/* Desktop Contact CTA */}
@@ -138,7 +134,7 @@ export function Header() {
               <Magnet strength={0.18}>
                 <Link
                   href="/#contact"
-                  className="hdr__cta"
+                  className="hdr__cta min-h-[40px]"
                   onClick={() => playMechanicalClick(680)}
                 >
                   <span>{locale === "id" ? "Kontak" : "Contact"}</span>
@@ -159,9 +155,9 @@ export function Header() {
               aria-label={isMobileMenuOpen ? "Tutup Menu" : "Buka Menu Navigasi"}
             >
               {isMobileMenuOpen ? (
-                <X className="h-5 w-5 text-[var(--ink)]" aria-hidden="true" />
+                <X className="h-5 w-5 text-current" aria-hidden="true" />
               ) : (
-                <Menu className="h-5 w-5 text-[var(--ink)]" aria-hidden="true" />
+                <Menu className="h-5 w-5 text-current" aria-hidden="true" />
               )}
             </button>
           </div>
@@ -177,14 +173,13 @@ export function Header() {
           aria-label="Mobile Navigation"
         >
           {/* Top Bar inside Drawer */}
-          <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
+          <div className="flex items-center justify-between px-[var(--container-gutter)] py-3 border-b border-white/10">
             <div className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-[var(--violet)] animate-pulse" />
               <span className="text-base font-semibold tracking-tight text-white">
                 {SITE_PROFILE.shortName}
               </span>
-              <span className="font-mono text-[10px] uppercase tracking-widest text-white/50 ml-2">
-                // NAV
+              <span className="font-mono text-[10px] uppercase tracking-widest text-white/55 ml-1">
+                NAV
               </span>
             </div>
             <div className="flex items-center gap-2.5">
@@ -194,12 +189,12 @@ export function Header() {
                   playMechanicalClick(480);
                   toggleLocale();
                 }}
-                className="hdr__lang !bg-white/10 !text-white !border-white/15"
-                aria-label="Ubah Bahasa"
+                className="hdr__lang min-h-[40px] !bg-white/10 !text-white !border-white/15"
+                aria-label="ID / EN Toggle Language"
               >
-                <span className={locale === "id" ? "opacity-100" : "opacity-45"}>ID</span>
-                <span className="opacity-30">/</span>
-                <span className={locale === "en" ? "opacity-100" : "opacity-45"}>EN</span>
+                <span className={locale === "id" ? "opacity-100" : "opacity-75"}>ID</span>
+                <span aria-hidden="true" className="opacity-45">/</span>
+                <span className={locale === "en" ? "opacity-100" : "opacity-75"}>EN</span>
               </button>
               <button
                 type="button"
@@ -216,17 +211,17 @@ export function Header() {
           </div>
 
           {/* Links List */}
-          <div className="flex-1 overflow-y-auto px-6 py-8">
+          <div className="flex-1 overflow-y-auto px-[var(--container-gutter)] py-6">
             <div className="flex flex-col gap-3">
               {navItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={handleNavClick}
-                  className="group flex items-center justify-between rounded-2xl border border-white/8 bg-white/5 p-4 text-white hover:border-[var(--violet)] hover:bg-white/10 transition-all duration-200"
+                  className="group flex items-center justify-between rounded-2xl border border-white/8 bg-white/5 p-4 text-white hover:border-[#c4e22e] hover:bg-white/10 transition-all duration-200"
                 >
                   <div className="flex items-center gap-4">
-                    <span className="font-mono text-xs font-bold text-[var(--violet)]">
+                    <span className="font-mono text-xs font-bold text-[#c4e22e]">
                       {item.num}
                     </span>
                     <div>
@@ -257,7 +252,7 @@ export function Header() {
           </div>
 
           {/* Bottom Drawer Meta */}
-          <div className="flex items-center justify-between px-6 py-4 border-t border-white/10 bg-black/40 font-mono text-[11px] text-white/50">
+          <div className="flex items-center justify-between px-[var(--container-gutter)] py-4 border-t border-white/10 bg-black/40 font-mono text-[11px] text-white/50">
             <div className="flex items-center gap-2">
               <Sparkles className="h-3.5 w-3.5 text-[var(--lime)]" />
               <span>{locale === "id" ? "Tersedia untuk Proyek" : "Available for Projects"}</span>

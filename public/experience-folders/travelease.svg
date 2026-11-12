@@ -14,12 +14,12 @@
       <feDropShadow dx="0" dy="-4" stdDeviation="6" flood-color="rgba(0,0,0,0.25)"/>
     </filter>
     <linearGradient id="backGrad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#6d28d9"/>
-      <stop offset="100%" stop-color="#7c3aed"/>
+      <stop offset="0%" stop-color="#262a38"/>
+      <stop offset="100%" stop-color="#363b4e"/>
     </linearGradient>
     <linearGradient id="frontGrad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#7c3aed"/>
-      <stop offset="100%" stop-color="#6d28d9"/>
+      <stop offset="0%" stop-color="#363b4e"/>
+      <stop offset="100%" stop-color="#262a38"/>
     </linearGradient>
     <linearGradient id="frontHighlight" x1="0" y1="0" x2="1" y2="0">
       <stop offset="0%" stop-color="rgba(255,255,255,0.25)"/>
@@ -31,7 +31,7 @@
   <g id="folder-back">
     <path d="M 0 60 Q 0 36 24 36 L 276 36 C 300 36 300 0 324 0 L 480 0 C 504 0 504 36 528 36 L 536 36 Q 560 36 560 60 L 560 366 Q 560 390 536 390 L 24 390 Q 0 390 0 366 Z" fill="url(#backGrad)" />
     <text x="402" y="24" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="700" fill="#ffffff" letter-spacing="0.04em" text-anchor="middle">
-      APP-02 � TRAVELEASE
+      APP-02 · TRAVELEASE
     </text>
   </g>
 
@@ -57,10 +57,10 @@
 
   <g filter="url(#paper-drop-shadow-2)">
     <rect x="155" y="44" width="250" height="240" rx="16" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
-    <rect x="175" y="64" width="68" height="20" rx="10" fill="#7c3aed"/>
+    <rect x="175" y="64" width="68" height="20" rx="10" fill="#363b4e"/>
     <text x="209" y="78" font-family="monospace" font-size="10" font-weight="bold" fill="#ffffff" text-anchor="middle">DOC-02</text>
     <text x="385" y="78" font-family="monospace" font-size="10" font-weight="600" fill="#64748b" text-anchor="end">02/03</text>
-    <text x="175" y="108" font-family="system-ui, sans-serif" font-size="13.5" font-weight="800" fill="#0f172a" letter-spacing="-0.01em">Katalog Wisata & Rating Ulasan</text>
+    <text x="175" y="108" font-family="system-ui, sans-serif" font-size="13.5" font-weight="800" fill="#0f172a" letter-spacing="-0.01em">Katalog Wisata &amp; Rating Ulasan</text>
     <text x="175" y="126" font-family="system-ui, sans-serif" font-size="10.5" font-weight="500" fill="#475569">Info tiket dan ulasan pengunjung...</text>
     <rect x="175" y="142" width="205" height="5.5" rx="2.75" fill="#94a3b8"/>
     <rect x="175" y="154" width="185" height="5.5" rx="2.75" fill="#cbd5e1"/>

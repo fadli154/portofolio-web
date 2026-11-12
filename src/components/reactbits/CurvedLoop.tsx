@@ -390,6 +390,7 @@ export const CurvedLoop: FC<CurvedLoopProps> = ({
   useEffect(() => {
     if (!ready) return;
     const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+    if (reduceMotion) return;
     let frame = 0;
     let last = 0;
     let visible = true;
