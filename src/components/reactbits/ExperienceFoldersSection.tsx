@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Briefcase,
   Code2,
@@ -35,6 +36,8 @@ interface ExperienceFoldersSectionProps {
 export function ExperienceFoldersSection({
   locale = "id",
 }: ExperienceFoldersSectionProps) {
+  const router = useRouter();
+
   // View mode: 'circular' (3D WebGL Cylinder) or 'deck' (Direct Interactive 3D Folder)
   const [viewMode, setViewMode] = useState<"circular" | "deck">("circular");
 
@@ -224,16 +227,36 @@ export function ExperienceFoldersSection({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedFolder]);
 
+  // Lock body scroll when inspection modal is active
+  useEffect(() => {
+    if (selectedFolder) {
+      const prevOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = prevOverflow;
+      };
+    }
+  }, [selectedFolder]);
+
   // Transform folder papers into ReactBits Folder items
   const buildFolderItems = useCallback((folder: ExperienceFolderData): FolderItem[] => {
     return folder.papers.map((paper, idx) => ({
       title: paper.code,
       description: paper.title,
       content: (
-        <div className="flex h-full w-full flex-col justify-between bg-white p-5 text-[#111827] select-none">
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+            playMechanicalClick(720);
+            setSelectedFolder(null);
+            router.push(`/projects/${folder.slug}`);
+          }}
+          className="group flex h-full w-full cursor-pointer flex-col justify-between bg-white p-3.5 sm:p-4 md:p-5 text-[#111827] select-none transition-colors hover:bg-neutral-50/90"
+          title={`${paper.code}: ${paper.title} - Klik untuk melihat detail studi kasus`}
+        >
           <div>
-            <div className="flex items-center justify-between border-b border-gray-200 pb-2.5">
-              <span className="rounded-full bg-black px-2.5 py-0.5 font-mono text-[9px] font-bold text-white">
+            <div className="flex items-center justify-between border-b border-gray-200 pb-2">
+              <span className="rounded-full bg-black px-2 py-0.5 font-mono text-[9px] font-bold text-white">
                 {paper.code}
               </span>
               <span className="font-mono text-[9px] font-semibold text-gray-500">
@@ -241,25 +264,25 @@ export function ExperienceFoldersSection({
               </span>
             </div>
 
-            <h4 className="mt-3 text-sm font-bold leading-snug tracking-tight text-gray-900">
+            <h4 className="mt-2.5 text-xs sm:text-sm font-bold leading-snug tracking-tight text-gray-900 group-hover:text-black">
               {paper.title}
             </h4>
 
-            <p className="mt-2 text-xs leading-relaxed text-gray-600">
+            <p className="mt-1.5 text-[11px] sm:text-xs leading-relaxed text-gray-600 line-clamp-4">
               {paper.desc}
             </p>
           </div>
 
-          <div className="border-t border-gray-100 pt-3">
+          <div className="border-t border-gray-100 pt-2">
             <div className="flex items-center justify-between font-mono text-[9px] text-gray-400">
-              <span>{folder.tab}</span>
-              <span className="font-bold text-[var(--violet)]">KLIK LIHAT DETAIL</span>
+              <span className="truncate max-w-[130px] sm:max-w-none">{folder.tab}</span>
+              <span className="font-semibold text-gray-400">DOC 0{idx + 1}</span>
             </div>
           </div>
         </div>
       ),
     }));
-  }, []);
+  }, [router]);
 
   const currentFolderForDeck = EXPERIENCE_FOLDERS[activeDeckIndex];
 
@@ -503,6 +526,7 @@ export function ExperienceFoldersSection({
                   onItemClick={(_, pIdx) => {
                     setActivePaperIndex(pIdx);
                     playMechanicalClick(720);
+                    router.push(`/projects/${currentFolderForDeck.slug}`);
                   }}
                 />
               </div>
@@ -597,7 +621,7 @@ export function ExperienceFoldersSection({
             MODAL INSPECTION STAGE (Triggered on click from Circular Gallery)
             =================================================================== */}
       {selectedFolder && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 md:p-8">
+        <div className="fixed inset-0 z-[90] flex items-center justify-center p-2.5 pt-4 sm:p-4 md:p-8">
           {/* Backdrop */}
           <div
             className="absolute inset-0 bg-black/85 backdrop-blur-md"
@@ -605,21 +629,21 @@ export function ExperienceFoldersSection({
           />
 
           {/* Modal Dialog Card */}
-          <div className="relative z-10 flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-[32px] border border-white/15 bg-[#121316] text-[#f5f5f2] shadow-2xl">
+          <div className="relative z-10 flex max-h-[92vh] sm:max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-[24px] sm:rounded-[32px] border border-white/15 bg-[#121316] text-[#f5f5f2] shadow-2xl">
             {/* Modal Top Bar */}
-            <div className="flex items-center justify-between border-b border-white/10 px-6 py-4">
-              <div className="flex items-center gap-3">
-                <span className="rounded-full bg-[#c4e22e] px-3 py-1 font-mono text-xs font-bold text-[#111213]">
+            <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-3.5 py-2.5 sm:px-6 sm:py-4">
+              <div className="flex items-center gap-2 sm:gap-3 min-w-0 pr-2">
+                <span className="shrink-0 rounded-full bg-[#c4e22e] px-2.5 py-0.5 sm:px-3 sm:py-1 font-mono text-[10px] sm:text-xs font-bold text-[#111213]">
                   {selectedFolder.badge}
                 </span>
-                <span className="font-mono text-xs font-medium text-white/70">
+                <span className="truncate font-mono text-[11px] sm:text-xs font-medium text-white/70">
                   {selectedFolder.tab} · {selectedFolder.year}
                 </span>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
                 {/* Prev / Next folder switcher */}
-                <div className="flex items-center gap-1 border-r border-white/15 pr-3">
+                <div className="flex items-center gap-1 border-r border-white/15 pr-2 sm:pr-3">
                   <button
                     type="button"
                     onClick={() => {
@@ -633,10 +657,11 @@ export function ExperienceFoldersSection({
                       setActivePaperIndex(0);
                       playMechanicalClick(580);
                     }}
-                    className="rounded-full p-2 text-white/70 hover:bg-white/10 hover:text-white"
+                    className="flex h-9 w-9 items-center justify-center rounded-full text-white/70 hover:bg-white/10 hover:text-white transition-colors"
                     title="Folder Sebelumnya (Left Arrow)"
+                    aria-label="Folder Sebelumnya"
                   >
-                    <ChevronLeft className="h-5 w-5" />
+                    <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
                   </button>
                   <button
                     type="button"
@@ -650,10 +675,11 @@ export function ExperienceFoldersSection({
                       setActivePaperIndex(0);
                       playMechanicalClick(660);
                     }}
-                    className="rounded-full p-2 text-white/70 hover:bg-white/10 hover:text-white"
+                    className="flex h-9 w-9 items-center justify-center rounded-full text-white/70 hover:bg-white/10 hover:text-white transition-colors"
                     title="Folder Berikutnya (Right Arrow)"
+                    aria-label="Folder Berikutnya"
                   >
-                    <ChevronRight className="h-5 w-5" />
+                    <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
                   </button>
                 </div>
 
@@ -664,25 +690,26 @@ export function ExperienceFoldersSection({
                     setSelectedFolder(null);
                     playMechanicalClick(500);
                   }}
-                  className="rounded-full bg-white/10 p-2 text-white/80 hover:bg-white/20 hover:text-white"
+                  className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/80 hover:bg-white/20 hover:text-white transition-colors"
                   title="Tutup (Esc)"
+                  aria-label="Tutup modal folder"
                 >
-                  <X className="h-5 w-5" />
+                  <X className="h-4 w-4 sm:h-5 sm:w-5" />
                 </button>
               </div>
             </div>
 
             {/* Modal Body: 2-Column Physical 3D Folder & Document Details */}
-            <div className="grid flex-1 grid-cols-1 overflow-y-auto p-6 md:p-8 lg:grid-cols-12 lg:gap-8">
+            <div className="grid flex-1 grid-cols-1 overflow-y-auto p-4 sm:p-6 md:p-8 lg:grid-cols-12 lg:gap-8">
               {/* Stage 1: Interactive 3D Folder Canvas */}
-              <div className="flex min-h-[420px] items-center justify-center rounded-2xl bg-black/40 p-6 lg:col-span-6">
+              <div className="flex min-h-[350px] sm:min-h-[420px] items-center justify-center rounded-2xl bg-black/40 p-4 sm:p-6 lg:col-span-6">
                 <Folder
                   key={selectedFolder.id}
                   label={selectedFolder.tab}
                   color={selectedFolder.color}
                   mode="flap"
                   variant="solid"
-                  size={1.35}
+                  size={isMobile ? 1.05 : 1.35}
                   defaultOpen={true}
                   draggable={true}
                   zoomOnClick={true}
@@ -692,6 +719,8 @@ export function ExperienceFoldersSection({
                   onItemClick={(_, pIdx) => {
                     setActivePaperIndex(pIdx);
                     playMechanicalClick(720);
+                    setSelectedFolder(null);
+                    router.push(`/projects/${selectedFolder.slug}`);
                   }}
                 />
               </div>

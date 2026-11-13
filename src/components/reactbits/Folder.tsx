@@ -406,7 +406,7 @@ const measureFolder = (
     frontTop,
     frontH: tabH + h - frontTop,
     docW,
-    docH: docW * (book ? 1.28 : 1.22)
+    docH: docW * (book ? 1.32 : 1.42)
   };
 };
 
@@ -2367,7 +2367,7 @@ const Folder = ({
                 borderRadius: 'calc(7px * var(--folder-scale))',
                 background: 'var(--folder-paper)',
                 boxShadow: PAPER_SHADOW,
-                cursor: draggable ? 'grab' : isOpen ? 'pointer' : undefined,
+                cursor: isOpen ? 'pointer' : draggable ? 'grab' : undefined,
                 touchAction: draggable ? 'none' : undefined
               }}
               data-folder-item={index}
