@@ -73,6 +73,8 @@ const SPRING = 320;
 const INHERIT = /^(currentcolor|inherit)$/i;
 const INTRO_DELAY = 0.15;
 const KICK_DECAY = 0.62;
+const BLEED_X = 160;
+const BLEED_Y = 220;
 
 const approach = (current: number, target: number, dt: number, seconds: number) =>
   current + (target - current) * (1 - Math.exp(-dt / seconds));
@@ -301,9 +303,10 @@ const TechText = memo(({
       const inkHeight = m.actualBoundingBoxAscent + m.actualBoundingBoxDescent;
       const margin = width * 0.05;
       const start =
-        s.align === 'left' ? margin : s.align === 'right' ? width - margin - inkWidth : (width - inkWidth) / 2;
+        BLEED_X +
+        (s.align === 'left' ? margin : s.align === 'right' ? width - margin - inkWidth : (width - inkWidth) / 2);
       const x = start + m.actualBoundingBoxLeft;
-      const baseline = (height - inkHeight) / 2 + m.actualBoundingBoxAscent;
+      const baseline = BLEED_Y + (height - inkHeight) / 2 + m.actualBoundingBoxAscent;
       const xHeight = baseline - probe.measureText('x').actualBoundingBoxAscent;
       const capHeight = baseline - probe.measureText('H').actualBoundingBoxAscent;
       const ascender = baseline - probe.measureText('d').actualBoundingBoxAscent;
@@ -592,7 +595,7 @@ const TechText = memo(({
       const pad = Math.max(12, view.size * 0.12);
       const x1 = Math.round(view.left - pad);
       const x2 = Math.round(view.right + pad);
-      const room = width - x2 > x1;
+      const room = BLEED_X + width - x2 > x1 - BLEED_X;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.strokeStyle = accent;
       ctx.fillStyle = accent;
@@ -767,8 +770,8 @@ const TechText = memo(({
         width = Math.max(1, container.clientWidth);
         height = Math.max(1, container.clientHeight);
         dpr = Math.min(window.devicePixelRatio || 1, 2);
-        const pixelWidth = Math.round(width * dpr);
-        const pixelHeight = Math.round(height * dpr);
+        const pixelWidth = Math.round((width + BLEED_X * 2) * dpr);
+        const pixelHeight = Math.round((height + BLEED_Y * 2) * dpr);
         if (canvas.width !== pixelWidth) canvas.width = pixelWidth;
         if (canvas.height !== pixelHeight) canvas.height = pixelHeight;
       }
@@ -819,8 +822,14 @@ const TechText = memo(({
       let moving = false;
       glyphs.forEach((glyph, i) => {
         if (i === dragging) {
-          glyph.offset.x = approach(glyph.offset.x, pointer.x - grab.x, dt, 0.03);
-          glyph.offset.y = approach(glyph.offset.y, pointer.y - grab.y, dt, 0.03);
+          const minDx = 14 - glyph.box.x1;
+          const maxDx = width + BLEED_X * 2 - 14 - glyph.box.x2;
+          const minDy = 26 - glyph.box.y1;
+          const maxDy = height + BLEED_Y * 2 - 14 - glyph.box.y2;
+          const targetDx = Math.min(maxDx, Math.max(minDx, pointer.x - grab.x));
+          const targetDy = Math.min(maxDy, Math.max(minDy, pointer.y - grab.y));
+          glyph.offset.x = approach(glyph.offset.x, targetDx, dt, 0.03);
+          glyph.offset.y = approach(glyph.offset.y, targetDy, dt, 0.03);
           glyph.velocity.x = 0;
           glyph.velocity.y = 0;
           moving = true;
@@ -973,8 +982,8 @@ const TechText = memo(({
 
     const locate = (e: PointerEvent) => {
       const rect = container.getBoundingClientRect();
-      pointer.x = e.clientX - rect.left;
-      pointer.y = e.clientY - rect.top;
+      pointer.x = e.clientX - rect.left + BLEED_X;
+      pointer.y = e.clientY - rect.top + BLEED_Y;
     };
     const onMove = (e: PointerEvent) => {
       locate(e);
@@ -1020,7 +1029,8 @@ const TechText = memo(({
         performance.now() - press.time < 450
       ) {
         const rect = container.getBoundingClientRect();
-        if (Math.hypot(e.clientX - rect.left - press.x, e.clientY - rect.top - press.y) < 6) kick(press.index);
+        if (Math.hypot(e.clientX - rect.left + BLEED_X - press.x, e.clientY - rect.top + BLEED_Y - press.y) < 6)
+          kick(press.index);
       }
       press.index = -1;
       wake();

@@ -569,13 +569,18 @@ const solvePin = (body, grab, target) => {
 const placeHanging = (sim, layout, intro) => {
   const { nodes, previous, velocities, body, anchor } = sim;
   nodes[0].copy(anchor);
+  const introAngle = 0.36;
   for (let i = 1; i <= JOINTS; i++) {
     nodes[i].copy(nodes[i - 1]);
-    if (intro) nodes[i].x += sim.rest;
-    else nodes[i].y -= sim.rest;
+    if (intro) {
+      nodes[i].x += Math.sin(introAngle) * sim.rest;
+      nodes[i].y -= Math.cos(introAngle) * sim.rest;
+    } else {
+      nodes[i].y -= sim.rest;
+    }
   }
   body.quaternion.identity();
-  if (intro) body.quaternion.setFromAxisAngle(new THREE.Vector3(0, 0, 1), Math.PI / 2);
+  if (intro) body.quaternion.setFromAxisAngle(new THREE.Vector3(0, 0, 1), introAngle);
   body.hang.set(0, layout.hangY, 0);
   const offset = scratch.a.copy(body.hang).applyQuaternion(body.quaternion);
   body.position.copy(nodes[JOINTS]).sub(offset);
@@ -977,7 +982,7 @@ const Lanyard = ({
         if (!placed) {
           placeHanging(sim, layout, s.intro && !reducedMotion);
           placed = true;
-        } else if (layoutKey !== applied.layoutKey) {
+        } else if (!sim.grab) {
           placeHanging(sim, layout, false);
         }
       }
@@ -1253,8 +1258,33 @@ const Lanyard = ({
       start();
     };
 
+    const isInteractiveTarget = target => {
+      if (!(target instanceof Element)) return false;
+      return Boolean(target.closest('a, button, input, select, textarea, [role="button"], .tech-text'));
+    };
+
+    const onWindowPointerDown = event => {
+      if (event.target === canvas || sim.grab) return;
+      if (!settingsRef.current.interactive || event.button > 0) return;
+      if (isInteractiveTarget(event.target)) return;
+      const rect = canvas.getBoundingClientRect();
+      if (
+        event.clientX < rect.left ||
+        event.clientX > rect.right ||
+        event.clientY < rect.top ||
+        event.clientY > rect.bottom
+      ) {
+        return;
+      }
+      toPointer(event);
+      if (!pickCard()) return;
+      canvas.style.pointerEvents = 'auto';
+      onPointerDown(event);
+    };
+
     const onTouchStart = event => {
       if (!settingsRef.current.interactive || event.touches.length !== 1) return;
+      if (isInteractiveTarget(event.target)) return;
       toPointer(event.touches[0]);
       if (pickCard()) {
         canvas.style.pointerEvents = 'auto';
@@ -1263,10 +1293,13 @@ const Lanyard = ({
     };
 
     canvas.addEventListener('pointerdown', onPointerDown);
+    window.addEventListener('pointerdown', onWindowPointerDown);
     canvas.addEventListener('pointermove', onPointerMove);
     window.addEventListener('pointermove', onPointerMove, { passive: true });
     canvas.addEventListener('pointerup', onPointerUp);
+    window.addEventListener('pointerup', onPointerUp);
     canvas.addEventListener('pointercancel', onPointerUp);
+    window.addEventListener('pointercancel', onPointerUp);
     canvas.addEventListener('lostpointercapture', onPointerUp);
     canvas.addEventListener('touchstart', onTouchStart, { passive: false });
 
@@ -1302,10 +1335,13 @@ const Lanyard = ({
       intersectionObserver.disconnect();
       document.removeEventListener('visibilitychange', onVisibility);
       canvas.removeEventListener('pointerdown', onPointerDown);
+      window.removeEventListener('pointerdown', onWindowPointerDown);
       canvas.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointermove', onPointerMove);
       canvas.removeEventListener('pointerup', onPointerUp);
+      window.removeEventListener('pointerup', onPointerUp);
       canvas.removeEventListener('pointercancel', onPointerUp);
+      window.removeEventListener('pointercancel', onPointerUp);
       canvas.removeEventListener('lostpointercapture', onPointerUp);
       canvas.removeEventListener('touchstart', onTouchStart);
       [bodyMesh, frontMesh, backMesh, ring, clampMesh, eyelet, band].forEach(mesh => mesh.geometry?.dispose());

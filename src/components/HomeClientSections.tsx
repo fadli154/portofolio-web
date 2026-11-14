@@ -596,9 +596,9 @@ export function HomeClientSections({
           1. STUDIO KEFFI HERO + REACTBITS ANIMATED DISPLAY & 3D BENTO STAGE
          ===================================================================== */}
       <section id="hero" className="relative overflow-x-clip pt-24 pb-10 md:pt-32 md:pb-10">
-        {/* Desktop-only 3D Lanyard Canvas (disabled on mobile to keep text clear and 60fps smooth) */}
-        {hasMounted && screenWidth >= 1024 && (
-          <div className="pointer-events-none absolute left-0 top-0 z-20 hidden h-[860px] w-full lg:block">
+        {/* Responsive 3D Lanyard Canvas: Behind text (z-[5]) on mobile/tablet so it never blocks copy, z-20 on desktop */}
+        {hasMounted && (
+          <div className="pointer-events-none absolute left-0 top-0 z-[5] h-[640px] w-full sm:h-[720px] lg:z-20 lg:h-[860px]">
             <LanyardWrapper
               frontImage="/fadli-profile.png"
               backImage="/fadli-profile.png"
@@ -607,15 +607,15 @@ export function HomeClientSections({
               cardColor="#ffffff"
               strapColor="#111111"
               orientation="portrait"
-              anchor={0.72}
-              strapLength={0.5}
-              size={0.58}
+              anchor={screenWidth < 640 ? 0.68 : screenWidth < 1024 ? 0.72 : 0.72}
+              strapLength={screenWidth < 640 ? 0.46 : screenWidth < 1024 ? 0.48 : 0.5}
+              size={screenWidth < 640 ? 0.42 : screenWidth < 1024 ? 0.5 : 0.58}
               gravity={1.1}
               breeze={0.35}
               damping={0.55}
               elasticity={0.45}
               interactive={true}
-              baseHeight={700}
+              baseHeight={screenWidth < 640 ? 600 : screenWidth < 1024 ? 660 : 700}
               className="h-full w-full"
             />
           </div>
@@ -628,7 +628,7 @@ export function HomeClientSections({
             <div className="relative z-30 lg:col-span-7">
               {/* Eyebrow Kicker */}
               <div className="mb-7 flex flex-wrap items-center gap-4">
-                <span className="sec-kicker font-mono text-xs font-semibold tracking-wider text-[var(--ink)]">
+                <span className="sec-kicker font-mono text-xs font-semibold tracking-wider text-[var(--ink)] [text-shadow:0_1px_12px_var(--cream)] lg:[text-shadow:none]">
                   {locale === "id"
                     ? "PORTOFOLIO INFORMATIKA · WEB, MOBILE, GOVTECH & VISION AI"
                     : "INFORMATICS PORTFOLIO · WEB, MOBILE, GOVTECH & VISION AI"}
@@ -640,7 +640,7 @@ export function HomeClientSections({
                 <span className="sr-only">Fadli Hifziansyah</span>
                 <span
                   aria-hidden="true"
-                  className="relative block h-[64px] w-[111.11%] -ml-[5.55%] text-[var(--ink)] sm:h-[84px] md:h-[104px] lg:h-[120px]"
+                  className="relative z-20 block h-[64px] w-[111.11%] -ml-[5.55%] overflow-visible text-[var(--ink)] sm:h-[84px] md:h-[104px] lg:h-[120px]"
                 >
                   <TechText
                     text="Fadli Hifziansyah"
@@ -669,7 +669,7 @@ export function HomeClientSections({
                     guides={false}
                   />
                 </span>
-                <span className="mt-1 block text-lg font-normal tracking-tight text-[var(--mute)] sm:text-3xl md:text-4xl lg:text-[42px] lg:leading-[1.12] max-w-xl">
+                <span className="mt-1 block max-w-xl text-lg font-normal tracking-tight text-[var(--mute)] [text-shadow:0_1px_16px_var(--cream),0_0_8px_var(--cream)] sm:text-3xl md:text-4xl lg:text-[42px] lg:leading-[1.12] lg:[text-shadow:none]">
                   {locale === "id"
                     ? "Rekayasa Web, Mobile & Computer Vision."
                     : "Web, Mobile & Computer Vision Engineering."}
@@ -677,7 +677,7 @@ export function HomeClientSections({
               </h1>
 
               {/* Sub-Headline Description */}
-              <p className="mt-5 max-w-xxl text-base leading-relaxed text-[var(--mute)] md:text-lg">
+              <p className="mt-5 max-w-xxl text-base leading-relaxed text-[var(--mute)] [text-shadow:0_1px_16px_var(--cream),0_0_8px_var(--cream)] md:text-lg lg:[text-shadow:none]">
                 {locale === "id"
                   ? "Mendokumentasikan karya rekayasa perangkat lunak, pengalaman magang di Dinas Kominfo (Project Warga Laravel), aduan publik pemerintah (Kopmas), IoT dan Edge AI (HajiCare dan Sign2Speech)."
                   : "Documenting software engineering projects, official internship at Dinas Kominfo (Project Warga Laravel), government civic portal (Kopmas), IoT and Edge AI ecosystems (HajiCare and Sign2Speech)."}
@@ -705,7 +705,7 @@ export function HomeClientSections({
                 </Magnet>
 
                 <Magnet strength={0.16}>
-                  <a href="#coursework" className="keffi-pill-outline">
+                  <a href="#coursework" className="keffi-pill-outline bg-[var(--cream)]/85 backdrop-blur-xs">
                     <span className="inline-flex h-5 w-5 items-center justify-center rounded-full bg-[#c4e22e] text-[#111213]" aria-hidden="true">
                       <BookOpen className="h-3 w-3" />
                     </span>
@@ -716,26 +716,6 @@ export function HomeClientSections({
                     </span>
                   </a>
                 </Magnet>
-              </div>
-
-              {/* Clean Mobile Identity Card (replaces Lanyard & oversized Terminal on small screens) */}
-              <div className="mt-6 flex items-center gap-3.5 rounded-2xl border border-[var(--line)] bg-white p-3.5 shadow-xs lg:hidden dark:bg-[#141418]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={profile.avatarUrl}
-                  alt={profile.fullName}
-                  width={44}
-                  height={44}
-                  className="h-11 w-11 shrink-0 rounded-full object-cover border border-[var(--line)]"
-                />
-                <div className="min-w-0">
-                  <div className="font-sans text-sm font-semibold leading-snug text-[var(--ink)]">
-                    Web Intern @ Kominfo · Juara II OASE III
-                  </div>
-                  <div className="mt-0.5 font-mono text-[11px] leading-relaxed text-[var(--mute)]">
-                    Laravel 9 · Next.js 15 · Flutter · Vision AI
-                  </div>
-                </div>
               </div>
 
               {/* Compact HRD Quick Links Row */}

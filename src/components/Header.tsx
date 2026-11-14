@@ -37,12 +37,19 @@ function LocaleToggleButton({
   );
 }
 
+const IDLE_HIDE_DELAY_MS = 2800;
+
 export function Header() {
   const pathname = usePathname();
   const { locale, toggleLocale } = usePortfolioState();
   const [isCompact, setIsCompact] = useState(false);
+  const [isIdleHidden, setIsIdleHidden] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDrawerMounted, setIsDrawerMounted] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+  const isHeaderHoveredRef = useRef(false);
+  const isMobileMenuOpenRef = useRef(false);
+  const idleTimerRef = useRef<number | null>(null);
   const drawerRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -50,12 +57,72 @@ export function Header() {
   const wasOpenRef = useRef(false);
 
   useEffect(() => {
-    const onScroll = () => {
-      setIsCompact(window.scrollY > 90);
+    isMobileMenuOpenRef.current = isMobileMenuOpen;
+    if (isMobileMenuOpen) {
+      setIsIdleHidden((prev) => (prev ? false : prev));
+    }
+  }, [isMobileMenuOpen]);
+
+  useEffect(() => {
+    const clearIdleTimer = () => {
+      if (idleTimerRef.current !== null) {
+        window.clearTimeout(idleTimerRef.current);
+        idleTimerRef.current = null;
+      }
     };
+
+    const scheduleIdleHide = () => {
+      clearIdleTimer();
+      idleTimerRef.current = window.setTimeout(() => {
+        const hasFocusInside =
+          typeof document !== "undefined" &&
+          Boolean(headerRef.current?.contains(document.activeElement));
+        if (isMobileMenuOpenRef.current || isHeaderHoveredRef.current || hasFocusInside) {
+          scheduleIdleHide();
+          return;
+        }
+        setIsIdleHidden((prev) => (prev ? prev : true));
+      }, IDLE_HIDE_DELAY_MS);
+    };
+
+    const revealAndResetIdle = () => {
+      setIsIdleHidden((prev) => (prev ? false : prev));
+      scheduleIdleHide();
+    };
+
+    const onScroll = () => {
+      const nextCompact = window.scrollY > 90;
+      setIsCompact((prev) => (prev === nextCompact ? prev : nextCompact));
+      revealAndResetIdle();
+    };
+
+    const onPointerOrKeyActivity = () => {
+      revealAndResetIdle();
+    };
+
+    const onMouseMoveTopEdge = (e: MouseEvent) => {
+      if (e.clientY <= 84 || isHeaderHoveredRef.current) {
+        revealAndResetIdle();
+      }
+    };
+
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("pointerdown", onPointerOrKeyActivity, { passive: true });
+    window.addEventListener("touchstart", onPointerOrKeyActivity, { passive: true });
+    window.addEventListener("click", onPointerOrKeyActivity, { passive: true });
+    window.addEventListener("keydown", onPointerOrKeyActivity, { passive: true });
+    window.addEventListener("mousemove", onMouseMoveTopEdge, { passive: true });
+
+    return () => {
+      clearIdleTimer();
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("pointerdown", onPointerOrKeyActivity);
+      window.removeEventListener("touchstart", onPointerOrKeyActivity);
+      window.removeEventListener("click", onPointerOrKeyActivity);
+      window.removeEventListener("keydown", onPointerOrKeyActivity);
+      window.removeEventListener("mousemove", onMouseMoveTopEdge);
+    };
   }, []);
 
   // Ensure drawer mounts synchronously on open
@@ -255,7 +322,22 @@ export function Header() {
 
   return (
     <>
-      <header className={`hdr ${isCompact ? "is-compact" : ""} ${isDarkRoute ? "hdr--dark" : ""}`}>
+      <header
+        ref={headerRef}
+        onPointerEnter={() => {
+          isHeaderHoveredRef.current = true;
+          setIsIdleHidden((prev) => (prev ? false : prev));
+        }}
+        onPointerLeave={() => {
+          isHeaderHoveredRef.current = false;
+        }}
+        onFocusCapture={() => {
+          setIsIdleHidden((prev) => (prev ? false : prev));
+        }}
+        className={`hdr ${isCompact ? "is-compact" : ""} ${isDarkRoute ? "hdr--dark" : ""} ${
+          isIdleHidden && !isMobileMenuOpen ? "is-idle-hidden" : ""
+        }`}
+      >
         <div className="hdr__bar">
           {/* Left: Minimal Brand */}
           <Link
