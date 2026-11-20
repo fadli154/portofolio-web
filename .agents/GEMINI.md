@@ -23,6 +23,8 @@ Gunakan matriks ini untuk menentukan skill yang **wajib** dipanggil berdasarkan 
 
 | Kategori Permintaan / Tugas | Skill Wajib (Primary) | Skill Pendukung (Secondary) | Output / Standar |
 | :--- | :--- | :--- | :--- |
+| **Tata Kelola Proyek, Rules Gate, Codebase Registry, & 500-LOC Gate** | `project-rules-gate` | `project-master-rules.md`, `CODEBASE-REGISTRY.md` | Konstitusi 4 Pilar, write-through registry hemat token, konfirmasi >500 LOC, Pojok Mentor. |
+| **Spesifikasi Token Desain & Kontrak DESIGN.md** | `design-md` | `ui-ux-pro-max`, `awwwards` | Token warna HSL/CSS Variables tunggal, zero raw hex, konsistensi lintas layar. |
 | **Ideasi, Fitur Baru, Improvement, Refactor Arsitektur** | `brainstorming` | `last30days`, `writing-plans` | PRD terverifikasi, validasi kebutuhan pengguna riil, rencana kerja terstruktur. |
 | **Riset Pasar, Tren, Diskusi Pengguna Terkini** | `last30days` | `brainstorming` | Data tren riil 30 hari terakhir dari Reddit, X, HN, GitHub. |
 | **Copywriting, Teks UX, Konten PRD, Presentasi** | `humanizer` | `brainstorming` | Teks otentik natural, bebas pola klise AI (*not-X-but-Y, forced triads*). |
@@ -64,6 +66,15 @@ Skill berikut terpasang langsung di dalam proyek dan siap digunakan secara insta
 7. `cloudflare-security-audit`
 8. `security-predeploy-gate`
 9. `ci-cd-release-ready`
+10. `project-rules-gate`
+11. `design-md`
+12. `supabase-postgres-best-practices`
+13. `supabase`
+14. `vercel-react-best-practices`
+
+**Berkas Konstitusi & Tata Kelola Utama:**
+- `.agents/rules/project-master-rules.md` (Konstitusi Tunggal: 4 Pilar Governance, 500-LOC Gate, & Pojok Mentor)
+- `.agents/CODEBASE-REGISTRY.md` (Katalog Kode Hemat Token: `/core`, `/common/widgets`, `/common/utils`, `Services`)
 
 *(Skill proses seperti `brainstorming`, `systematic-debugging`, `writing-plans`, dan `verification-before-completion` aktif secara global di lingkungan Antigravity).*
 
