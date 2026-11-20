@@ -19,7 +19,7 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { BlurText } from "@/components/reactbits/BlurText";
-import FadeContent from "@/components/reactbits/FadeContent";
+import FadeContent from "@/components/FadeContent";
 import CircularGalleryWrapper, { type GalleryItem } from "@/components/reactbits/CircularGalleryWrapper";
 import Folder, { type FolderItem } from "@/components/reactbits/Folder";
 import {
@@ -28,6 +28,7 @@ import {
   type ExperienceFolderPaper,
 } from "@/data/experience-folders";
 import { playMechanicalClick } from "@/lib/audio/sound-effects";
+import { getLenis } from "@/engine";
 
 interface ExperienceFoldersSectionProps {
   locale?: "id" | "en";
@@ -227,12 +228,15 @@ export function ExperienceFoldersSection({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedFolder]);
 
-  // Lock body scroll when inspection modal is active
+  // Lock body scroll and pause Lenis when inspection modal is active
   useEffect(() => {
     if (selectedFolder) {
+      const lenis = getLenis();
+      lenis?.stop();
       const prevOverflow = document.body.style.overflow;
       document.body.style.overflow = "hidden";
       return () => {
+        lenis?.start();
         document.body.style.overflow = prevOverflow;
       };
     }
@@ -287,20 +291,20 @@ export function ExperienceFoldersSection({
   const currentFolderForDeck = EXPERIENCE_FOLDERS[activeDeckIndex];
 
   return (
-    <section id="work" className="scroll-mt-28 overflow-hidden bg-white pb-12 md:pb-20 dark:bg-[#0a0a0c]">
+    <section id="work" style={{ scrollMarginTop: 0 }} className="scroll-mt-0 min-h-screen lg:h-screen flex flex-col justify-center overflow-hidden bg-white pt-14 pb-4 md:pt-16 md:pb-6 dark:bg-[#0a0a0c]">
       <FadeContent blur={6} duration={0.7} ease="power2.out" threshold={0.08} initialOpacity={0} once={true}>
         <div className="keffi-wrap">
           {/* Section Header */}
-        <div className="sec-head dark:border-white/10 pt-14">
+        <div className="sec-head dark:border-white/10 !pb-2.5 md:!pb-3.5">
           <div>
-            <div className="flex mb-10 items-center gap-2 font-mono text-xs font-semibold tracking-wider text-[var(--mute)] dark:text-gray-300">
+            <div className="flex mb-1.5 sm:mb-2 items-center gap-2 font-mono text-xs font-semibold tracking-wider text-[var(--mute)] dark:text-gray-300">
               <span>
                 {locale === "id"
                   ? "REKAM JEJAK & KARYA UNGGULAN · GALERI 3D"
                   : "SELECTED WORK & EXPERIENCE · 3D GALLERY"}
               </span>
             </div>
-            <h2 className="sec-title mt-3 text-[var(--ink)] dark:text-[#f5f5f2]">
+            <h2 className="sec-title mt-0.5 text-[var(--ink)] dark:text-[#f5f5f2]">
               <BlurText
                 text={
                   locale === "id"
@@ -357,7 +361,7 @@ export function ExperienceFoldersSection({
           =================================================================== */}
       <FadeContent blur={false} duration={0.7} ease="power2.out" threshold={0.08} initialOpacity={0} once={true}>
       {viewMode === "circular" && (
-        <div className="relative mt-6 h-[340px] w-full overflow-hidden sm:h-[440px] md:mt-8 md:h-[520px]">
+        <div className="relative mt-2 md:mt-4 h-[340px] sm:h-[400px] md:h-[430px] lg:h-[460px] w-full overflow-hidden">
           {/* Circular Gallery WebGL Component */}
           <CircularGalleryWrapper
             items={galleryItems}
@@ -412,7 +416,7 @@ export function ExperienceFoldersSection({
           =================================================================== */}
       {viewMode === "deck" && (
         <div className="keffi-wrap">
-          <div className="mt-10 overflow-hidden rounded-[32px] border border-[var(--line)] bg-[#f5f5f2]/80 p-6 md:p-10 dark:border-white/10 dark:bg-[#121316]">
+          <div className="mt-3 md:mt-4 overflow-hidden rounded-[28px] border border-[var(--line)] bg-[#f5f5f2]/80 p-4 sm:p-6 md:p-8 dark:border-white/10 dark:bg-[#121316]">
             {/* Folder Tabs Navigation with Drag-to-Scroll */}
             <div
               ref={tabsRef}
@@ -621,7 +625,12 @@ export function ExperienceFoldersSection({
             MODAL INSPECTION STAGE (Triggered on click from Circular Gallery)
             =================================================================== */}
       {selectedFolder && (
-        <div className="fixed inset-0 z-[90] flex items-center justify-center p-2.5 pt-4 sm:p-4 md:p-8">
+        <div
+          className="fixed inset-0 z-[90] flex items-center justify-center p-2.5 pt-4 sm:p-4 md:p-8 overflow-y-auto overscroll-contain"
+          data-lenis-prevent="true"
+          role="dialog"
+          aria-modal="true"
+        >
           {/* Backdrop */}
           <div
             className="absolute inset-0 bg-black/85 backdrop-blur-md"
@@ -629,7 +638,10 @@ export function ExperienceFoldersSection({
           />
 
           {/* Modal Dialog Card */}
-          <div className="relative z-10 flex max-h-[92vh] sm:max-h-[90vh] w-full max-w-5xl flex-col overflow-hidden rounded-[24px] sm:rounded-[32px] border border-white/15 bg-[#121316] text-[#f5f5f2] shadow-2xl">
+          <div
+            className="relative z-10 flex max-h-[92vh] sm:max-h-[90vh] my-auto w-full max-w-5xl flex-col overflow-hidden rounded-[24px] sm:rounded-[32px] border border-white/15 bg-[#121316] text-[#f5f5f2] shadow-2xl"
+            data-lenis-prevent="true"
+          >
             {/* Modal Top Bar */}
             <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-3.5 py-2.5 sm:px-6 sm:py-4">
               <div className="flex items-center gap-2 sm:gap-3 min-w-0 pr-2">
@@ -700,7 +712,10 @@ export function ExperienceFoldersSection({
             </div>
 
             {/* Modal Body: 2-Column Physical 3D Folder & Document Details */}
-            <div className="grid flex-1 grid-cols-1 overflow-y-auto p-4 sm:p-6 md:p-8 lg:grid-cols-12 lg:gap-8">
+            <div
+              className="grid flex-1 grid-cols-1 overflow-y-auto overscroll-contain p-4 sm:p-6 md:p-8 lg:grid-cols-12 lg:gap-8"
+              data-lenis-prevent="true"
+            >
               {/* Stage 1: Interactive 3D Folder Canvas */}
               <div className="flex min-h-[350px] sm:min-h-[420px] items-center justify-center rounded-2xl bg-black/40 p-4 sm:p-6 lg:col-span-6">
                 <Folder

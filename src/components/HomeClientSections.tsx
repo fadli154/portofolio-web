@@ -30,6 +30,7 @@ import {
 import { usePortfolioState } from "@/lib/i18n/context";
 import {
   CERTIFICATES,
+  EDUCATIONS,
   EXPERIENCES,
   KWU_SESSIONS,
   PROJECTS,
@@ -57,14 +58,16 @@ import { CountUp } from "@/components/reactbits/CountUp";
 import { Magnet } from "@/components/reactbits/Magnet";
 import { CustomCursor } from "@/components/reactbits/CustomCursor";
 import { DriftWall, type DriftWallItem } from "@/components/reactbits/DriftWall";
-import FadeContent from "@/components/reactbits/FadeContent";
+import FadeContent from "@/components/FadeContent";
 import { LogoLoop, type LogoItem } from "@/components/reactbits/LogoLoop";
 import ScrollStack, { ScrollStackItem } from "@/components/reactbits/ScrollStack";
 import { TechText } from "@/components/reactbits/TechText";
 import type { FlexCarouselItem } from "@/components/reactbits/FlexCarousel";
 import { ExperienceFoldersSection } from "@/components/reactbits/ExperienceFoldersSection";
+import { EducationSection } from "@/components/EducationSection";
 import LanyardWrapper from "@/components/reactbits/LanyardWrapper";
 import { KeffiStackFigure } from "@/components/figures/keffi-svc-figures";
+import { getLenis } from "@/engine";
 
 const FlexCarousel = dynamic(() => import("@/components/reactbits/FlexCarousel"), {
   ssr: false,
@@ -171,6 +174,34 @@ const HERO_TECH_LOGOS: LogoItem[] = [
     ),
     title: "Docker",
     href: "https://www.docker.com",
+  },
+  {
+    node: (
+      <svg viewBox="0 0 24 24" fill="currentColor" className="h-[1em] w-[1em]" aria-hidden="true">
+        <path d="M0 0v24h24V0H0zm3.8 4.3h6.6c2.4 0 4.2 1.3 4.2 3.6 0 2.2-1.8 3.6-4.2 3.6H6.6v8.2H3.8V4.3zm2.8 4.8h3.5c1.1 0 1.9-.6 1.9-1.4 0-.9-.8-1.4-1.9-1.4H6.6v2.8zm11 5.4c.7.4 1.7.7 2.6.7 1.2 0 1.8-.5 1.8-1.2 0-.8-.7-1.1-2-1.7-1.8-.7-2.9-1.7-2.9-3.2 0-1.8 1.5-3.2 3.8-3.2 1 0 2 .3 2.7.7l-.6 1.7c-.6-.4-1.4-.6-2.1-.6-1.1 0-1.7.5-1.7 1.1 0 .7.6 1 1.9 1.5 1.9.8 3 1.7 3 3.4 0 1.9-1.5 3.3-4 3.3-1.2 0-2.3-.3-3.1-.8l.6-1.7z" />
+      </svg>
+    ),
+    title: "Photoshop",
+    href: "https://www.adobe.com/products/photoshop.html",
+  },
+  {
+    node: (
+      <svg viewBox="0 0 24 24" fill="currentColor" className="h-[1em] w-[1em]" aria-hidden="true">
+        <circle cx="12" cy="12" r="3.2" />
+        <path d="M12 2a10 10 0 0 0-7.07 2.93l4.24 4.24A4 4 0 0 1 12 8V2zm-9.07 9.07a10 10 0 0 0 2.93 7.07l4.24-4.24A4 4 0 0 1 9 12H2.93zm16.14 0A4 4 0 0 1 15 13.9l4.24 4.24A10 10 0 0 0 21.07 12h-2zm-5.07 1.9l4.24 4.24A10 10 0 0 1 12 22v-6a4 4 0 0 1 0-.1z" />
+      </svg>
+    ),
+    title: "DaVinci Resolve",
+    href: "https://www.blackmagicdesign.com/products/davinciresolve",
+  },
+  {
+    node: (
+      <svg viewBox="0 0 24 24" fill="currentColor" className="h-[1em] w-[1em]" aria-hidden="true">
+        <path d="M21.5 4.5l-8.5-2v19l8.5-2V4.5zM2.5 6.5l8-1.5v14l-8-1.5V6.5zm5.5 8h-3v-5h3v5z" />
+      </svg>
+    ),
+    title: "MS Office",
+    href: "https://www.office.com",
   },
 ];
 
@@ -316,6 +347,7 @@ export function HomeClientSections({
   profile,
   projects: initialProjects,
   experiences: initialExperiences,
+  educations: initialEducations = [],
   certificates: initialCertificates = [],
   courseworkSessions: initialCourseworkSessions = [],
 }: HomeClientSectionsProps) {
@@ -347,6 +379,31 @@ export function HomeClientSections({
   const [selectedSessionModal, setSelectedSessionModal] =
     useState<KwuSessionItem | null>(null);
   const [pertemuanViewMode, setPertemuanViewMode] = useState<"carousel" | "grid">("carousel");
+
+  // Lock body scroll and pause Lenis whenever a lightbox/modal is open
+  useEffect(() => {
+    const isAnyModalOpen = Boolean(selectedCertModal || selectedSessionModal);
+    if (!isAnyModalOpen) return;
+
+    const lenis = getLenis();
+    lenis?.stop();
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setSelectedCertModal(null);
+        setSelectedSessionModal(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      lenis?.start();
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedCertModal, selectedSessionModal]);
 
   const courseworkFlexItems: (FlexCarouselItem & { raw: KwuSessionItem })[] = useMemo(() => {
     return courseworkSessions.map((session) => ({
@@ -595,7 +652,7 @@ export function HomeClientSections({
       {/* =====================================================================
           1. STUDIO KEFFI HERO + REACTBITS ANIMATED DISPLAY & 3D BENTO STAGE
          ===================================================================== */}
-      <section id="hero" className="relative overflow-x-clip pt-24 pb-10 md:pt-32 md:pb-10">
+      <section id="hero" style={{ scrollMarginTop: 0 }} className="scroll-mt-0 relative overflow-x-clip min-h-[calc(100vh-6rem)] pt-24 pb-10 md:pt-32 md:pb-10">
         {/* Responsive 3D Lanyard Canvas: Behind text (z-[5]) on mobile/tablet so it never blocks copy, z-20 on desktop */}
         {hasMounted && (
           <div className="pointer-events-none absolute left-0 top-0 z-[5] h-[640px] w-full sm:h-[720px] lg:z-20 lg:h-[860px]">
@@ -782,106 +839,106 @@ export function HomeClientSections({
       {/* =====================================================================
           2. STUDIO KEFFI EDITORIAL ABOUT & ANIMATED COUNTUP METRICS (#about)
          ===================================================================== */}
-      <section id="about" className="scroll-mt-24 pt-12 pb-14 md:pt-20 md:pb-24">
+      <section id="about" style={{ scrollMarginTop: 0 }} className="scroll-mt-0 min-h-screen flex flex-col justify-center pt-20 pb-20 md:pt-28 md:pb-28">
         <FadeContent blur={6} duration={0.7} ease="power2.out" threshold={0.08} initialOpacity={0} once={true}>
           <div className="keffi-wrap">
-          <div className="keffi-grid items-start">
-            {/* Left 3 Columns: Studio Keffi Metadata Definition List */}
-            <dl className="col-span-12 grid grid-cols-2 gap-5 border-t border-[var(--line)] pt-5 sm:grid-cols-4 lg:col-span-3 lg:grid-cols-1">
-              <div>
-                <dt className="font-mono text-[11px] uppercase tracking-widest text-[var(--mute)]">
-                  {locale === "id" ? "Domisili" : "Based"}
-                </dt>
-                <dd className="mt-1 text-sm font-medium text-[var(--ink)]">
-                  Indonesia · UTC+7
-                </dd>
-              </div>
-              <div>
-                <dt className="font-mono text-[11px] uppercase tracking-widest text-[var(--mute)]">
-                  {locale === "id" ? "Fokus Teknis" : "Disciplines"}
-                </dt>
-                <dd className="mt-1 text-sm font-medium text-[var(--ink)]">
-                  Web, Mobile, GovTech, Vision AI
-                </dd>
-              </div>
-              <div>
-                <dt className="font-mono text-[11px] uppercase tracking-widest text-[var(--mute)]">
-                  {locale === "id" ? "Tim Akademik" : "Academic Group"}
-                </dt>
-                <dd className="mt-1 text-sm font-medium text-[var(--ink)]">
-                  Informatika · Kelompok K-1
-                </dd>
-              </div>
-              <div>
-                <dt className="font-mono text-[11px] uppercase tracking-widest text-[var(--mute)]">
-                  GitHub
-                </dt>
-                <dd className="mt-1 font-mono text-sm font-semibold text-[var(--violet)] dark:text-[#c4e22e]">
-                  @fadli154 ({ghStats.public_repos} Repos)
-                </dd>
-              </div>
-            </dl>
-
-            {/* Right 9 Columns: Large Indented Editorial Statement */}
-            <div className="col-span-12 lg:col-span-9">
-              <p className="about-statement">
-                {locale === "id"
-                  ? "Saya membangun perangkat lunak yang berfokus pada dampak nyata dan utilitas publik, mulai dari digitalisasi administrasi kependudukan (Project Warga) di Dinas Kominfo dengan Laravel 9 & MySQL, portal aduan gizi anak nasional (Kopmas), hingga aplikasi mobile IoT dan Edge AI aksesibilitas ibadah haji (HajiCare & Sign2Speech)."
-                  : "I build software engineered for real-world utility and public impact, spanning municipal citizen administration (Project Warga) at Dinas Kominfo with Laravel 9 & MySQL, national child nutrition reporting (Kopmas), and mobile Edge AI wearables (HajiCare & Sign2Speech)."}
-              </p>
-
-              {/* Editorial Metrics Row */}
-              <div className="mt-10 grid grid-cols-2 gap-6 border-t border-[var(--line)] pt-8 md:mt-14 md:grid-cols-4 md:pt-10">
+            <div className="keffi-grid items-start">
+              {/* Left 3 Columns: Studio Keffi Metadata Definition List */}
+              <dl className="col-span-12 grid grid-cols-2 gap-5 border-t border-[var(--line)] pt-5 sm:grid-cols-4 lg:col-span-3 lg:grid-cols-1">
                 <div>
-                  <div className="font-sans text-4xl font-semibold tracking-tight text-[var(--ink)] md:text-5xl">
-                    <CountUp to={5} prefix="0" />
-                  </div>
-                  <div className="mt-2 font-mono text-xs uppercase tracking-wider text-[var(--mute)]">
-                    {locale === "id" ? "Pilar Tech Stack" : "Tech Stack Pillars"}
-                  </div>
+                  <dt className="font-mono text-[11px] uppercase tracking-widest text-[var(--mute)]">
+                    {locale === "id" ? "Domisili" : "Based"}
+                  </dt>
+                  <dd className="mt-1 text-sm font-medium text-[var(--ink)]">
+                    Indonesia · UTC+7
+                  </dd>
                 </div>
-
                 <div>
-                  <div className="font-sans text-4xl font-semibold tracking-tight text-[var(--violet)] dark:text-[#c4e22e] md:text-5xl">
-                    <CountUp
-                      to={publishedProjectCount}
-                      prefix={publishedProjectCount < 10 ? "0" : ""}
-                    />
-                  </div>
-                  <div className="mt-2 font-mono text-xs uppercase tracking-wider text-[var(--mute)]">
-                    {locale === "id"
-                      ? "Proyek Diselesaikan"
-                      : "Projects Completed"}
-                  </div>
+                  <dt className="font-mono text-[11px] uppercase tracking-widest text-[var(--mute)]">
+                    {locale === "id" ? "Fokus Teknis" : "Disciplines"}
+                  </dt>
+                  <dd className="mt-1 text-sm font-medium text-[var(--ink)]">
+                    Web, Mobile, GovTech, Vision AI
+                  </dd>
                 </div>
-
                 <div>
-                  <div className="font-sans text-4xl font-semibold tracking-tight text-[var(--ink)] md:text-5xl">
-                    <CountUp
-                      to={courseworkSessions.length}
-                      prefix={courseworkSessions.length < 10 ? "0" : ""}
-                    />
-                  </div>
-                  <div className="mt-2 font-mono text-xs uppercase tracking-wider text-[var(--mute)]">
-                    {locale === "id"
-                      ? "Pertemuan Kuliah Tercatat"
-                      : "Coursework Sessions Logged"}
-                  </div>
+                  <dt className="font-mono text-[11px] uppercase tracking-widest text-[var(--mute)]">
+                    {locale === "id" ? "Tim Akademik" : "Academic Group"}
+                  </dt>
+                  <dd className="mt-1 text-sm font-medium text-[var(--ink)]">
+                    Informatika · Kelompok K-1
+                  </dd>
                 </div>
-
                 <div>
-                  <div className="font-sans text-4xl font-semibold tracking-tight text-[var(--ink)] md:text-5xl">
-                    <CountUp to={20} />
+                  <dt className="font-mono text-[11px] uppercase tracking-widest text-[var(--mute)]">
+                    GitHub
+                  </dt>
+                  <dd className="mt-1 font-mono text-sm font-semibold text-[var(--violet)] dark:text-[#c4e22e]">
+                    @fadli154 ({ghStats.public_repos} Repos)
+                  </dd>
+                </div>
+              </dl>
+
+              {/* Right 9 Columns: Large Indented Editorial Statement */}
+              <div className="col-span-12 lg:col-span-9">
+                <p className="about-statement">
+                  {locale === "id"
+                    ? "Saya membangun perangkat lunak yang berfokus pada dampak nyata dan utilitas publik, mulai dari digitalisasi administrasi kependudukan (Project Warga) di Dinas Kominfo dengan Laravel 9 & MySQL, portal aduan gizi anak nasional (Kopmas), hingga aplikasi mobile IoT dan Edge AI aksesibilitas ibadah haji (HajiCare & Sign2Speech)."
+                    : "I build software engineered for real-world utility and public impact, spanning municipal citizen administration (Project Warga) at Dinas Kominfo with Laravel 9 & MySQL, national child nutrition reporting (Kopmas), and mobile Edge AI wearables (HajiCare & Sign2Speech)."}
+                </p>
+
+                {/* Editorial Metrics Row */}
+                <div className="mt-10 grid grid-cols-2 gap-6 border-t border-[var(--line)] pt-8 md:mt-14 md:grid-cols-4 md:pt-10">
+                  <div>
+                    <div className="font-sans text-4xl font-semibold tracking-tight text-[var(--ink)] md:text-5xl">
+                      <CountUp to={5} prefix="0" />
+                    </div>
+                    <div className="mt-2 font-mono text-xs uppercase tracking-wider text-[var(--mute)]">
+                      {locale === "id" ? "Pilar Tech Stack" : "Tech Stack Pillars"}
+                    </div>
                   </div>
-                  <div className="mt-2 font-mono text-xs uppercase tracking-wider text-[var(--mute)]">
-                    {locale === "id"
-                      ? "Indikator Evaluasi SWOT"
-                      : "SWOT Evaluation Points"}
+
+                  <div>
+                    <div className="font-sans text-4xl font-semibold tracking-tight text-[var(--violet)] dark:text-[#c4e22e] md:text-5xl">
+                      <CountUp
+                        to={publishedProjectCount}
+                        prefix={publishedProjectCount < 10 ? "0" : ""}
+                      />
+                    </div>
+                    <div className="mt-2 font-mono text-xs uppercase tracking-wider text-[var(--mute)]">
+                      {locale === "id"
+                        ? "Proyek Diselesaikan"
+                        : "Projects Completed"}
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="font-sans text-4xl font-semibold tracking-tight text-[var(--ink)] md:text-5xl">
+                      <CountUp
+                        to={courseworkSessions.length}
+                        prefix={courseworkSessions.length < 10 ? "0" : ""}
+                      />
+                    </div>
+                    <div className="mt-2 font-mono text-xs uppercase tracking-wider text-[var(--mute)]">
+                      {locale === "id"
+                        ? "Pertemuan Kuliah Tercatat"
+                        : "Coursework Sessions Logged"}
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="font-sans text-4xl font-semibold tracking-tight text-[var(--ink)] md:text-5xl">
+                      <CountUp to={20} />
+                    </div>
+                    <div className="mt-2 font-mono text-xs uppercase tracking-wider text-[var(--mute)]">
+                      {locale === "id"
+                        ? "Indikator Evaluasi SWOT"
+                        : "SWOT Evaluation Points"}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
           </div>
         </FadeContent>
       </section>
@@ -892,108 +949,117 @@ export function HomeClientSections({
       <ExperienceFoldersSection locale={locale} />
 
       {/* =====================================================================
+          3.5 ACADEMIC JOURNEY & EDUCATION (#education) — SCROLL-EXPAND STORYTELLING
+         ===================================================================== */}
+      <EducationSection
+        educations={initialEducations.length > 0 ? initialEducations : EDUCATIONS}
+      />
+
+      {/* =====================================================================
           4. DARK STICKY STACKING TECH STACK & TRANSPARENT /ANATOMY
          ===================================================================== */}
-      <section id="stack" className="scroll-mt-24 bg-[#111213] pt-16 pb-16 text-[#f5f5f2] md:pt-24 md:pb-24">
-        <div className="keffi-wrap">
-          <div className="sec-head sec-head--dark">
-            <div>
-              <div className="mb-7 flex flex-wrap items-center gap-4">
-                <span className="sec-kicker font-mono text-xs font-semibold tracking-wider !text-[#f5f5f2]/85">
-                  {locale === "id"
-                    ? "ARSITEKTUR SISTEM · 5 PILAR TECH STACK & ANATOMI"
-                    : "SYSTEM ARCHITECTURE · 5 TECH STACK PILLARS"}
-                </span>
+      <section id="stack" style={{ scrollMarginTop: 0 }} className="scroll-mt-0 min-h-screen relative bg-[#111213] pt-16 pb-16 text-[#f5f5f2] md:pt-24 md:pb-24">
+        <FadeContent blur={6} duration={0.7} ease="power2.out" threshold={0.08} initialOpacity={0} once={true}>
+          <div className="keffi-wrap">
+            <div className="sec-head sec-head--dark">
+              <div>
+                <div className="mb-7 flex flex-wrap items-center gap-4">
+                  <span className="sec-kicker font-mono text-xs font-semibold tracking-wider !text-[#f5f5f2]/85">
+                    {locale === "id"
+                      ? "ARSITEKTUR SISTEM · 5 PILAR TECH STACK & ANATOMI"
+                      : "SYSTEM ARCHITECTURE · 5 TECH STACK PILLARS"}
+                  </span>
+                </div>
+                <h2 className="sec-title !text-[#f5f5f2]">
+                  <BlurText
+                    text={
+                      locale === "id"
+                        ? "Keahlian & Instrumen Teknis."
+                        : "Capabilities & Tech Stack."
+                    }
+                  />
+                </h2>
               </div>
-              <h2 className="sec-title !text-[#f5f5f2]">
-                <BlurText
-                  text={
-                    locale === "id"
-                      ? "Keahlian & Instrumen Teknis."
-                      : "Capabilities & Tech Stack."
-                  }
-                />
-              </h2>
+              <p className="max-w-md text-sm leading-relaxed text-white/70">
+                {locale === "id"
+                  ? "Lima instrumen mekanis isometrik 3D dengan arsitektur fisik di setiap kartu. Tarik vertikal untuk memicu exploded-view atau pilih stasiun untuk menginspeksi lapisan sistem."
+                  : "Five distinct 3D isometric mechanical instruments with dedicated architectures per layer. Drag vertically for exploded-view inspection or select a station to explore."}
+              </p>
             </div>
-            <p className="max-w-md text-sm leading-relaxed text-white/70">
-              {locale === "id"
-                ? "Lima instrumen mekanis isometrik 3D dengan arsitektur fisik di setiap kartu. Tarik vertikal untuk memicu exploded-view atau pilih stasiun untuk menginspeksi lapisan sistem."
-                : "Five distinct 3D isometric mechanical instruments with dedicated architectures per layer. Drag vertically for exploded-view inspection or select a station to explore."}
-            </p>
+
+            {/* REACT BITS SCROLL STACK CARDS (.svc) */}
+            <ScrollStack
+              className="svc-scroll-stack mt-8"
+              useWindowScroll={true}
+              smoothScroll={false}
+              itemDistance={isMobile ? 28 : 56}
+              itemStackDistance={isMobile ? 14 : 24}
+              stackPosition={isMobile ? "10%" : "14%"}
+              itemScale={isMobile ? 0.035 : 0.045}
+              baseScale={0.84}
+              dimAmount={0.2}
+              blurAmount={0}
+              tiltAmount={0}
+              rotationAmount={0}
+              holdDistance={isMobile ? 40 : 120}
+            >
+              {SKILL_GROUP_CARDS.map((group, idx) => {
+                const variant = SVC_VARIANTS[idx % SVC_VARIANTS.length]!;
+                return (
+                  <ScrollStackItem key={group.id} itemClassName={`svc ${variant}`}>
+                    <div className="keffi-grid items-center">
+                      {/* Left 5 Columns: Editorial Stack Info */}
+                      <div className="col-span-12 lg:col-span-5">
+                        <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-widest opacity-80">
+                          <span>(0{idx + 1})</span>
+                          <span>·</span>
+                          <span>{group.badge}</span>
+                        </div>
+
+                        <h3 className="mt-3 text-2xl font-semibold tracking-tight md:text-3xl">
+                          {locale === "id" ? group.titleId : group.titleEn}
+                        </h3>
+
+                        <p className="mt-3 text-sm leading-relaxed opacity-85 md:text-base">
+                          {locale === "id" ? group.descId : group.descEn}
+                        </p>
+
+                        {/* Skill Icons Row */}
+                        <div className="mt-5">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={group.skillIconsUrl}
+                            alt={group.titleEn}
+                            width={320}
+                            height={36}
+                            loading="lazy"
+                            className="h-9 w-auto object-contain opacity-90 transition hover:opacity-100"
+                          />
+                        </div>
+
+                        <ul className="mt-5 flex flex-wrap gap-2">
+                          {group.items.map((skill) => (
+                            <li
+                              key={skill}
+                              className="rounded-full border border-current/20 bg-black/5 px-3 py-1 font-mono text-xs font-medium"
+                            >
+                              {skill}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Right 7 Columns: Background-Free Isometric SVG Figure */}
+                      <div className="col-span-12 mt-6 lg:col-span-7 lg:mt-0">
+                        <KeffiStackFigure id={group.id} />
+                      </div>
+                    </div>
+                  </ScrollStackItem>
+                );
+              })}
+            </ScrollStack>
           </div>
-
-          {/* REACT BITS SCROLL STACK CARDS (.svc) */}
-          <ScrollStack
-            className="svc-scroll-stack mt-8"
-            useWindowScroll={true}
-            smoothScroll={false}
-            itemDistance={isMobile ? 28 : 56}
-            itemStackDistance={isMobile ? 14 : 24}
-            stackPosition={isMobile ? "10%" : "14%"}
-            itemScale={isMobile ? 0.035 : 0.045}
-            baseScale={0.84}
-            dimAmount={0.2}
-            blurAmount={0}
-            tiltAmount={0}
-            rotationAmount={0}
-            holdDistance={isMobile ? 40 : 120}
-          >
-            {SKILL_GROUP_CARDS.map((group, idx) => {
-              const variant = SVC_VARIANTS[idx % SVC_VARIANTS.length]!;
-              return (
-                <ScrollStackItem key={group.id} itemClassName={`svc ${variant}`}>
-                  <div className="keffi-grid items-center">
-                    {/* Left 5 Columns: Editorial Stack Info */}
-                    <div className="col-span-12 lg:col-span-5">
-                      <div className="flex items-center gap-3 font-mono text-xs uppercase tracking-widest opacity-80">
-                        <span>(0{idx + 1})</span>
-                        <span>·</span>
-                        <span>{group.badge}</span>
-                      </div>
-
-                      <h3 className="mt-3 text-2xl font-semibold tracking-tight md:text-3xl">
-                        {locale === "id" ? group.titleId : group.titleEn}
-                      </h3>
-
-                      <p className="mt-3 text-sm leading-relaxed opacity-85 md:text-base">
-                        {locale === "id" ? group.descId : group.descEn}
-                      </p>
-
-                      {/* Skill Icons Row */}
-                      <div className="mt-5">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={group.skillIconsUrl}
-                          alt={group.titleEn}
-                          width={320}
-                          height={36}
-                          loading="lazy"
-                          className="h-9 w-auto object-contain opacity-90 transition hover:opacity-100"
-                        />
-                      </div>
-
-                      <ul className="mt-5 flex flex-wrap gap-2">
-                        {group.items.map((skill) => (
-                          <li
-                            key={skill}
-                            className="rounded-full border border-current/20 bg-black/5 px-3 py-1 font-mono text-xs font-medium"
-                          >
-                            {skill}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    {/* Right 7 Columns: Background-Free Isometric SVG Figure */}
-                    <div className="col-span-12 mt-6 lg:col-span-7 lg:mt-0">
-                      <KeffiStackFigure id={group.id} />
-                    </div>
-                  </div>
-                </ScrollStackItem>
-              );
-            })}
-          </ScrollStack>
-        </div>
+        </FadeContent>
       </section>
 
       {/* =====================================================================
@@ -1002,257 +1068,258 @@ export function HomeClientSections({
          ===================================================================== */}
       <section
         id="certificates"
-        className="scroll-mt-24 relative overflow-hidden border-t border-white/10 bg-[#0c0d12] pt-16 pb-0 text-[#f5f5f2] md:pt-24"
+        style={{ scrollMarginTop: 0 }}
+        className="scroll-mt-0 min-h-screen relative overflow-hidden border-t border-white/10 bg-[#0c0d12] pt-16 pb-16 text-[#f5f5f2] md:pt-24 md:pb-24"
       >
         <FadeContent blur={6} duration={0.7} ease="power2.out" threshold={0.08} initialOpacity={0} once={true}>
           <div className="keffi-wrap">
-          <div className="sec-head sec-head--dark">
-            <div>
-              <div className="mb-7 flex flex-wrap items-center gap-4">
-                <span className="sec-kicker font-mono text-xs font-semibold tracking-wider !text-[#f5f5f2]/85">
+            <div className="sec-head sec-head--dark">
+              <div>
+                <div className="mb-7 flex flex-wrap items-center gap-4">
+                  <span className="sec-kicker font-mono text-xs font-semibold tracking-wider !text-[#f5f5f2]/85">
+                    {locale === "id"
+                      ? "BRANKAS PRESTASI & SERTIFIKASI KOMPETENSI RESMI"
+                      : "VERIFIED CREDENTIALS & AWARDS VAULT"}
+                  </span>
+                </div>
+                <h2 className="sec-title !text-[#f5f5f2]">
+                  <BlurText
+                    text={
+                      locale === "id"
+                        ? "Sertifikasi & Lisensi Resmi."
+                        : "Credentials & Proven Competencies."
+                    }
+                  />
+                </h2>
+              </div>
+              <div className="flex flex-col items-start gap-4 lg:items-end">
+                <p className="max-w-md text-sm leading-relaxed text-white/75">
                   {locale === "id"
-                    ? "BRANKAS PRESTASI & SERTIFIKASI KOMPETENSI RESMI"
-                    : "VERIFIED CREDENTIALS & AWARDS VAULT"}
-                </span>
-              </div>
-              <h2 className="sec-title !text-[#f5f5f2]">
-                <BlurText
-                  text={
-                    locale === "id"
-                      ? "Sertifikasi & Lisensi Resmi."
-                      : "Credentials & Proven Competencies."
-                  }
-                />
-              </h2>
-            </div>
-            <div className="flex flex-col items-start gap-4 lg:items-end">
-              <p className="max-w-md text-sm leading-relaxed text-white/75">
-                {locale === "id"
-                  ? "Koleksi lisensi kompetensi dan sertifikat penghargaan yang tersinkronisasi dari Supabase. Klik kartu sertifikat manapun untuk melihat detail resmi."
-                  : "Verified credentials and competition awards synced dynamically from Supabase. Click any certificate tile to inspect official details."}
-              </p>
-              <div className="flex flex-wrap items-center gap-3">
-                <span className="rounded-full border border-white/15 bg-white/8 px-3.5 py-1.5 font-mono text-xs font-semibold text-white/90">
-                  {dynamicCertificates.filter((c) => c.isVisible !== false).length}{" "}
-                  {locale === "id" ? "Sertifikat Terverifikasi" : "Verified Credentials"}
-                </span>
-                <Link
-                  href="/certificates"
-                  className="inline-flex min-h-[36px] items-center gap-1.5 rounded-full bg-[#f5f5f2] px-4 py-1.5 font-sans text-xs font-semibold text-[#111213] transition hover:-translate-y-0.5 hover:bg-white"
-                >
-                  <span>{locale === "id" ? "Buka Brankas Lengkap" : "Open Full Vault"}</span>
-                  <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
-                </Link>
+                    ? "Koleksi lisensi kompetensi dan sertifikat penghargaan yang tersinkronisasi dari Supabase. Klik kartu sertifikat manapun untuk melihat detail resmi."
+                    : "Verified credentials and competition awards synced dynamically from Supabase. Click any certificate tile to inspect official details."}
+                </p>
+                <div className="flex flex-wrap items-center gap-3">
+                  <span className="rounded-full border border-white/15 bg-white/8 px-3.5 py-1.5 font-mono text-xs font-semibold text-white/90">
+                    {dynamicCertificates.filter((c) => c.isVisible !== false).length}{" "}
+                    {locale === "id" ? "Sertifikat Terverifikasi" : "Verified Credentials"}
+                  </span>
+                  <Link
+                    href="/certificates"
+                    className="inline-flex min-h-[36px] items-center gap-1.5 rounded-full bg-[#f5f5f2] px-4 py-1.5 font-sans text-xs font-semibold text-[#111213] transition hover:-translate-y-0.5 hover:bg-white"
+                  >
+                    <span>{locale === "id" ? "Buka Brankas Lengkap" : "Open Full Vault"}</span>
+                    <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+                  </Link>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* =================================================================
+            {/* =================================================================
               CROWN JEWEL SPOTLIGHT: JUARA II NASIONAL OASE III PTKIN 2026
               (Kementerian Agama Republik Indonesia · Inovasi HajiCare)
              ================================================================= */}
-          {featuredOaseCert && (
-            <div className="relative mt-10 overflow-hidden rounded-[24px] border border-amber-300/35 bg-[#16171d] p-6 transition-all duration-300 hover:border-amber-300/60 sm:p-8 md:rounded-[28px] md:p-10">
-              <div className="relative z-10 grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-10">
-                {/* Left Column: Prestigious Copy & Metadata */}
-                <div className="flex flex-col justify-between space-y-5 lg:col-span-7">
-                  <div>
-                    {/* Crown Kicker Badge */}
-                    <div className="flex flex-wrap items-center gap-2.5">
-                      <span className="inline-flex items-center gap-2 rounded-full border border-amber-300/40 bg-amber-400/12 px-3.5 py-1 font-mono text-[11px] font-semibold text-amber-200">
-                        <Trophy className="h-3.5 w-3.5 text-amber-200" aria-hidden="true" />
-                        <span>
-                          {locale === "id"
-                            ? "PRESTASI UTAMA NASIONAL"
-                            : "NATIONAL CROWN ACHIEVEMENT"}
+            {featuredOaseCert && (
+              <div className="relative mt-10 overflow-hidden rounded-[24px] border border-amber-300/35 bg-[#16171d] p-6 transition-all duration-300 hover:border-amber-300/60 sm:p-8 md:rounded-[28px] md:p-10">
+                <div className="relative z-10 grid grid-cols-1 items-center gap-8 lg:grid-cols-12 lg:gap-10">
+                  {/* Left Column: Prestigious Copy & Metadata */}
+                  <div className="flex flex-col justify-between space-y-5 lg:col-span-7">
+                    <div>
+                      {/* Crown Kicker Badge */}
+                      <div className="flex flex-wrap items-center gap-2.5">
+                        <span className="inline-flex items-center gap-2 rounded-full border border-amber-300/40 bg-amber-400/12 px-3.5 py-1 font-mono text-[11px] font-semibold text-amber-200">
+                          <Trophy className="h-3.5 w-3.5 text-amber-200" aria-hidden="true" />
+                          <span>
+                            {locale === "id"
+                              ? "PRESTASI UTAMA NASIONAL"
+                              : "NATIONAL CROWN ACHIEVEMENT"}
+                          </span>
                         </span>
-                      </span>
-                      <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-[11px] text-white/75">
-                        KEMENAG RI · DIKTIS
-                      </span>
+                        <span className="rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-[11px] text-white/75">
+                          KEMENAG RI · DIKTIS
+                        </span>
+                      </div>
+
+                      {/* Main Title */}
+                      <h3 className="mt-4 text-2xl font-semibold tracking-tight text-white sm:text-3xl md:text-4xl leading-tight">
+                        {locale === "id" ? (
+                          <>
+                            Juara II Literasi Inovasi{" "}
+                            <span className="text-amber-200">Teknologi</span>
+                          </>
+                        ) : (
+                          <>
+                            National 2nd Place: Tech Innovation{" "}
+                            <span className="text-amber-200">Literacy</span>
+                          </>
+                        )}
+                      </h3>
+
+                      {/* Subtitle / Competition Venue */}
+                      <p className="mt-2 text-sm sm:text-base font-medium text-amber-200/90">
+                        OASE III PTKIN se-Indonesia · UIN Sunan Kalijaga Yogyakarta (3 s.d. 7 November 2026)
+                      </p>
+
+                      {/* Context & Description */}
+                      <p className="mt-3 text-sm leading-relaxed text-white/80 sm:text-base">
+                        {locale === "id"
+                          ? "Mewakili UIN Sultan Maulana Hasanuddin Banten di tingkat nasional lewat sistem kecerdasan buatan Smart Hajj (HajiCare), menggunakan pelacakan sendi tangan Computer Vision 60fps untuk membantu jamaah haji lansia dan disabilitas rungu."
+                          : "Representing UIN Sultan Maulana Hasanuddin Banten at the national finals with Smart Hajj (HajiCare), a mobile Computer Vision system running 60fps hand landmark tracking for deaf and elderly pilgrims."}
+                      </p>
+
+                      {/* Official Verification Pills */}
+                      <div className="mt-5 flex flex-wrap items-center gap-3 font-mono text-xs text-white/80">
+                        <div className="inline-flex items-center gap-1.5 rounded-lg border border-white/12 bg-black/35 px-3 py-1.5">
+                          <ShieldCheck className="h-4 w-4 text-emerald-300" aria-hidden="true" />
+                          <span>No. SK: 712/Dt.I.III/PP.01/11/2026</span>
+                        </div>
+                        <div className="inline-flex items-center gap-1.5 rounded-lg border border-white/12 bg-black/35 px-3 py-1.5">
+                          <CheckCircle2 className="h-4 w-4 text-amber-200" aria-hidden="true" />
+                          <span>Tercatat Resmi Kemenag RI</span>
+                        </div>
+                      </div>
                     </div>
 
-                    {/* Main Title */}
-                    <h3 className="mt-4 text-2xl font-semibold tracking-tight text-white sm:text-3xl md:text-4xl leading-tight">
-                      {locale === "id" ? (
-                        <>
-                          Juara II Literasi Inovasi{" "}
-                          <span className="text-amber-200">Teknologi</span>
-                        </>
-                      ) : (
-                        <>
-                          National 2nd Place: Tech Innovation{" "}
-                          <span className="text-amber-200">Literacy</span>
-                        </>
+                    {/* Clean Action Buttons */}
+                    <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-white/10">
+                      <a
+                        href={featuredOaseCert.fileUrl || "/sertif/oase-juara-2-lit.pdf"}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex min-h-[40px] items-center gap-2 rounded-full bg-[#f5f5f2] px-5 py-2 font-sans text-xs font-semibold text-[#111213] transition hover:-translate-y-0.5 hover:bg-white"
+                      >
+                        <FileText className="h-4 w-4" aria-hidden="true" />
+                        <span>{locale === "id" ? "Buka Berkas PDF Resmi" : "Open Official PDF"}</span>
+                        <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+                      </a>
+
+                      <button
+                        type="button"
+                        onClick={() => {
+                          playMechanicalClick(750);
+                          setSelectedCertModal(featuredOaseCert);
+                        }}
+                        className="inline-flex min-h-[40px] items-center gap-2 rounded-full border border-white/25 bg-white/5 px-5 py-2 font-mono text-xs font-semibold text-white transition hover:-translate-y-0.5 hover:border-white/50 hover:bg-white/10"
+                      >
+                        <Eye className="h-4 w-4" aria-hidden="true" />
+                        <span>{locale === "id" ? "Perbesar Sertifikat" : "Inspect Certificate"}</span>
+                      </button>
+
+                      {hajicareProject && (
+                        <Link
+                          href={`/projects/${hajicareProject.slug}`}
+                          onClick={() => playMechanicalClick(720)}
+                          className="inline-flex min-h-[40px] items-center gap-1.5 px-3 py-2 font-mono text-xs font-medium text-white/80 transition hover:-translate-y-0.5 hover:text-white"
+                        >
+                          <span>{locale === "id" ? "Studi Kasus HajiCare" : "HajiCare Case Study"}</span>
+                          <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
+                        </Link>
                       )}
-                    </h3>
-
-                    {/* Subtitle / Competition Venue */}
-                    <p className="mt-2 text-sm sm:text-base font-medium text-amber-200/90">
-                      OASE III PTKIN se-Indonesia · UIN Sunan Kalijaga Yogyakarta (3 s.d. 7 November 2026)
-                    </p>
-
-                    {/* Context & Description */}
-                    <p className="mt-3 text-sm leading-relaxed text-white/80 sm:text-base">
-                      {locale === "id"
-                        ? "Mewakili UIN Sultan Maulana Hasanuddin Banten di tingkat nasional lewat sistem kecerdasan buatan Smart Hajj (HajiCare), menggunakan pelacakan sendi tangan Computer Vision 60fps untuk membantu jamaah haji lansia dan disabilitas rungu."
-                        : "Representing UIN Sultan Maulana Hasanuddin Banten at the national finals with Smart Hajj (HajiCare), a mobile Computer Vision system running 60fps hand landmark tracking for deaf and elderly pilgrims."}
-                    </p>
-
-                    {/* Official Verification Pills */}
-                    <div className="mt-5 flex flex-wrap items-center gap-3 font-mono text-xs text-white/80">
-                      <div className="inline-flex items-center gap-1.5 rounded-lg border border-white/12 bg-black/35 px-3 py-1.5">
-                        <ShieldCheck className="h-4 w-4 text-emerald-300" aria-hidden="true" />
-                        <span>No. SK: 712/Dt.I.III/PP.01/11/2026</span>
-                      </div>
-                      <div className="inline-flex items-center gap-1.5 rounded-lg border border-white/12 bg-black/35 px-3 py-1.5">
-                        <CheckCircle2 className="h-4 w-4 text-amber-200" aria-hidden="true" />
-                        <span>Tercatat Resmi Kemenag RI</span>
-                      </div>
                     </div>
                   </div>
 
-                  {/* Clean Action Buttons */}
-                  <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-white/10">
-                    <a
-                      href={featuredOaseCert.fileUrl || "/sertif/oase-juara-2-lit.pdf"}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex min-h-[40px] items-center gap-2 rounded-full bg-[#f5f5f2] px-5 py-2 font-sans text-xs font-semibold text-[#111213] transition hover:-translate-y-0.5 hover:bg-white"
-                    >
-                      <FileText className="h-4 w-4" aria-hidden="true" />
-                      <span>{locale === "id" ? "Buka Berkas PDF Resmi" : "Open Official PDF"}</span>
-                      <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
-                    </a>
-
-                    <button
-                      type="button"
+                  {/* Right Column: Interactive Certificate Frame */}
+                  <div className="lg:col-span-5">
+                    <div
                       onClick={() => {
-                        playMechanicalClick(750);
+                        playMechanicalClick(780);
                         setSelectedCertModal(featuredOaseCert);
                       }}
-                      className="inline-flex min-h-[40px] items-center gap-2 rounded-full border border-white/25 bg-white/5 px-5 py-2 font-mono text-xs font-semibold text-white transition hover:-translate-y-0.5 hover:border-white/50 hover:bg-white/10"
+                      className="group relative cursor-pointer overflow-hidden rounded-2xl border border-white/15 bg-[#0d0f14] transition-all duration-300 hover:border-amber-300/60"
                     >
-                      <Eye className="h-4 w-4" aria-hidden="true" />
-                      <span>{locale === "id" ? "Perbesar Sertifikat" : "Inspect Certificate"}</span>
-                    </button>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={featuredOaseCert.imageUrl}
+                        alt={featuredOaseCert.title}
+                        width={800}
+                        height={600}
+                        className="w-full object-contain transition-transform duration-500 group-hover:scale-[1.03]"
+                        loading="lazy"
+                      />
 
-                    {hajicareProject && (
-                      <Link
-                        href={`/projects/${hajicareProject.slug}`}
-                        onClick={() => playMechanicalClick(720)}
-                        className="inline-flex min-h-[40px] items-center gap-1.5 px-3 py-2 font-mono text-xs font-medium text-white/80 transition hover:-translate-y-0.5 hover:text-white"
-                      >
-                        <span>{locale === "id" ? "Studi Kasus HajiCare" : "HajiCare Case Study"}</span>
-                        <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
-                      </Link>
-                    )}
-                  </div>
-                </div>
+                      {/* Seal Badge */}
+                      <div className="absolute top-3 right-3 flex items-center gap-1.5 rounded-full border border-amber-300/40 bg-black/85 px-3 py-1 font-mono text-[10px] font-bold text-amber-200 backdrop-blur-md">
+                        <Star className="h-3 w-3 fill-amber-200 text-amber-200" aria-hidden="true" />
+                        <span>JUARA II NASIONAL</span>
+                      </div>
 
-                {/* Right Column: Interactive Certificate Frame */}
-                <div className="lg:col-span-5">
-                  <div
-                    onClick={() => {
-                      playMechanicalClick(780);
-                      setSelectedCertModal(featuredOaseCert);
-                    }}
-                    className="group relative cursor-pointer overflow-hidden rounded-2xl border border-white/15 bg-[#0d0f14] transition-all duration-300 hover:border-amber-300/60"
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={featuredOaseCert.imageUrl}
-                      alt={featuredOaseCert.title}
-                      width={800}
-                      height={600}
-                      className="w-full object-contain transition-transform duration-500 group-hover:scale-[1.03]"
-                      loading="lazy"
-                    />
-
-                    {/* Seal Badge */}
-                    <div className="absolute top-3 right-3 flex items-center gap-1.5 rounded-full border border-amber-300/40 bg-black/85 px-3 py-1 font-mono text-[10px] font-bold text-amber-200 backdrop-blur-md">
-                      <Star className="h-3 w-3 fill-amber-200 text-amber-200" aria-hidden="true" />
-                      <span>JUARA II NASIONAL</span>
+                      {/* Hover Overlay with Inspect prompt */}
+                      <div className="absolute inset-0 flex flex-col items-center justify-end bg-gradient-to-t from-black/85 via-black/15 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-[#f5f5f2] px-4 py-1.5 font-mono text-xs font-semibold text-[#111213] shadow-md">
+                          <Eye className="h-3.5 w-3.5" aria-hidden="true" />
+                          <span>{locale === "id" ? "Klik untuk Memperbesar" : "Click to inspect"}</span>
+                        </span>
+                      </div>
                     </div>
-
-                    {/* Hover Overlay with Inspect prompt */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-end bg-gradient-to-t from-black/85 via-black/15 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                      <span className="inline-flex items-center gap-1.5 rounded-full bg-[#f5f5f2] px-4 py-1.5 font-mono text-xs font-semibold text-[#111213] shadow-md">
-                        <Eye className="h-3.5 w-3.5" aria-hidden="true" />
-                        <span>{locale === "id" ? "Klik untuk Memperbesar" : "Click to inspect"}</span>
-                      </span>
-                    </div>
+                    <p className="mt-2.5 text-center font-mono text-[11px] text-white/60">
+                      {locale === "id"
+                        ? "Dokumen resmi terverifikasi · Kementerian Agama RI"
+                        : "Official verified document · Ministry of Religious Affairs"}
+                    </p>
                   </div>
-                  <p className="mt-2.5 text-center font-mono text-[11px] text-white/60">
-                    {locale === "id"
-                      ? "Dokumen resmi terverifikasi · Kementerian Agama RI"
-                      : "Official verified document · Ministry of Religious Affairs"}
-                  </p>
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {/* Section Transition Header for 3D Drift Wall */}
-          <div className="mt-12 flex flex-col items-start justify-between gap-3 border-t border-white/10 pt-8 sm:flex-row sm:items-center">
-            <div>
-              <span className="sec-kicker !text-white/70">
-                <span>
-                  {locale === "id"
-                    ? "DINDING 3D LISENSI & SERTIFIKASI KOMPETENSI"
-                    : "3D DRIFT WALL · TECHNICAL CREDENTIALS & LICENSES"}
+            {/* Section Transition Header for 3D Drift Wall */}
+            <div className="mt-12 flex flex-col items-start justify-between gap-3 border-t border-white/10 pt-8 sm:flex-row sm:items-center">
+              <div>
+                <span className="sec-kicker !text-white/70">
+                  <span>
+                    {locale === "id"
+                      ? "DINDING 3D LISENSI & SERTIFIKASI KOMPETENSI"
+                      : "3D DRIFT WALL · TECHNICAL CREDENTIALS & LICENSES"}
+                  </span>
                 </span>
-              </span>
-              <p className="mt-1.5 text-xs text-white/75 max-w-xl">
-                {locale === "id"
-                  ? "Sertifikasi resmi Cisco IOS, MikroTik MTCNA, Keamanan Siber, Administrasi Linux, dan Kompetisi Web UMKM."
-                  : "Verified certifications spanning Cisco IOS, MikroTik MTCNA, Cybersecurity, Linux Administration, and UMKM Web Competition."}
-              </p>
+                <p className="mt-1.5 text-xs text-white/75 max-w-xl">
+                  {locale === "id"
+                    ? "Sertifikasi resmi Cisco IOS, MikroTik MTCNA, Keamanan Siber, Administrasi Linux, dan Kompetisi Web UMKM."
+                    : "Verified certifications spanning Cisco IOS, MikroTik MTCNA, Cybersecurity, Linux Administration, and UMKM Web Competition."}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
         </FadeContent>
 
         {/* 3D PERSPECTIVE DRIFT WALL - SEAMLESS, CENTERED, WITH SMOOTH EDGE FADES */}
         <FadeContent blur={false} duration={0.7} ease="power2.out" threshold={0.08} initialOpacity={0} once={true}>
-        <div className="relative isolate mt-6 h-[400px] w-full overflow-hidden sm:mt-8 sm:h-[480px] md:h-[580px]">
-          {/* Top Fade Gradient Shadow - Smooth Seamless Blend */}
-          <div
-            className="pointer-events-none absolute inset-x-0 -top-px z-20 h-20 sm:h-24"
-            style={{
-              background:
-                "linear-gradient(to bottom, #0c0d12 0%, rgba(12, 13, 18, 0.72) 48%, rgba(12, 13, 18, 0) 100%)",
-            }}
-          />
+          <div className="relative isolate mt-6 h-[400px] w-full overflow-hidden sm:mt-8 sm:h-[480px] md:h-[580px]">
+            {/* Top Fade Gradient Shadow - Smooth Seamless Blend */}
+            <div
+              className="pointer-events-none absolute inset-x-0 -top-px z-20 h-20 sm:h-24"
+              style={{
+                background:
+                  "linear-gradient(to bottom, #0c0d12 0%, rgba(12, 13, 18, 0.72) 48%, rgba(12, 13, 18, 0) 100%)",
+              }}
+            />
 
-          {/* 3D Drift Wall Component with responsive columns and balanced centering */}
-          <DriftWall
-            className="isolate"
-            items={driftWallItems}
-            columns={driftWallConfig.columns}
-            tileWidth={driftWallConfig.tileWidth}
-            tileHeight={driftWallConfig.tileHeight}
-            gap={driftWallConfig.gap}
-            radius={16}
-            tilt={12}
-            turn={-7}
-            perspective={1250}
-            depth={90}
-            speed={28}
-            fade={0}
-            pauseOnHover={true}
-            onTileClick={handleDriftTileClick}
-          />
+            {/* 3D Drift Wall Component with responsive columns and balanced centering */}
+            <DriftWall
+              className="isolate"
+              items={driftWallItems}
+              columns={driftWallConfig.columns}
+              tileWidth={driftWallConfig.tileWidth}
+              tileHeight={driftWallConfig.tileHeight}
+              gap={driftWallConfig.gap}
+              radius={16}
+              tilt={12}
+              turn={-7}
+              perspective={1250}
+              depth={90}
+              speed={28}
+              fade={0}
+              pauseOnHover={true}
+              onTileClick={handleDriftTileClick}
+            />
 
-          {/* Bottom Inner Gradient Shadow - Seamless Flush Dissolve into Section Bottom */}
-          <div
-            className="pointer-events-none absolute inset-x-0 -bottom-px z-20 h-28 sm:h-32"
-            style={{
-              background:
-                "linear-gradient(to top, #0c0d12 0%, #0c0d12 18%, rgba(12, 13, 18, 0.78) 54%, rgba(12, 13, 18, 0) 100%)",
-            }}
-          />
-        </div>
+            {/* Bottom Inner Gradient Shadow - Seamless Flush Dissolve into Section Bottom */}
+            <div
+              className="pointer-events-none absolute inset-x-0 -bottom-px z-20 h-28 sm:h-32"
+              style={{
+                background:
+                  "linear-gradient(to top, #0c0d12 0%, #0c0d12 18%, rgba(12, 13, 18, 0.78) 54%, rgba(12, 13, 18, 0) 100%)",
+              }}
+            />
+          </div>
         </FadeContent>
       </section>
 
@@ -1262,626 +1329,630 @@ export function HomeClientSections({
          ===================================================================== */}
       <section
         id="coursework"
-        className="scroll-mt-24 relative overflow-hidden bg-white pt-14 md:pt-24 dark:bg-[#0a0a0c]"
+        style={{ scrollMarginTop: 0 }}
+        className="scroll-mt-0 min-h-screen relative overflow-hidden bg-white pt-16 pb-16 md:pt-24 md:pb-24 dark:bg-[#0a0a0c]"
       >
         <FadeContent blur={6} duration={0.7} ease="power2.out" threshold={0.08} initialOpacity={0} once={true}>
-        <div className="keffi-wrap">
-          <div className="sec-head">
-            <div>
-              <div className="mb-7 flex flex-wrap items-center gap-4">
-                <span className="sec-kicker font-mono text-xs font-semibold tracking-wider text-[var(--ink)]">
-                  {locale === "id"
-                    ? "PORTAL AKADEMIK KEWIRAUSAHAAN · KELOMPOK K-1"
-                    : "ENTREPRENEURSHIP ACADEMIC PORTAL · GROUP K-1"}
-                </span>
+          <div className="keffi-wrap">
+            <div className="sec-head">
+              <div>
+                <div className="mb-7 flex flex-wrap items-center gap-4">
+                  <span className="sec-kicker font-mono text-xs font-semibold tracking-wider text-[var(--ink)]">
+                    {locale === "id"
+                      ? "PORTAL AKADEMIK KEWIRAUSAHAAN · KELOMPOK K-1"
+                      : "ENTREPRENEURSHIP ACADEMIC PORTAL · GROUP K-1"}
+                  </span>
+                </div>
+                <h2 className="sec-title text-[var(--ink)] dark:text-[#f5f5f2]">
+                  <BlurText
+                    text={
+                      locale === "id"
+                        ? "Kewirausahaan & Ekosistem K-1."
+                        : "Coursework & K-1 Ecosystem."
+                    }
+                  />
+                </h2>
               </div>
-              <h2 className="sec-title text-[var(--ink)] dark:text-[#f5f5f2]">
-                <BlurText
-                  text={
-                    locale === "id"
-                      ? "Kewirausahaan & Ekosistem K-1."
-                      : "Coursework & K-1 Ecosystem."
-                  }
-                />
-              </h2>
-            </div>
 
-            {/* Studio Keffi Pill Switcher for Academic & Telemetry Sub-Views */}
-            <div
-              className="flex max-w-full overflow-x-auto gap-2 rounded-2xl md:rounded-full bg-[var(--bone)] p-1.5 no-scrollbar scroll-smooth"
-              role="tablist"
-              aria-label="Academic and telemetry tabs"
-            >
-              {[
-                {
-                  id: "pertemuan" as const,
-                  label:
-                    locale === "id"
-                      ? `Pertemuan & Tugas (${courseworkSessions.length})`
-                      : `Sessions & Tasks (${courseworkSessions.length})`,
-                  icon: ClipboardCheck,
-                },
-                {
-                  id: "kelompok-k1" as const,
-                  label:
-                    locale === "id"
-                      ? "Anggota Kelompok K-1 (5)"
-                      : "Group K-1 Members (5)",
-                  icon: Users,
-                },
-                {
-                  id: "swot" as const,
-                  label:
-                    locale === "id"
-                      ? "Evaluasi SWOT (20 Poin)"
-                      : "SWOT Matrix (20 Pts)",
-                  icon: Layers,
-                },
-                {
-                  id: "github" as const,
-                  label: "GitHub Live (@fadli154)",
-                  icon: FolderGit2,
-                },
-              ].map((tab) => {
-                const Icon = tab.icon;
-                const active = activeHubTab === tab.id;
-                return (
-                  <button
-                    key={tab.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={active}
-                    onClick={() => {
-                      playMechanicalClick(680);
-                      setActiveHubTab(tab.id);
-                    }}
-                    className={`inline-flex shrink-0 items-center gap-2 rounded-xl md:rounded-full px-4 py-2.5 text-xs font-medium whitespace-nowrap transition-all ${active
-                      ? "bg-[var(--ink)] text-[var(--cream)] shadow-sm"
-                      : "text-[var(--ink)] hover:bg-black/5"
-                      }`}
-                  >
-                    <Icon className="h-3.5 w-3.5" />
-                    <span>{tab.label}</span>
-                  </button>
-                );
-              })}
+              {/* Studio Keffi Pill Switcher for Academic & Telemetry Sub-Views */}
+              <div
+                className="flex max-w-full overflow-x-auto gap-2 rounded-2xl md:rounded-full bg-[var(--bone)] p-1.5 no-scrollbar scroll-smooth"
+                role="tablist"
+                aria-label="Academic and telemetry tabs"
+              >
+                {[
+                  {
+                    id: "pertemuan" as const,
+                    label:
+                      locale === "id"
+                        ? `Pertemuan & Tugas (${courseworkSessions.length})`
+                        : `Sessions & Tasks (${courseworkSessions.length})`,
+                    icon: ClipboardCheck,
+                  },
+                  {
+                    id: "kelompok-k1" as const,
+                    label:
+                      locale === "id"
+                        ? "Anggota Kelompok K-1 (5)"
+                        : "Group K-1 Members (5)",
+                    icon: Users,
+                  },
+                  {
+                    id: "swot" as const,
+                    label:
+                      locale === "id"
+                        ? "Evaluasi SWOT (20 Poin)"
+                        : "SWOT Matrix (20 Pts)",
+                    icon: Layers,
+                  },
+                  {
+                    id: "github" as const,
+                    label: "GitHub Live (@fadli154)",
+                    icon: FolderGit2,
+                  },
+                ].map((tab) => {
+                  const Icon = tab.icon;
+                  const active = activeHubTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={active}
+                      onClick={() => {
+                        playMechanicalClick(680);
+                        setActiveHubTab(tab.id);
+                      }}
+                      className={`inline-flex shrink-0 items-center gap-2 rounded-xl md:rounded-full px-4 py-2.5 text-xs font-medium whitespace-nowrap transition-all ${active
+                        ? "bg-[var(--ink)] text-[var(--cream)] shadow-sm"
+                        : "text-[var(--ink)] hover:bg-black/5"
+                        }`}
+                    >
+                      <Icon className="h-3.5 w-3.5" />
+                      <span>{tab.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </div>
-        </div>
         </FadeContent>
 
         <FadeContent blur={false} duration={0.7} ease="power2.out" threshold={0.08} initialOpacity={0} once={true}>
-        {/* TAB 1: DYNAMIC PERTEMUAN, ABSEN, BUKTI KEHADIRAN & TUGAS */}
-        {activeHubTab === "pertemuan" && (
-          <div className="mt-8">
-            {/* Clean Editorial Sub-Header (No Card, Seamless Section Integration) */}
-            <div className="keffi-wrap">
-              <div className="flex flex-wrap items-end justify-between gap-6 border-b border-[var(--line)] pb-6 dark:border-white/10">
-                <div>
-                  <span className="inline-block rounded-full bg-[#c4e22e] px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-[#111213]">
-                    MATA KULIAH KEWIRAUSAHAAN · LOG ABSENSI &amp; TUGAS TERINTEGRASI SUPABASE
-                  </span>
-                  <p className="mt-1.5 max-w-2xl text-sm text-[var(--mute)] dark:text-gray-400">
-                    {locale === "id"
-                      ? "Setiap pertemuan mencatat status kehadiran, foto bukti hadir, serta rincian tugas mingguan yang dikelola langsung melalui CMS Admin."
-                      : "Each session logs attendance status, attendance proof photo, and weekly task deliverables managed dynamically via the Admin CMS."}
-                  </p>
-                </div>
-                <div className="flex flex-wrap items-center gap-3 font-mono text-xs">
-                  <span className="rounded-full border border-[var(--line)] bg-[var(--bone)] px-3.5 py-1.5 font-semibold text-[var(--ink)] dark:border-white/15 dark:bg-white/10 dark:text-white">
-                    {
-                      courseworkSessions.filter(
-                        (s) => (s.attendanceStatus || "Hadir") === "Hadir"
-                      ).length
-                    }{" "}
-                    / {courseworkSessions.length} Hadir
-                  </span>
-                  <span className="rounded-full border border-[var(--line)] bg-white px-3.5 py-1.5 font-semibold text-[var(--ink)] dark:border-white/15 dark:bg-white/5 dark:text-white">
-                    {
-                      courseworkSessions.filter(
-                        (s) => (s.taskStatus || "Selesai") === "Selesai"
-                      ).length
-                    }{" "}
-                    Tugas Selesai
-                  </span>
-
-                  {/* View Mode Switcher Pill */}
-                  <div className="inline-flex items-center rounded-full border border-[var(--line)] bg-[#f5f5f2] p-1 dark:border-white/15 dark:bg-black/40">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        playMechanicalClick(560);
-                        setPertemuanViewMode("carousel");
-                      }}
-                      className={`min-h-[32px] rounded-full px-3.5 py-1 font-mono text-[11px] font-semibold transition-all ${pertemuanViewMode === "carousel"
-                        ? "bg-white text-[var(--ink)] shadow-xs dark:bg-[#1a1b1e] dark:text-white"
-                        : "text-[var(--mute)] hover:text-[var(--ink)] dark:text-gray-400 dark:hover:text-white"
-                        }`}
-                    >
-                      Flex Carousel
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        playMechanicalClick(580);
-                        setPertemuanViewMode("grid");
-                      }}
-                      className={`min-h-[32px] rounded-full px-3.5 py-1 font-mono text-[11px] font-semibold transition-all ${pertemuanViewMode === "grid"
-                        ? "bg-white text-[var(--ink)] shadow-xs dark:bg-[#1a1b1e] dark:text-white"
-                        : "text-[var(--mute)] hover:text-[var(--ink)] dark:text-gray-400 dark:hover:text-white"
-                        }`}
-                    >
-                      Grid
-                    </button>
+          {/* TAB 1: DYNAMIC PERTEMUAN, ABSEN, BUKTI KEHADIRAN & TUGAS */}
+          {activeHubTab === "pertemuan" && (
+            <div className="mt-8">
+              {/* Clean Editorial Sub-Header (No Card, Seamless Section Integration) */}
+              <div className="keffi-wrap">
+                <div className="flex flex-wrap items-end justify-between gap-6 border-b border-[var(--line)] pb-6 dark:border-white/10">
+                  <div>
+                    <span className="inline-block rounded-full bg-[#c4e22e] px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-[#111213]">
+                      MATA KULIAH KEWIRAUSAHAAN · LOG ABSENSI &amp; TUGAS TERINTEGRASI SUPABASE
+                    </span>
+                    <p className="mt-1.5 max-w-2xl text-sm text-[var(--mute)] dark:text-gray-400">
+                      {locale === "id"
+                        ? "Setiap pertemuan mencatat status kehadiran, foto bukti hadir, serta rincian tugas mingguan yang dikelola langsung melalui CMS Admin."
+                        : "Each session logs attendance status, attendance proof photo, and weekly task deliverables managed dynamically via the Admin CMS."}
+                    </p>
                   </div>
-                </div>
-              </div>
-            </div>
+                  <div className="flex flex-wrap items-center gap-3 font-mono text-xs">
+                    <span className="rounded-full border border-[var(--line)] bg-[var(--bone)] px-3.5 py-1.5 font-semibold text-[var(--ink)] dark:border-white/15 dark:bg-white/10 dark:text-white">
+                      {
+                        courseworkSessions.filter(
+                          (s) => (s.attendanceStatus || "Hadir") === "Hadir"
+                        ).length
+                      }{" "}
+                      / {courseworkSessions.length} Hadir
+                    </span>
+                    <span className="rounded-full border border-[var(--line)] bg-white px-3.5 py-1.5 font-semibold text-[var(--ink)] dark:border-white/15 dark:bg-white/5 dark:text-white">
+                      {
+                        courseworkSessions.filter(
+                          (s) => (s.taskStatus || "Selesai") === "Selesai"
+                        ).length
+                      }{" "}
+                      Tugas Selesai
+                    </span>
 
-            {pertemuanViewMode === "carousel" ? (
-              <div className="relative h-[460px] w-full overflow-hidden text-[var(--ink)] sm:h-[520px] md:h-[580px]">
-                <FlexCarousel
-                  items={courseworkFlexItems}
-                  preset="liquid"
-                  intro="rise"
-                  cardHeight={0.48}
-                  gap={14}
-                  radius={14}
-                  fit="natural"
-                  focusOnClick={false}
-                  captions={true}
-                  captureWheel={false}
-                  autoplay={true}
-                  onSelect={handleFlexSelect}
-                  className="h-full w-full"
-                />
-              </div>
-            ) : (
-              <div className="keffi-wrap mt-10">
-                <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {courseworkSessions.map((session) => {
-                    const status = session.attendanceStatus || "Hadir";
-                    const taskStatus = session.taskStatus || "Selesai";
-                    const statusColor =
-                      status === "Hadir"
-                        ? "bg-emerald-500/15 text-emerald-800 border-emerald-500/30"
-                        : status === "Izin" || status === "Sakit"
-                          ? "bg-amber-500/15 text-amber-800 border-amber-500/30"
-                          : "bg-zinc-500/15 text-zinc-700 border-zinc-400/30";
-
-                    return (
-                      <TiltedCard
-                        key={session.number}
-                        maxTilt={4.5}
-                        cursorLabel="DETAIL"
-                        className="h-full rounded-[26px]"
-                      >
-                        <SpotlightCard
-                          spotlightColor="rgba(196, 226, 46, 0.2)"
-                          onClick={() => setSelectedSessionModal(session)}
-                          className="flex h-full cursor-pointer flex-col justify-between rounded-[26px] border border-[var(--line)] bg-white p-6 shadow-sm"
-                        >
-                          <div>
-                            {/* Header Row: Pertemuan Badge + Attendance Status */}
-                            <div className="flex items-center justify-between gap-2">
-                              <span className="rounded-full bg-[var(--ink)] px-3 py-1 font-mono text-[11px] font-semibold text-[var(--cream)]">
-                                {session.code}
-                              </span>
-                              <span
-                                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-mono text-[11px] font-semibold ${statusColor}`}
-                              >
-                                <CheckCircle2 className="h-3 w-3" />
-                                <span>Absen: {status}</span>
-                              </span>
-                            </div>
-
-                            <h3 className="mt-4 text-xl font-medium tracking-tight text-[var(--ink)]">
-                              {locale === "id" ? session.titleId : session.titleEn}
-                            </h3>
-                            <p className="mt-2 text-xs leading-relaxed text-[var(--mute)]">
-                              {locale === "id" ? session.descId : session.descEn}
-                            </p>
-
-                            {/* Attendance Proof Preview Box */}
-                            <div className="mt-4 overflow-hidden rounded-2xl border border-[var(--line)] bg-[#f5f5f2]">
-                              {session.attendanceProofUrl ? (
-                                <div className="relative h-40 w-full">
-                                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                                  <img
-                                    src={session.attendanceProofUrl}
-                                    alt={`Bukti Kehadiran ${session.code}`}
-                                    className="h-full w-full object-cover"
-                                  />
-                                  <span className="absolute bottom-2 right-2 rounded-full bg-black/75 px-2.5 py-1 font-mono text-[10px] text-[#c4e22e]">
-                                    Bukti Terunggah ✓
-                                  </span>
-                                </div>
-                              ) : (
-                                <div className="flex h-28 flex-col items-center justify-center p-4 text-center">
-                                  <FileCheck2 className="h-5 w-5 text-[var(--violet)]" />
-                                  <span className="mt-1.5 font-mono text-[11px] font-medium text-[var(--ink)]">
-                                    {status === "Hadir"
-                                      ? "Kehadiran Tercatat di Sistem"
-                                      : `Status: ${status}`}
-                                  </span>
-                                  <span className="text-[11px] text-[var(--mute)]">
-                                    {session.sessionDate || "Semester Aktif · 2026"}
-                                  </span>
-                                </div>
-                              )}
-                            </div>
-
-                            {/* Task / Tugas Section inside Card */}
-                            <div className="mt-4 rounded-2xl border border-[var(--line)] bg-[#f5f5f2]/70 p-4">
-                              <div className="flex items-center justify-between gap-2">
-                                <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--violet)]">
-                                  TUGAS PERTEMUAN {session.number}
-                                </span>
-                                <span className="rounded-full bg-[#c4e22e] px-2.5 py-0.5 font-mono text-[10px] font-bold text-[#111213]">
-                                  {taskStatus}
-                                </span>
-                              </div>
-                              <div className="mt-1.5 text-sm font-semibold text-[var(--ink)]">
-                                {session.taskTitle ||
-                                  (locale === "id"
-                                    ? "Dokumentasi & Evaluasi Mingguan"
-                                    : "Weekly Coursework Deliverable")}
-                              </div>
-                              {session.taskDescription && (
-                                <p className="mt-1 line-clamp-2 text-xs text-[var(--mute)]">
-                                  {session.taskDescription}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-
-                          <div className="mt-5 flex items-center justify-between border-t border-[var(--line)] pt-4 font-mono text-xs">
-                            <span className="inline-flex items-center gap-1.5 font-medium text-[var(--ink)]">
-                              <Eye className="h-3.5 w-3.5 text-[var(--violet)]" />
-                              <span>
-                                {locale === "id"
-                                  ? "Lihat Bukti & Tugas"
-                                  : "Inspect Proof & Task"}
-                              </span>
-                            </span>
-                            {session.taskUrl && (
-                              <a
-                                href={session.taskUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                onClick={(e) => e.stopPropagation()}
-                                className="inline-flex items-center gap-1 font-semibold text-[var(--violet)] hover:underline"
-                              >
-                                <span>Link Tugas</span>
-                                <ArrowUpRight className="h-3.5 w-3.5" />
-                              </a>
-                            )}
-                          </div>
-                        </SpotlightCard>
-                      </TiltedCard>
-                    );
-                  })}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* TAB 2: DIREKTORI 5 ANGGOTA KELOMPOK K-1 INFORMATIKA */}
-        {activeHubTab === "kelompok-k1" && (
-          <div className="keffi-wrap mt-12 space-y-8">
-            <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl bg-[#111213] p-7 text-[#f5f5f2]">
-              <div>
-                <span className="font-mono text-xs uppercase tracking-widest text-[#c4e22e]">
-                  DIREKTORI KOLABORASI · KELOMPOK K-1 INFORMATIKA
-                </span>
-                <h3 className="mt-2 text-2xl font-medium">
-                  5 Anggota Tim &amp; Klasifikasi Profil SWOT
-                </h3>
-              </div>
-              <a
-                href={profile.socials.kelompokK1}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="keffi-pill-btn keffi-pill-btn--lime !py-2.5 !px-5"
-              >
-                <span>Buka Web Utama Kelompok K-1</span>
-                <ArrowUpRight className="h-4 w-4" />
-              </a>
-            </div>
-
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {TEAM_K1_MEMBERS.map((member) => (
-                <TiltedCard
-                  key={member.number}
-                  maxTilt={5}
-                  cursorLabel="VISIT PORTO"
-                  className="rounded-[26px]"
-                >
-                  <SpotlightCard
-                    spotlightColor={
-                      member.isSelf
-                        ? "rgba(196, 226, 46, 0.25)"
-                        : "rgba(196, 226, 46, 0.18)"
-                    }
-                    className={`flex h-full flex-col justify-between rounded-[26px] border p-7 ${member.isSelf
-                      ? "border-[#111213] bg-[#c4e22e] text-[#111213]"
-                      : "border-[var(--line)] bg-white text-[var(--ink)]"
-                      }`}
-                  >
-                    <div>
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="font-mono text-xs font-bold opacity-70">
-                          ANGGOTA #{member.number}
-                        </span>
-                        <span
-                          className={`rounded-full px-3 py-1 font-mono text-[10px] font-bold uppercase ${member.isSelf
-                            ? "bg-[#111213] text-[#c4e22e]"
-                            : member.roleType === "entrepreneur"
-                              ? "bg-[var(--violet)]/12 text-[var(--violet)]"
-                              : "bg-emerald-500/15 text-emerald-800"
-                            }`}
-                        >
-                          {locale === "id"
-                            ? member.roleBadgeId
-                            : member.roleBadgeEn}
-                        </span>
-                      </div>
-
-                      <h4 className="mt-5 text-2xl font-medium tracking-tight">
-                        {member.name}
-                      </h4>
-                      <p className="mt-2 text-xs opacity-75">
-                        {member.roleType === "entrepreneur"
-                          ? "Profil SWOT: Wirausaha / Entrepreneur (3 Anggota K-1)"
-                          : "Profil SWOT: Intrapreneur / Pegawai Profesional (2 Anggota K-1)"}
-                      </p>
-                    </div>
-
-                    <div className="mt-8 pt-4 border-t border-current/10">
-                      <a
-                        href={member.portfolioUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`inline-flex w-full items-center justify-between rounded-full px-4 py-2.5 text-xs font-semibold transition ${member.isSelf
-                          ? "bg-[#111213] text-[#f5f5f2] hover:bg-[#c4e22e] hover:text-[#111213]"
-                          : "bg-[#f5f5f2] text-[var(--ink)] hover:bg-[var(--ink)] hover:text-[var(--cream)]"
+                    {/* View Mode Switcher Pill */}
+                    <div className="inline-flex items-center rounded-full border border-[var(--line)] bg-[#f5f5f2] p-1 dark:border-white/15 dark:bg-black/40">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          playMechanicalClick(560);
+                          setPertemuanViewMode("carousel");
+                        }}
+                        className={`min-h-[32px] rounded-full px-3.5 py-1 font-mono text-[11px] font-semibold transition-all ${pertemuanViewMode === "carousel"
+                          ? "bg-white text-[var(--ink)] shadow-xs dark:bg-[#1a1b1e] dark:text-white"
+                          : "text-[var(--mute)] hover:text-[var(--ink)] dark:text-gray-400 dark:hover:text-white"
                           }`}
                       >
-                        <span>Kunjungi Portofolio Google Sites</span>
-                        <ExternalLink className="h-3.5 w-3.5" />
-                      </a>
+                        Flex Carousel
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          playMechanicalClick(580);
+                          setPertemuanViewMode("grid");
+                        }}
+                        className={`min-h-[32px] rounded-full px-3.5 py-1 font-mono text-[11px] font-semibold transition-all ${pertemuanViewMode === "grid"
+                          ? "bg-white text-[var(--ink)] shadow-xs dark:bg-[#1a1b1e] dark:text-white"
+                          : "text-[var(--mute)] hover:text-[var(--ink)] dark:text-gray-400 dark:hover:text-white"
+                          }`}
+                      >
+                        Grid
+                      </button>
                     </div>
-                  </SpotlightCard>
-                </TiltedCard>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* TAB 3: EVALUASI DIRI & MATRIKS SWOT 20 POIN */}
-        {activeHubTab === "swot" && (
-          <div className="keffi-wrap mt-12 grid grid-cols-1 gap-8 lg:grid-cols-2">
-            {/* 10 Strengths */}
-            <SpotlightCard
-              spotlightColor="rgba(16, 185, 129, 0.14)"
-              className="rounded-[28px] border border-[var(--line)] bg-white p-7 md:p-9"
-            >
-              <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
-                <span className="font-mono text-xs font-bold uppercase tracking-wider text-emerald-700">
-                  STRENGTHS · 10 KEKUATAN UTAMA (S1-S10)
-                </span>
-                <span className="rounded-full bg-emerald-500/15 px-3 py-1 font-mono text-xs font-bold text-emerald-800">
-                  10 Poin
-                </span>
-              </div>
-              <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {SWOT_STRENGTHS.map((item) => (
-                  <div
-                    key={item.code}
-                    className="rounded-2xl border border-[var(--line)] bg-[#f5f5f2] p-4"
-                  >
-                    <div className="font-mono text-xs font-bold text-emerald-700">
-                      {item.code} · {locale === "id" ? item.titleId : item.titleEn}
-                    </div>
-                    <p className="mt-1 text-xs leading-relaxed text-[var(--mute)]">
-                      {locale === "id" ? item.descId : item.descEn}
-                    </p>
                   </div>
-                ))}
-              </div>
-            </SpotlightCard>
-
-            {/* 10 Weaknesses / Self-Improvement */}
-            <SpotlightCard
-              spotlightColor="rgba(196, 226, 46, 0.2)"
-              className="rounded-[28px] border border-[var(--line)] bg-white p-7 md:p-9"
-            >
-              <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
-                <span className="font-mono text-xs font-bold uppercase tracking-wider text-[var(--violet)]">
-                  WEAKNESSES · 10 EVALUASI &amp; PENGEMBANGAN DIRI (W1-W10)
-                </span>
-                <span className="rounded-full bg-[var(--violet)]/12 px-3 py-1 font-mono text-xs font-bold text-[var(--violet)]">
-                  10 Poin
-                </span>
-              </div>
-              <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {SWOT_WEAKNESSES.map((item) => (
-                  <div
-                    key={item.code}
-                    className="rounded-2xl border border-[var(--line)] bg-[#f5f5f2] p-4"
-                  >
-                    <div className="font-mono text-xs font-bold text-[var(--violet)]">
-                      {item.code} · {locale === "id" ? item.titleId : item.titleEn}
-                    </div>
-                    <p className="mt-1 text-xs leading-relaxed text-[var(--mute)]">
-                      {locale === "id" ? item.descId : item.descEn}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </SpotlightCard>
-          </div>
-        )}
-
-        {/* TAB 4: LIVE GITHUB @FADLI154 REPOSITORIES */}
-        {activeHubTab === "github" && (
-          <div className="keffi-wrap mt-12 space-y-8">
-            <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl bg-[#111213] p-7 text-[#f5f5f2]">
-              <div className="flex items-center gap-4">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={profile.avatarUrl}
-                  alt={profile.fullName}
-                  width={56}
-                  height={56}
-                  className="h-14 w-14 rounded-2xl border border-white/20 object-cover"
-                />
-                <div>
-                  <div className="font-mono text-xs text-[#c4e22e]">
-                    LIVE GITHUB TELEMETRY · @{profile.handle}
-                  </div>
-                  <h3 className="text-xl font-medium">
-                    {ghStats.public_repos} Public Repositories · {ghStats.followers} Followers
-                  </h3>
                 </div>
               </div>
-              <a
-                href={profile.socials.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="keffi-pill-btn keffi-pill-btn--lime !py-2.5 !px-5"
-              >
-                <span>Buka GitHub @fadli154</span>
-                <ArrowUpRight className="h-4 w-4" />
-              </a>
-            </div>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              {ghRepos.map((repo) => (
-                <TiltedCard
-                  key={repo.id}
-                  maxTilt={4}
-                  cursorLabel="GITHUB REPO"
-                  className="rounded-[24px]"
+              {pertemuanViewMode === "carousel" ? (
+                <div className="relative h-[520px] w-full overflow-hidden text-[var(--ink)] sm:h-[580px] md:h-[640px]">
+                  <FlexCarousel
+                    items={courseworkFlexItems}
+                    preset="ribbon"
+                    intro="rise"
+                    cardHeight={0.46}
+                    tilt={0}
+                    bend={0.28}
+                    gap={18}
+                    radius={18}
+                    fit="natural"
+                    focusOnClick={false}
+                    captions={true}
+                    captureWheel={false}
+                    autoplay={true}
+                    onSelect={handleFlexSelect}
+                    className="h-full w-full"
+                  />
+                </div>
+              ) : (
+                <div className="keffi-wrap mt-10 pb-16 md:pb-24">
+                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    {courseworkSessions.map((session) => {
+                      const status = session.attendanceStatus || "Hadir";
+                      const taskStatus = session.taskStatus || "Selesai";
+                      const statusColor =
+                        status === "Hadir"
+                          ? "bg-emerald-500/15 text-emerald-800 border-emerald-500/30"
+                          : status === "Izin" || status === "Sakit"
+                            ? "bg-amber-500/15 text-amber-800 border-amber-500/30"
+                            : "bg-zinc-500/15 text-zinc-700 border-zinc-400/30";
+
+                      return (
+                        <TiltedCard
+                          key={session.number}
+                          maxTilt={4.5}
+                          cursorLabel="DETAIL"
+                          className="h-full rounded-[26px]"
+                        >
+                          <SpotlightCard
+                            spotlightColor="rgba(196, 226, 46, 0.2)"
+                            onClick={() => setSelectedSessionModal(session)}
+                            className="flex h-full cursor-pointer flex-col justify-between rounded-[26px] border border-[var(--line)] bg-white p-6 shadow-sm"
+                          >
+                            <div>
+                              {/* Header Row: Pertemuan Badge + Attendance Status */}
+                              <div className="flex items-center justify-between gap-2">
+                                <span className="rounded-full bg-[var(--ink)] px-3 py-1 font-mono text-[11px] font-semibold text-[var(--cream)]">
+                                  {session.code}
+                                </span>
+                                <span
+                                  className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1 font-mono text-[11px] font-semibold ${statusColor}`}
+                                >
+                                  <CheckCircle2 className="h-3 w-3" />
+                                  <span>Absen: {status}</span>
+                                </span>
+                              </div>
+
+                              <h3 className="mt-4 text-xl font-medium tracking-tight text-[var(--ink)]">
+                                {locale === "id" ? session.titleId : session.titleEn}
+                              </h3>
+                              <p className="mt-2 text-xs leading-relaxed text-[var(--mute)]">
+                                {locale === "id" ? session.descId : session.descEn}
+                              </p>
+
+                              {/* Attendance Proof Preview Box */}
+                              <div className="mt-4 overflow-hidden rounded-2xl border border-[var(--line)] bg-[#f5f5f2]">
+                                {session.attendanceProofUrl ? (
+                                  <div className="relative h-40 w-full">
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img
+                                      src={session.attendanceProofUrl}
+                                      alt={`Bukti Kehadiran ${session.code}`}
+                                      className="h-full w-full object-cover"
+                                    />
+                                    <span className="absolute bottom-2 right-2 rounded-full bg-black/75 px-2.5 py-1 font-mono text-[10px] text-[#c4e22e]">
+                                      Bukti Terunggah ✓
+                                    </span>
+                                  </div>
+                                ) : (
+                                  <div className="flex h-28 flex-col items-center justify-center p-4 text-center">
+                                    <FileCheck2 className="h-5 w-5 text-[var(--violet)]" />
+                                    <span className="mt-1.5 font-mono text-[11px] font-medium text-[var(--ink)]">
+                                      {status === "Hadir"
+                                        ? "Kehadiran Tercatat di Sistem"
+                                        : `Status: ${status}`}
+                                    </span>
+                                    <span className="text-[11px] text-[var(--mute)]">
+                                      {session.sessionDate || "Semester Aktif · 2026"}
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Task / Tugas Section inside Card */}
+                              <div className="mt-4 rounded-2xl border border-[var(--line)] bg-[#f5f5f2]/70 p-4">
+                                <div className="flex items-center justify-between gap-2">
+                                  <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[var(--violet)]">
+                                    TUGAS PERTEMUAN {session.number}
+                                  </span>
+                                  <span className="rounded-full bg-[#c4e22e] px-2.5 py-0.5 font-mono text-[10px] font-bold text-[#111213]">
+                                    {taskStatus}
+                                  </span>
+                                </div>
+                                <div className="mt-1.5 text-sm font-semibold text-[var(--ink)]">
+                                  {session.taskTitle ||
+                                    (locale === "id"
+                                      ? "Dokumentasi & Evaluasi Mingguan"
+                                      : "Weekly Coursework Deliverable")}
+                                </div>
+                                {session.taskDescription && (
+                                  <p className="mt-1 line-clamp-2 text-xs text-[var(--mute)]">
+                                    {session.taskDescription}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+
+                            <div className="mt-5 flex items-center justify-between border-t border-[var(--line)] pt-4 font-mono text-xs">
+                              <span className="inline-flex items-center gap-1.5 font-medium text-[var(--ink)]">
+                                <Eye className="h-3.5 w-3.5 text-[var(--violet)]" />
+                                <span>
+                                  {locale === "id"
+                                    ? "Lihat Bukti & Tugas"
+                                    : "Inspect Proof & Task"}
+                                </span>
+                              </span>
+                              {session.taskUrl && (
+                                <a
+                                  href={session.taskUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="inline-flex items-center gap-1 font-semibold text-[var(--violet)] hover:underline"
+                                >
+                                  <span>Link Tugas</span>
+                                  <ArrowUpRight className="h-3.5 w-3.5" />
+                                </a>
+                              )}
+                            </div>
+                          </SpotlightCard>
+                        </TiltedCard>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB 2: DIREKTORI 5 ANGGOTA KELOMPOK K-1 INFORMATIKA */}
+          {activeHubTab === "kelompok-k1" && (
+            <div className="keffi-wrap mt-12 space-y-8 pb-16 md:pb-24">
+              <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl bg-[#111213] p-7 text-[#f5f5f2]">
+                <div>
+                  <span className="font-mono text-xs uppercase tracking-widest text-[#c4e22e]">
+                    DIREKTORI KOLABORASI · KELOMPOK K-1 INFORMATIKA
+                  </span>
+                  <h3 className="mt-2 text-2xl font-medium">
+                    5 Anggota Tim &amp; Klasifikasi Profil SWOT
+                  </h3>
+                </div>
+                <a
+                  href={profile.socials.kelompokK1}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="keffi-pill-btn keffi-pill-btn--lime !py-2.5 !px-5"
                 >
-                  <SpotlightCard className="flex h-full flex-col justify-between rounded-[24px] border border-[var(--line)] bg-white p-6">
-                    <div>
-                      <div className="flex items-center justify-between gap-2 font-mono text-xs text-[var(--violet)]">
-                        <span className="font-semibold">{repo.name}</span>
-                        <span>{repo.language || "Code"}</span>
+                  <span>Buka Web Utama Kelompok K-1</span>
+                  <ArrowUpRight className="h-4 w-4" />
+                </a>
+              </div>
+
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {TEAM_K1_MEMBERS.map((member) => (
+                  <TiltedCard
+                    key={member.number}
+                    maxTilt={5}
+                    cursorLabel="VISIT PORTO"
+                    className="rounded-[26px]"
+                  >
+                    <SpotlightCard
+                      spotlightColor={
+                        member.isSelf
+                          ? "rgba(196, 226, 46, 0.25)"
+                          : "rgba(196, 226, 46, 0.18)"
+                      }
+                      className={`flex h-full flex-col justify-between rounded-[26px] border p-7 ${member.isSelf
+                        ? "border-[#111213] bg-[#c4e22e] text-[#111213]"
+                        : "border-[var(--line)] bg-white text-[var(--ink)]"
+                        }`}
+                    >
+                      <div>
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="font-mono text-xs font-bold opacity-70">
+                            ANGGOTA #{member.number}
+                          </span>
+                          <span
+                            className={`rounded-full px-3 py-1 font-mono text-[10px] font-bold uppercase ${member.isSelf
+                              ? "bg-[#111213] text-[#c4e22e]"
+                              : member.roleType === "entrepreneur"
+                                ? "bg-[var(--violet)]/12 text-[var(--violet)]"
+                                : "bg-emerald-500/15 text-emerald-800"
+                              }`}
+                          >
+                            {locale === "id"
+                              ? member.roleBadgeId
+                              : member.roleBadgeEn}
+                          </span>
+                        </div>
+
+                        <h4 className="mt-5 text-2xl font-medium tracking-tight">
+                          {member.name}
+                        </h4>
+                        <p className="mt-2 text-xs opacity-75">
+                          {member.roleType === "entrepreneur"
+                            ? "Profil SWOT: Wirausaha / Entrepreneur (3 Anggota K-1)"
+                            : "Profil SWOT: Intrapreneur / Pegawai Profesional (2 Anggota K-1)"}
+                        </p>
                       </div>
-                      <p className="mt-3 text-sm leading-relaxed text-[var(--mute)]">
-                        {repo.description ||
-                          "Repositori proyek perangkat lunak dan eksplorasi akademik Fadli Hifziansyah."}
+
+                      <div className="mt-8 pt-4 border-t border-current/10">
+                        <a
+                          href={member.portfolioUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`inline-flex w-full items-center justify-between rounded-full px-4 py-2.5 text-xs font-semibold transition ${member.isSelf
+                            ? "bg-[#111213] text-[#f5f5f2] hover:bg-[#c4e22e] hover:text-[#111213]"
+                            : "bg-[#f5f5f2] text-[var(--ink)] hover:bg-[var(--ink)] hover:text-[var(--cream)]"
+                            }`}
+                        >
+                          <span>Kunjungi Portofolio Google Sites</span>
+                          <ExternalLink className="h-3.5 w-3.5" />
+                        </a>
+                      </div>
+                    </SpotlightCard>
+                  </TiltedCard>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 3: EVALUASI DIRI & MATRIKS SWOT 20 POIN */}
+          {activeHubTab === "swot" && (
+            <div className="keffi-wrap mt-12 grid grid-cols-1 gap-8 lg:grid-cols-2 pb-16 md:pb-24">
+              {/* 10 Strengths */}
+              <SpotlightCard
+                spotlightColor="rgba(16, 185, 129, 0.14)"
+                className="rounded-[28px] border border-[var(--line)] bg-white p-7 md:p-9"
+              >
+                <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
+                  <span className="font-mono text-xs font-bold uppercase tracking-wider text-emerald-700">
+                    STRENGTHS · 10 KEKUATAN UTAMA (S1-S10)
+                  </span>
+                  <span className="rounded-full bg-emerald-500/15 px-3 py-1 font-mono text-xs font-bold text-emerald-800">
+                    10 Poin
+                  </span>
+                </div>
+                <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  {SWOT_STRENGTHS.map((item) => (
+                    <div
+                      key={item.code}
+                      className="rounded-2xl border border-[var(--line)] bg-[#f5f5f2] p-4"
+                    >
+                      <div className="font-mono text-xs font-bold text-emerald-700">
+                        {item.code} · {locale === "id" ? item.titleId : item.titleEn}
+                      </div>
+                      <p className="mt-1 text-xs leading-relaxed text-[var(--mute)]">
+                        {locale === "id" ? item.descId : item.descEn}
                       </p>
                     </div>
-                    <div className="mt-6 flex items-center justify-between border-t border-[var(--line)] pt-4 font-mono text-xs text-[var(--mute)]">
-                      <div className="flex items-center gap-4">
-                        <span className="inline-flex items-center gap-1">
-                          <Star className="h-3.5 w-3.5 text-amber-500" />
-                          {repo.stargazers_count}
-                        </span>
-                        <span className="inline-flex items-center gap-1">
-                          <GitFork className="h-3.5 w-3.5" />
-                          {repo.forks_count}
-                        </span>
+                  ))}
+                </div>
+              </SpotlightCard>
+
+              {/* 10 Weaknesses / Self-Improvement */}
+              <SpotlightCard
+                spotlightColor="rgba(196, 226, 46, 0.2)"
+                className="rounded-[28px] border border-[var(--line)] bg-white p-7 md:p-9"
+              >
+                <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
+                  <span className="font-mono text-xs font-bold uppercase tracking-wider text-[var(--violet)]">
+                    WEAKNESSES · 10 EVALUASI &amp; PENGEMBANGAN DIRI (W1-W10)
+                  </span>
+                  <span className="rounded-full bg-[var(--violet)]/12 px-3 py-1 font-mono text-xs font-bold text-[var(--violet)]">
+                    10 Poin
+                  </span>
+                </div>
+                <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  {SWOT_WEAKNESSES.map((item) => (
+                    <div
+                      key={item.code}
+                      className="rounded-2xl border border-[var(--line)] bg-[#f5f5f2] p-4"
+                    >
+                      <div className="font-mono text-xs font-bold text-[var(--violet)]">
+                        {item.code} · {locale === "id" ? item.titleId : item.titleEn}
                       </div>
-                      <a
-                        href={repo.html_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 font-semibold text-[var(--ink)] hover:text-[var(--violet)]"
-                      >
-                        <span>Source</span>
-                        <ArrowUpRight className="h-3.5 w-3.5" />
-                      </a>
+                      <p className="mt-1 text-xs leading-relaxed text-[var(--mute)]">
+                        {locale === "id" ? item.descId : item.descEn}
+                      </p>
                     </div>
-                  </SpotlightCard>
-                </TiltedCard>
-              ))}
+                  ))}
+                </div>
+              </SpotlightCard>
             </div>
-            {ghLoading && (
-              <p className="font-mono text-xs text-[var(--mute)]">
-                Menyinkronkan repositori langsung dari api.github.com/users/fadli154...
-              </p>
-            )}
-          </div>
-        )}
+          )}
+
+          {/* TAB 4: LIVE GITHUB @FADLI154 REPOSITORIES */}
+          {activeHubTab === "github" && (
+            <div className="keffi-wrap mt-12 space-y-8 pb-16 md:pb-24">
+              <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl bg-[#111213] p-7 text-[#f5f5f2]">
+                <div className="flex items-center gap-4">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={profile.avatarUrl}
+                    alt={profile.fullName}
+                    width={56}
+                    height={56}
+                    className="h-14 w-14 rounded-2xl border border-white/20 object-cover"
+                  />
+                  <div>
+                    <div className="font-mono text-xs text-[#c4e22e]">
+                      LIVE GITHUB TELEMETRY · @{profile.handle}
+                    </div>
+                    <h3 className="text-xl font-medium">
+                      {ghStats.public_repos} Public Repositories · {ghStats.followers} Followers
+                    </h3>
+                  </div>
+                </div>
+                <a
+                  href={profile.socials.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="keffi-pill-btn keffi-pill-btn--lime !py-2.5 !px-5"
+                >
+                  <span>Buka GitHub @fadli154</span>
+                  <ArrowUpRight className="h-4 w-4" />
+                </a>
+              </div>
+
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                {ghRepos.map((repo) => (
+                  <TiltedCard
+                    key={repo.id}
+                    maxTilt={4}
+                    cursorLabel="GITHUB REPO"
+                    className="rounded-[24px]"
+                  >
+                    <SpotlightCard className="flex h-full flex-col justify-between rounded-[24px] border border-[var(--line)] bg-white p-6">
+                      <div>
+                        <div className="flex items-center justify-between gap-2 font-mono text-xs text-[var(--violet)]">
+                          <span className="font-semibold">{repo.name}</span>
+                          <span>{repo.language || "Code"}</span>
+                        </div>
+                        <p className="mt-3 text-sm leading-relaxed text-[var(--mute)]">
+                          {repo.description ||
+                            "Repositori proyek perangkat lunak dan eksplorasi akademik Fadli Hifziansyah."}
+                        </p>
+                      </div>
+                      <div className="mt-6 flex items-center justify-between border-t border-[var(--line)] pt-4 font-mono text-xs text-[var(--mute)]">
+                        <div className="flex items-center gap-4">
+                          <span className="inline-flex items-center gap-1">
+                            <Star className="h-3.5 w-3.5 text-amber-500" />
+                            {repo.stargazers_count}
+                          </span>
+                          <span className="inline-flex items-center gap-1">
+                            <GitFork className="h-3.5 w-3.5" />
+                            {repo.forks_count}
+                          </span>
+                        </div>
+                        <a
+                          href={repo.html_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 font-semibold text-[var(--ink)] hover:text-[var(--violet)]"
+                        >
+                          <span>Source</span>
+                          <ArrowUpRight className="h-3.5 w-3.5" />
+                        </a>
+                      </div>
+                    </SpotlightCard>
+                  </TiltedCard>
+                ))}
+              </div>
+              {ghLoading && (
+                <p className="font-mono text-xs text-[var(--mute)]">
+                  Menyinkronkan repositori langsung dari api.github.com/users/fadli154...
+                </p>
+              )}
+            </div>
+          )}
         </FadeContent>
       </section>
 
       {/* =====================================================================
           6. STUDIO KEFFI CLOSING CONTACT & COLLABORATION SECTION (#contact)
+          50% Viewport Height Contact + 50% Footer (Seamless Balanced Closure)
          ===================================================================== */}
-      <section id="contact" className="scroll-mt-24 border-t border-[var(--line)] bg-[var(--bg)] pt-16 pb-16 md:pt-24 md:pb-24">
+      <section id="contact" style={{ scrollMarginTop: 0 }} className="scroll-mt-0 min-h-[44vh] lg:h-[48vh] flex flex-col justify-center border-t border-[var(--line)] bg-[var(--bg)] py-10 sm:py-12 lg:py-0">
         <FadeContent blur={6} duration={0.7} ease="power2.out" threshold={0.08} initialOpacity={0} once={true}>
-        <div className="keffi-wrap">
-          <div className="keffi-grid items-end">
-            <div className="col-span-12 lg:col-span-8">
-              <div className="mb-7 flex flex-wrap items-center gap-4">
-                <span className="sec-kicker font-mono text-xs font-semibold tracking-wider text-[var(--ink)]">
-                  {locale === "id"
-                    ? "KOLABORASI, MAGANG & PROYEK PERANGKAT LUNAK"
-                    : "INTERNSHIP, FREELANCE & RESEARCH COLLABORATION"}
-                </span>
+          <div className="keffi-wrap">
+            <div className="keffi-grid items-end">
+              <div className="col-span-12 lg:col-span-8">
+                <div className="mb-4 sm:mb-5 flex flex-wrap items-center gap-4">
+                  <span className="sec-kicker font-mono text-xs font-semibold tracking-wider text-[var(--ink)]">
+                    {locale === "id"
+                      ? "KOLABORASI, MAGANG & PROYEK PERANGKAT LUNAK"
+                      : "INTERNSHIP, FREELANCE & RESEARCH COLLABORATION"}
+                  </span>
+                </div>
+                <h2 className="hero-giant">
+                  <BlurText
+                    text={
+                      locale === "id"
+                        ? "Mari berdiskusi & membangun solusi."
+                        : "Let's talk & build together."
+                    }
+                  />
+                </h2>
               </div>
-              <h2 className="hero-giant">
-                <BlurText
-                  text={
-                    locale === "id"
-                      ? "Mari berdiskusi & membangun solusi."
-                      : "Let's talk & build together."
-                  }
-                />
-              </h2>
-            </div>
 
-            <div className="col-span-12 flex flex-col items-start gap-4 lg:col-span-4 lg:items-end">
-              <Magnet strength={0.22}>
+              <div className="col-span-12 flex flex-col items-start gap-4 lg:col-span-4 lg:items-end">
+                <Magnet strength={0.22}>
+                  <button
+                    type="button"
+                    onClick={() => openInquiryWithScope("full-time")}
+                    className="keffi-pill-btn"
+                    data-cursor="MESSAGE"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={profile.avatarUrl}
+                      alt={profile.fullName}
+                      width={38}
+                      height={38}
+                      className="h-9 w-9 rounded-full object-cover border border-white/25"
+                    />
+                    <span>
+                      {locale === "id"
+                        ? "Kirim Pesan / Diskusi Proyek"
+                        : "Start a Project Conversation"}
+                    </span>
+                    <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                  </button>
+                </Magnet>
+
                 <button
                   type="button"
-                  onClick={() => openInquiryWithScope("full-time")}
-                  className="keffi-pill-btn"
-                  data-cursor="MESSAGE"
+                  onClick={handleCopyEmail}
+                  className="keffi-pill-outline font-mono text-xs"
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={profile.avatarUrl}
-                    alt={profile.fullName}
-                    width={38}
-                    height={38}
-                    className="h-9 w-9 rounded-full object-cover border border-white/25"
-                  />
-                  <span>
-                    {locale === "id"
-                      ? "Kirim Pesan / Diskusi Proyek"
-                      : "Start a Project Conversation"}
-                  </span>
-                  <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+                  {copiedEmail ? (
+                    <>
+                      <Check className="h-4 w-4 text-emerald-600" />
+                      <span>Tersalin: {profile.email}</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="h-4 w-4" />
+                      <span>{profile.email}</span>
+                    </>
+                  )}
                 </button>
-              </Magnet>
-
-              <button
-                type="button"
-                onClick={handleCopyEmail}
-                className="keffi-pill-outline font-mono text-xs"
-              >
-                {copiedEmail ? (
-                  <>
-                    <Check className="h-4 w-4 text-emerald-600" />
-                    <span>Tersalin: {profile.email}</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="h-4 w-4" />
-                    <span>{profile.email}</span>
-                  </>
-                )}
-              </button>
+              </div>
             </div>
           </div>
-        </div>
         </FadeContent>
       </section>
 
@@ -1890,13 +1961,15 @@ export function HomeClientSections({
          ===================================================================== */}
       {selectedSessionModal && (
         <div
-          className="fixed inset-0 z-[90] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-[90] flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm overflow-y-auto overscroll-contain"
           role="dialog"
           aria-modal="true"
+          data-lenis-prevent="true"
           onClick={() => setSelectedSessionModal(null)}
         >
           <div
-            className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-[28px] bg-white p-6 text-[var(--ink)] shadow-2xl md:p-9"
+            className="my-auto max-h-[88vh] w-full max-w-2xl overflow-y-auto overscroll-contain rounded-[28px] bg-white p-6 text-[var(--ink)] shadow-2xl md:p-9"
+            data-lenis-prevent="true"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-[var(--line)] pb-4">
@@ -1986,13 +2059,15 @@ export function HomeClientSections({
       {/* Lightbox Modal for Selected Certificate from Drift Wall */}
       {selectedCertModal && (
         <div
-          className="fixed inset-0 z-[95] flex items-center justify-center bg-black/80 p-4 backdrop-blur-md"
+          className="fixed inset-0 z-[95] flex items-center justify-center bg-black/80 p-4 backdrop-blur-md overflow-y-auto overscroll-contain"
           role="dialog"
           aria-modal="true"
+          data-lenis-prevent="true"
           onClick={() => setSelectedCertModal(null)}
         >
           <div
-            className="max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-[32px] border border-white/15 bg-[#14161c] p-6 text-[#f5f5f2] shadow-2xl md:p-8"
+            className="my-auto max-h-[88vh] w-full max-w-3xl overflow-y-auto overscroll-contain rounded-[32px] border border-white/15 bg-[#14161c] p-6 text-[#f5f5f2] shadow-2xl md:p-8"
+            data-lenis-prevent="true"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-white/10 pb-4">
@@ -2020,7 +2095,7 @@ export function HomeClientSections({
               <img
                 src={selectedCertModal.imageUrl}
                 alt={selectedCertModal.title}
-                className="max-h-[460px] w-full object-contain"
+                className="max-h-[380px] sm:max-h-[440px] w-full object-contain"
               />
             </div>
 

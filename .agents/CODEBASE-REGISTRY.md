@@ -37,6 +37,12 @@
 | `CountUp` | `src/components/reactbits/CountUp.tsx` | `({ to, from, duration, separator })` | Animasi angka metrik menghitung naik (untuk statistik tahun/proyek). |
 | `DeskComputerFigure` | `src/components/figures/desk-computer/DeskComputerFigure.tsx` | `({ liveState, interactive })` | Visual isometrik SVG/WebGL meja kerja programmer interaktif (Anatomy style). |
 | `ArchitectureRigFigure` | `src/components/figures/architecture-rig/figure.tsx` | `({ activeNode, onSelectNode })` | Diagram isometrik interaktif rig arsitektur sistem teknis. |
+| `ScrollExpand` | `src/components/ScrollExpand.jsx` | `({ src, title, scrollHint, useWindowScroll, children })` | Komponen animasi frame yang meluas dinamis mengikuti scroll halaman (ReactBits). |
+| `FadeContent` | `src/components/FadeContent.jsx` | `({ children, blur, duration, threshold, once })` | Komponen scroll-reveal resmi ReactBits via shadcn dengan transisi blur-to-clear. |
+| `DitherVeil` | `src/components/DitherVeil.jsx` | `({ src, fit, pattern, pixelSize, levels, palette, inkColor, paperColor, clickBurst, wander })` | WebGL dither canvas shader interaktif resmi ReactBits via shadcn dengan efek shockwave. |
+| `CardSwap` | `src/components/CardSwap.jsx` | `({ width, height, cardDistance, verticalDistance, depth, skewAmount, visibleCards, delay, draggable, children })` | Komponen 3D stack cards swap/flick resmi ReactBits via shadcn untuk rotasi kartu interaktif. |
+| `EducationSection` | `src/components/EducationSection.tsx` | `({ educations?: EducationItem[] })` | Section linimasa pendidikan dengan ScrollExpand crop frame, DitherVeil WebGL shader, dan 4 CardSwap 3D stack. |
+| `EducationDetailModal` | `src/components/education/EducationDetailModal.tsx` | `({ edu: EducationItem \| null, locale, onClose })` | Modal dialog interaktif Minimalist Editorial Dark untuk kurikulum dan proyek nyata studi. |
 
 ---
 

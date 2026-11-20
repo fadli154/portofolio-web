@@ -10,6 +10,7 @@ import {
   FileCode2,
   FolderGit2,
   Globe,
+  GraduationCap,
   Layers,
   Lock,
   Search,
@@ -20,6 +21,7 @@ import {
 import { usePortfolioState } from "@/lib/i18n/context";
 import { PROJECTS, SITE_PROFILE } from "@/data/site";
 import { playMechanicalClick } from "@/lib/audio/sound-effects";
+import { getLenis } from "@/engine";
 
 export function CommandPalette() {
   const router = useRouter();
@@ -48,6 +50,11 @@ export function CommandPalette() {
 
   useEffect(() => {
     if (!commandOpen) return;
+    const lenis = getLenis();
+    lenis?.stop();
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
     const onKey = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
@@ -55,7 +62,11 @@ export function CommandPalette() {
       }
     };
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      lenis?.start();
+      document.body.style.overflow = prevOverflow;
+    };
   }, [commandOpen, setCommandOpen]);
 
   if (!commandOpen) return null;
@@ -170,6 +181,20 @@ export function CommandPalette() {
         router.push("/projects");
       },
     },
+    {
+      id: "nav-education",
+      group: locale === "id" ? "Navigasi Halaman" : "Route Navigation",
+      label:
+        locale === "id"
+          ? "Riwayat Pendidikan (SMKN 4 Tangerang ➔ UIN SMH Banten)"
+          : "Academic Journey (SMKN 4 Tangerang ➔ UIN SMH Banten)",
+      icon: GraduationCap,
+      shortcut: "EDU",
+      run: () => {
+        setCommandOpen(false);
+        router.push("/#education");
+      },
+    },
   ];
 
   const filtered = actions.filter(
@@ -180,14 +205,16 @@ export function CommandPalette() {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-start justify-center bg-black/70 px-4 pt-[12vh] backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-start justify-center bg-black/70 px-4 pt-[12vh] backdrop-blur-sm overflow-y-auto overscroll-contain"
       role="dialog"
       aria-modal="true"
       aria-label="Command palette"
+      data-lenis-prevent="true"
       onClick={() => setCommandOpen(false)}
     >
       <div
-        className="w-full max-w-2xl border border-[var(--rule-strong)] bg-[var(--bg)] shadow-2xl"
+        className="w-full max-w-2xl border border-[var(--rule-strong)] bg-[var(--bg)] shadow-2xl max-h-[80vh] flex flex-col rounded-2xl overflow-hidden"
+        data-lenis-prevent="true"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-3 border-b border-[var(--rule)] px-4 py-3.5">
@@ -214,7 +241,7 @@ export function CommandPalette() {
           </button>
         </div>
 
-        <div className="max-h-[60vh] overflow-y-auto p-2">
+        <div className="max-h-[60vh] overflow-y-auto overscroll-contain p-2" data-lenis-prevent="true">
           {filtered.length === 0 ? (
             <p className="py-8 text-center font-mono text-xs text-[var(--ink-muted)]">
               {locale === "id" ? "Tidak ada perintah yang cocok." : "No matching command found."}

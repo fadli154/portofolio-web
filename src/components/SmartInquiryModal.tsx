@@ -5,6 +5,7 @@ import { Calendar, Check, Copy, Send, ShieldCheck, X } from "lucide-react";
 import { usePortfolioState } from "@/lib/i18n/context";
 import { SITE_PROFILE } from "@/data/site";
 import { playMechanicalClick } from "@/lib/audio/sound-effects";
+import { getLenis } from "@/engine";
 
 const SCOPES = [
   {
@@ -58,6 +59,27 @@ export function SmartInquiryModal() {
   React.useEffect(() => {
     setScope(initialInquiryScope);
   }, [initialInquiryScope]);
+
+  React.useEffect(() => {
+    if (!inquiryOpen) return;
+    const lenis = getLenis();
+    lenis?.stop();
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setInquiryOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      lenis?.start();
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [inquiryOpen, setInquiryOpen]);
 
   if (!inquiryOpen) return null;
 
@@ -133,14 +155,16 @@ export function SmartInquiryModal() {
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm overflow-y-auto"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm overflow-y-auto overscroll-contain"
       role="dialog"
       aria-modal="true"
       aria-labelledby="smart-inquiry-title"
+      data-lenis-prevent="true"
       onClick={() => setInquiryOpen(false)}
     >
       <div
-        className="w-full max-w-2xl border border-[var(--rule-strong)] bg-[var(--bg)] p-6 md:p-8 shadow-2xl my-auto"
+        className="w-full max-w-2xl border border-[var(--rule-strong)] bg-[var(--bg)] p-6 md:p-8 shadow-2xl my-auto max-h-[90vh] overflow-y-auto overscroll-contain rounded-2xl"
+        data-lenis-prevent="true"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-4 border-b border-[var(--rule)] pb-4">

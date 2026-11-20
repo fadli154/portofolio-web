@@ -22,6 +22,7 @@ import {
 } from "@/lib/data/cms-persistence";
 import { SpotlightCard } from "@/components/reactbits/SpotlightCard";
 import { TiltedCard } from "@/components/reactbits/TiltedCard";
+import { getLenis } from "@/engine";
 
 export function CertificatesVaultClient({
   certificates: initialCertificates,
@@ -34,6 +35,28 @@ export function CertificatesVaultClient({
   );
   const [selectedCert, setSelectedCert] = useState<CertificateItem | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
+
+  // Lock body scroll and pause Lenis while certificate modal is open
+  useEffect(() => {
+    if (!selectedCert) return;
+    const lenis = getLenis();
+    lenis?.stop();
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setSelectedCert(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      lenis?.start();
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedCert]);
 
   useEffect(() => {
     const store = loadCmsStoreClient();
@@ -326,13 +349,15 @@ export function CertificatesVaultClient({
       {/* Lightbox Modal */}
       {selectedCert && (
         <div
-          className="fixed inset-0 z-[95] flex items-center justify-center bg-black/85 p-4 backdrop-blur-md"
+          className="fixed inset-0 z-[95] flex items-center justify-center bg-black/85 p-4 backdrop-blur-md overflow-y-auto overscroll-contain"
           role="dialog"
           aria-modal="true"
+          data-lenis-prevent="true"
           onClick={() => setSelectedCert(null)}
         >
           <div
-            className="max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-[32px] border border-white/15 bg-[#171920] p-6 text-[#f5f5f2] shadow-md md:p-8"
+            className="my-auto max-h-[88vh] w-full max-w-3xl overflow-y-auto overscroll-contain rounded-[32px] border border-white/15 bg-[#171920] p-6 text-[#f5f5f2] shadow-md md:p-8"
+            data-lenis-prevent="true"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between border-b border-white/10 pb-4">
@@ -357,7 +382,7 @@ export function CertificatesVaultClient({
               <img
                 src={selectedCert.imageUrl}
                 alt={selectedCert.title}
-                className="max-h-[460px] w-full object-contain"
+                className="max-h-[380px] sm:max-h-[440px] w-full object-contain"
               />
             </div>
 

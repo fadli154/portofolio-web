@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *, .dark, .dark *));
 @import "../components/iso/iso.css";
+@import "../components/LogoLoop.css";
+@import "../components/CardSwap.css";
+@import "../components/DitherVeil.css";
 
 :root,
 html[data-theme="light"] {
@@ -113,9 +116,10 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Zero scroll-margin across all section targets for full-screen landing without cuts */
 section[id],
 [id] {
-  scroll-margin-top: clamp(80px, 10vw, 110px);
+  scroll-margin-top: 0px !important;
 }
 
 /* ============================================================================

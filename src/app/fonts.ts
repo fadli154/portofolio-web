@@ -2,7 +2,6 @@ import { Instrument_Sans, Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/go
 
 export const display = Instrument_Sans({
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
   variable: "--font-display",
   display: "swap",
 });

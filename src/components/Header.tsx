@@ -10,6 +10,7 @@ import { SITE_PROFILE } from "@/data/site";
 import { Magnet } from "@/components/reactbits/Magnet";
 import { playMechanicalClick } from "@/lib/audio/sound-effects";
 import type { Locale } from "@/lib/i18n/context";
+import { scrollTo } from "@/engine";
 
 function LocaleToggleButton({
   locale,
@@ -281,10 +282,31 @@ export function Header() {
     setIsMobileMenuOpen(false);
   }, [pathname]);
 
-  const handleNavClick = useCallback(() => {
-    playMechanicalClick(620);
-    setIsMobileMenuOpen(false);
-  }, []);
+  const handleNavClick = useCallback(
+    (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+      playMechanicalClick(620);
+      setIsMobileMenuOpen(false);
+
+      if (pathname === "/") {
+        if (href === "/" || href === "/#top" || href === "#top") {
+          e.preventDefault();
+          scrollTo(0, { offset: 0, duration: 1.1 });
+          window.history.pushState(null, "", "/");
+          return;
+        }
+        if (href.startsWith("/#") || href.startsWith("#")) {
+          e.preventDefault();
+          const hash = href.startsWith("/#") ? href.replace("/", "") : href;
+          const targetEl = document.querySelector(hash);
+          if (targetEl) {
+            scrollTo(targetEl as HTMLElement, { offset: 0, duration: 1.1 });
+            window.history.pushState(null, "", hash);
+          }
+        }
+      }
+    },
+    [pathname]
+  );
 
   // Hide public header on private Admin CMS routes
   if (pathname?.startsWith("/admin")) {
@@ -305,15 +327,21 @@ export function Header() {
       desc: locale === "id" ? "3D Folder Galeri & Proyek" : "3D Folder Gallery & Projects",
     },
     {
+      href: "/#education",
+      label: locale === "id" ? "Pendidikan" : "Education",
+      num: "03",
+      desc: locale === "id" ? "SMKN 4 Tangerang ➔ UIN Banten" : "Academic Milestones",
+    },
+    {
       href: "/#stack",
       label: "Stack",
-      num: "03",
+      num: "04",
       desc: locale === "id" ? "Arsitektur & Instrumen 3D" : "Architecture & 3D Instruments",
     },
     {
       href: "/#coursework",
       label: locale === "id" ? "Kuliah (K-1)" : "Coursework",
-      num: "04",
+      num: "05",
       desc: locale === "id" ? "Log Absensi Kewirausahaan" : "Entrepreneurship Sessions",
     },
   ];
@@ -343,7 +371,7 @@ export function Header() {
           <Link
             href="/"
             className="hdr__brand min-h-[40px]"
-            onClick={() => playMechanicalClick(520)}
+            onClick={(e) => handleNavClick(e, "/")}
           >
             <span>{SITE_PROFILE.shortName}</span>
           </Link>
@@ -351,7 +379,12 @@ export function Header() {
           {/* Center: Desktop Floating Blurred Pill Navigation (4 Concise Items Only) */}
           <nav className="hdr__nav hidden md:inline-flex" aria-label="Primary navigation">
             {navItems.map((item) => (
-              <Link key={item.href} href={item.href} className="hdr__link">
+              <Link
+                key={item.href}
+                href={item.href}
+                className="hdr__link"
+                onClick={(e) => handleNavClick(e, item.href)}
+              >
                 {item.label}
               </Link>
             ))}
@@ -367,7 +400,7 @@ export function Header() {
                 <Link
                   href="/#contact"
                   className="hdr__cta min-h-[40px]"
-                  onClick={() => playMechanicalClick(680)}
+                  onClick={(e) => handleNavClick(e, "/#contact")}
                 >
                   <span>{locale === "id" ? "Kontak" : "Contact"}</span>
                   <span aria-hidden="true">↗</span>
@@ -416,9 +449,10 @@ export function Header() {
           ref={drawerRef}
           id="mobile-navigation-drawer"
           style={{ opacity: 0 }}
-          className={`fixed inset-0 z-[70] flex flex-col bg-[#0c0d12]/94 backdrop-blur-2xl md:hidden ${
+          className={`fixed inset-0 z-[70] flex flex-col bg-[#0c0d12]/94 backdrop-blur-2xl md:hidden overflow-y-auto overscroll-contain ${
             isMobileMenuOpen ? "pointer-events-auto" : "pointer-events-none"
           }`}
+          data-lenis-prevent="true"
           role="dialog"
           aria-modal="true"
           aria-label="Mobile Navigation"
@@ -458,13 +492,13 @@ export function Header() {
             </div>
 
             {/* Links List */}
-            <div className="flex-1 overflow-y-auto px-[var(--container-gutter)] py-6">
+            <div className="flex-1 overflow-y-auto overscroll-contain px-[var(--container-gutter)] py-6" data-lenis-prevent="true">
               <div className="flex flex-col gap-3">
                 {navItems.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
-                    onClick={handleNavClick}
+                    onClick={(e) => handleNavClick(e, item.href)}
                     data-drawer-item=""
                     className="group flex items-center justify-between rounded-2xl border border-white/8 bg-white/5 p-4 text-white hover:border-[#c4e22e] hover:bg-white/10 transition-[border-color,background-color] duration-200"
                   >
@@ -493,7 +527,7 @@ export function Header() {
               >
                 <Link
                   href="/#contact"
-                  onClick={handleNavClick}
+                  onClick={(e) => handleNavClick(e, "/#contact")}
                   className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--lime)] py-4 px-6 text-sm font-bold text-[#111213] shadow-lg hover:brightness-110 active:scale-[0.99] transition-all"
                 >
                   <span>{locale === "id" ? "Kirim Pesan / Kontak" : "Get In Touch / Contact"}</span>

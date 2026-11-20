@@ -67,16 +67,32 @@ export interface ExperienceItem {
   stack: string[];
 }
 
+export interface EducationProject {
+  title: string;
+  role: string;
+  descriptionId: string;
+  descriptionEn: string;
+  tech: string[];
+  link?: string;
+}
+
 export interface EducationItem {
   id: string;
   institution: string;
+  institutionShort?: string;
+  websiteUrl: string;
   degreeEn: string;
   degreeId: string;
   period: string;
+  statusLabelId: string;
+  statusLabelEn: string;
   location: string;
-  gpaOrHonors: string;
+  gpaOrHonors?: string;
   focusEn: string;
   focusId: string;
+  curriculumHighlightsId: string[];
+  curriculumHighlightsEn: string[];
+  keyProjects?: EducationProject[];
 }
 
 /** Mirrors `public.certificates` (see supabase/migrations/20261110000006). */
@@ -183,7 +199,7 @@ export const SITE_PROFILE = {
     linkedin: "https://www.linkedin.com/in/fadli-hifziansyah-1b26902ba/",
     instagram: "https://www.instagram.com/fadli.890",
     googleSites: "https://sites.google.com/view/pdhlii/halaman-muka",
-    kelompokK1: "https://sites.google.com/view/reynaldi-porto/portofolio",
+    kelompokK1: "https://sites.google.com/view/reynaldi-porto/dashboard-kelompok",
   },
   availability: {
     available: true,
@@ -299,15 +315,23 @@ export const SKILL_GROUP_CARDS: SkillGroupCard[] = [
   },
   {
     id: "devops",
-    badge: "WORKFLOW",
-    titleId: "DevOps, Version Control & Design Tools",
-    titleEn: "DevOps, Version Control & Design Tools",
+    badge: "WORKFLOW & CREATIVE",
+    titleId: "DevOps, Multimedia & Creative Suite",
+    titleEn: "DevOps, Creative Media & Office Suite",
     descId:
-      "Manajemen repositori kode, kolaborasi tim pengembang, otomatisasi pengujian/deployment, dan perancangan prototipe antarmuka.",
+      "Otomatisasi repositori kode (Git & CI/CD), penyuntingan video profesional (DaVinci Resolve), desain grafis citra (Photoshop), prototipe antarmuka (Figma), serta administrasi perkantoran (Microsoft Office).",
     descEn:
-      "Code repository management, engineering team collaboration, automated deployment workflows, and UI prototyping.",
-    skillIconsUrl: "https://skillicons.dev/icons?i=git,github,vscode,figma&perline=6",
-    items: ["Git", "GitHub CI/CD", "VS Code", "Figma", "Version Control"],
+      "Code repository automation (Git & CI/CD), professional non-linear video editing (DaVinci Resolve), raster graphic design (Photoshop), UI/UX prototyping (Figma), and office productivity (Microsoft Office).",
+    skillIconsUrl: "https://skillicons.dev/icons?i=git,github,vscode,figma,ps&perline=6",
+    items: [
+      "Git",
+      "GitHub CI/CD",
+      "Figma",
+      "DaVinci Resolve (Video Editor)",
+      "Adobe Photoshop",
+      "Microsoft Office 365",
+      "VS Code",
+    ],
   },
 ];
 
@@ -1111,17 +1135,127 @@ export const EXPERIENCES: ExperienceItem[] = [
 
 export const EDUCATIONS: EducationItem[] = [
   {
-    id: "edu-01",
-    institution: "Program Studi Informatika · Kelompok K-1",
-    degreeEn: "Undergraduate Student in Informatics (Computer Science)",
-    degreeId: "Mahasiswa Sarjana Informatika (Ilmu Komputer)",
-    period: "Aktif · Kelompok K-1",
-    location: "Indonesia",
-    gpaOrHonors: "Fokus: Web & Mobile Engineering, GovTech, Computer Vision & Kewirausahaan",
+    id: "edu-smkn4",
+    institution: "SMK Negeri 4 Tangerang",
+    institutionShort: "SMKN 4 Tangerang",
+    websiteUrl: "https://smkn4-tng.sch.id/",
+    degreeEn: "Vocational High School Diploma in Software Engineering (RPL)",
+    degreeId: "Sekolah Menengah Kejuruan · Rekayasa Perangkat Lunak (RPL)",
+    period: "2021 – 2024",
+    statusLabelId: "Lulus",
+    statusLabelEn: "Graduated",
+    location: "Kota Tangerang, Banten",
+    gpaOrHonors: "Kompetensi Utama: Rekayasa Web, Basis Data Relasional & Aplikasi Sektor Publik",
     focusEn:
-      "Documenting academic coursework, software engineering projects, computer vision research (Smart Hajj AI), public-sector web applications (SIMDUK Kominfo), and Technology Entrepreneurship (Group K-1).",
+      "Mastered foundational software engineering, object-oriented programming, relational database modeling, and built production web systems for government clients and school administration.",
     focusId:
-      "Mendokumentasikan karya akademik perkuliahan, proyek rekayasa perangkat lunak, riset visi komputer (Smart Hajj AI), aplikasi web sektor publik (SIMDUK Kominfo), serta mata kuliah Kewirausahaan Teknologi (Kelompok K-1).",
+      "Mendalami fondasi rekayasa perangkat lunak, pemrograman berorientasi objek (OOP), pemodelan basis data relasional, serta membangun sistem web produksi untuk instansi pemerintah dan administrasi sekolah.",
+    curriculumHighlightsId: [
+      "Pemrograman Berorientasi Objek (PBO)",
+      "Pengembangan Aplikasi Web Berbasis Framework (Laravel / PHP)",
+      "Manajemen & Desain Basis Data (MySQL / Relational Schema)",
+      "Integrasi RESTful API & Interaksi CRUD Dinamis",
+      "Standar Rekayasa Web & Version Control Git",
+    ],
+    curriculumHighlightsEn: [
+      "Object-Oriented Programming (OOP Fundamentals)",
+      "Web Application Development (Laravel / PHP Framework)",
+      "Relational Database Design & Querying (MySQL)",
+      "RESTful API Integration & Dynamic CRUD Workflows",
+      "Web Engineering Standards & Git Version Control",
+    ],
+    keyProjects: [
+      {
+        title: "Aduan Salah Susu",
+        role: "Fullstack Developer",
+        descriptionId:
+          "Proyek web client instansi pemerintah untuk kanal penanganan, pelaporan, dan disposisi tindak lanjut aduan masyarakat secara terpusat.",
+        descriptionEn:
+          "Government client web platform for centralized public complaint intake, incident logging, and administrative escalation routing.",
+        tech: ["PHP", "Laravel", "MySQL", "Bootstrap", "REST API"],
+      },
+      {
+        title: "Dispress (Disposisi Surat SMKN 4 Tangerang)",
+        role: "Lead Developer",
+        descriptionId:
+          "Sistem informasi manajemen persuratan dan disposisi digital untuk divisi Tata Usaha SMKN 4 Tangerang guna mempercepat alur arsip masuk/keluar.",
+        descriptionEn:
+          "Digital letter tracking and disposition information system for the SMKN 4 Tangerang administrative secretariat, digitizing mail flow.",
+        tech: ["PHP", "Laravel", "MySQL", "Tailwind CSS", "DataTables"],
+      },
+      {
+        title: "E-SPP (Sistem Pembayaran SPP)",
+        role: "Fullstack Developer",
+        descriptionId:
+          "Aplikasi pencatatan, verifikasi, dan rekonsiliasi pembayaran SPP siswa berbasis role-based access (Petugas, Admin, Siswa) dengan histori tagihan otomatis.",
+        descriptionEn:
+          "Tuition payment fee tracking and reconciliation portal featuring RBAC permissions (Officers, Admins, Students) and automated billing logs.",
+        tech: ["PHP", "Laravel", "MySQL", "SweetAlert2", "Blade"],
+        link: "https://github.com/fadli154/Project-Spp",
+      },
+      {
+        title: "Project Warga (Magang Dinas Kominfo)",
+        role: "Web Engineering Intern",
+        descriptionId:
+          "Sistem Informasi Administrasi Kependudukan Terpadu yang dibangun saat masa praktik kerja lapangan resmi di Dinas Kominfo.",
+        descriptionEn:
+          "Integrated civil registry administration web portal built during the official student internship at the Department of Communication and Informatics (Dinas Kominfo).",
+        tech: ["Laravel 9", "MySQL", "Yajra DataTables", "Bootstrap 5"],
+        link: "https://github.com/Tofu-TheGreat/project-warga",
+      },
+    ],
+  },
+  {
+    id: "edu-uin",
+    institution: "UIN Sultan Maulana Hasanuddin Banten",
+    institutionShort: "UIN SMH Banten",
+    websiteUrl: "https://uinbanten.ac.id/",
+    degreeEn: "Bachelor of Informatics / Computer Science (S.Kom)",
+    degreeId: "Sarjana Komputer (S1) · Teknik Informatika",
+    period: "2024 – Sekarang",
+    statusLabelId: "Mahasiswa Aktif",
+    statusLabelEn: "Undergraduate Student",
+    location: "Kota Serang, Banten",
+    gpaOrHonors: "Fokus Riset: Arsitektur Web Modern, Firebase, Cloud Database & Edge AI",
+    focusEn:
+      "Deepening computer science principles, scalable web architecture, modern reactive frontend frameworks, Firebase ecosystems, secure database design, and edge Computer Vision.",
+    focusId:
+      "Memperdalam prinsip ilmu komputer, rekayasa perangkat lunak skala besar, arsitektur web reaktif modern, ekosistem Firebase, perancangan database aman, dan visi komputer (Computer Vision) on-device.",
+    curriculumHighlightsId: [
+      "Algoritma & Struktur Data Tingkat Lanjut",
+      "Arsitektur Sistem Web Modern (Next.js 15, React 19, Server Components)",
+      "Ekosistem Cloud & Autentikasi (Firebase & Supabase PostgreSQL RLS)",
+      "Rekayasa Aplikasi Mobile & IoT (Flutter, BLE, ESP32-S3)",
+      "Kecerdasan Buatan & Computer Vision (TensorFlow Lite, MediaPipe Hand Tracking)",
+    ],
+    curriculumHighlightsEn: [
+      "Advanced Algorithms & Data Structures",
+      "Modern Web Architecture (Next.js 15 App Router, React 19, Server Components)",
+      "Cloud Ecosystems & Auth Security (Firebase & Supabase PostgreSQL RLS)",
+      "Mobile & IoT Engineering (Flutter, BLE, ESP32-S3 Hardware)",
+      "Artificial Intelligence & Computer Vision (TensorFlow Lite, MediaPipe Hand Tracking)",
+    ],
+    keyProjects: [
+      {
+        title: "HajjCare AI & Smart Assistant",
+        role: "Lead Mobile & AI Engineer",
+        descriptionId:
+          "Aplikasi asisten cerdas jamaah haji dan umrah memadukan Computer Vision deteksi mata uang SAR, gelang IoT, dan penerjemah isyarat tangan Bisindo.",
+        descriptionEn:
+          "Multimodal AI assistive companion for Indonesian pilgrims combining on-device SAR currency recognition, IoT wearable telemetry, and sign language translation.",
+        tech: ["Flutter", "Dart", "Firebase", "TensorFlow Lite", "MediaPipe", "ESP32-S3"],
+        link: "/projects/hajjcare-multimodal-hajj-companion",
+      },
+      {
+        title: "Portfolio Web & CMS Engineering",
+        role: "Frontend & System Architect",
+        descriptionId:
+          "Platform portofolio editorial kelas Awwwards dengan Next.js 15, Three.js WebGL, Lenis scroll, serta proteksi keamanan PostgreSQL RLS.",
+        descriptionEn:
+          "Awwwards-standard editorial portfolio architecture featuring Next.js 15, Three.js WebGL, Lenis smooth scrolling, and strict PostgreSQL RLS policies.",
+        tech: ["Next.js 15", "React 19", "Tailwind CSS v4", "Supabase", "GSAP"],
+      },
+    ],
   },
 ];
 
@@ -1341,6 +1475,33 @@ export const TECHNOLOGIES: TechnologyItem[] = [
     years: "Daily Workflow",
     noteEn: "Version control (@fadli154), collaborative workflow, UI/UX prototyping",
     noteId: "Version control (@fadli154), kolaborasi tim, prototipe UI/UX",
+  },
+  {
+    name: "DaVinci Resolve",
+    slug: "davinci-resolve",
+    category: "Frontend & Creative",
+    proficiency: "Production",
+    years: "Active",
+    noteEn: "Non-linear video editing, color grading, motion graphics & audio sync",
+    noteId: "Penyuntingan video profesional, color grading, motion graphics & audio sync",
+  },
+  {
+    name: "Adobe Photoshop",
+    slug: "adobe-photoshop",
+    category: "Frontend & Creative",
+    proficiency: "Production",
+    years: "Active",
+    noteEn: "Raster graphics, digital photo retouching, visual asset preparation & UI mockups",
+    noteId: "Manipulasi citra digital, desain aset grafis raster, banner visual & mockup UI",
+  },
+  {
+    name: "Microsoft Office Suite",
+    slug: "ms-office",
+    category: "DevOps & Cloud",
+    proficiency: "Production",
+    years: "Proficient",
+    noteEn: "Word documentation, Excel data spreadsheets & executive PowerPoint presentations",
+    noteId: "Administrasi dokumen resmi Word, pengolahan spreadsheet Excel & presentasi PowerPoint",
   },
 ];
 
@@ -1671,7 +1832,7 @@ export const TEAM_K1_MEMBERS: TeamK1Member[] = [
     roleBadgeId: "PENGUSAHA",
     roleBadgeEn: "ENTREPRENEUR",
     roleType: "entrepreneur",
-    portfolioUrl: "https://sites.google.com/view/reynaldi-porto/halaman-muka",
+    portfolioUrl: "https://sites.google.com/view/reynaldi-porto/portofolio",
   },
   {
     number: "02",
@@ -1688,7 +1849,7 @@ export const TEAM_K1_MEMBERS: TeamK1Member[] = [
     roleBadgeId: "PENGUSAHA",
     roleBadgeEn: "ENTREPRENEUR",
     roleType: "entrepreneur",
-    portfolioUrl: "https://sites.google.com/view/mridwan-portofolio/kewirausahaan",
+    portfolioUrl: "https://sites.google.com/view/ridwan-iwan/iwan",
   },
   {
     number: "04",
@@ -1696,7 +1857,7 @@ export const TEAM_K1_MEMBERS: TeamK1Member[] = [
     roleBadgeId: "PEGAWAI",
     roleBadgeEn: "EMPLOYEE",
     roleType: "employee",
-    portfolioUrl: "https://sites.google.com/view/safira-dwi-febriyanti/Beranda",
+    portfolioUrl: "https://sites.google.com/view/porto-safira/portofolio-safira",
   },
   {
     number: "05",
@@ -1704,6 +1865,6 @@ export const TEAM_K1_MEMBERS: TeamK1Member[] = [
     roleBadgeId: "PENGUSAHA",
     roleBadgeEn: "ENTREPRENEUR",
     roleType: "entrepreneur",
-    portfolioUrl: "https://sites.google.com/view/rasyadahwasyafiq/halaman-muka",
+    portfolioUrl: "https://sites.google.com/view/rasyadah-informatika-home/halaman-muka",
   },
 ];

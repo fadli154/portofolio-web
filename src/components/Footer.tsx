@@ -17,10 +17,10 @@ export function Footer() {
   }
 
   return (
-    <footer className="bg-[#111213] py-16 text-[#f5f5f2]">
+    <footer className="bg-[#111213] min-h-[50vh] lg:h-[52vh] flex flex-col justify-center py-10 sm:py-12 lg:py-0 text-[#f5f5f2]">
       <FadeContent blur={6} duration={0.7} ease="power2.out" threshold={0.08} initialOpacity={0} once={true}>
         <div className="keffi-wrap">
-        <div className="keffi-grid items-start border-b border-white/12 pb-14">
+        <div className="keffi-grid items-start border-b border-white/12 pb-7 sm:pb-8">
           <div className="col-span-12 lg:col-span-6">
             <Link
               href="/"
@@ -141,7 +141,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-8 flex flex-wrap items-center justify-between gap-4 font-mono text-xs text-white/45">
+        <div className="mt-5 sm:mt-6 flex flex-wrap items-center justify-between gap-4 font-mono text-xs text-white/45">
           <span>
             © {new Date().getFullYear()} {SITE_PROFILE.fullName} · Informatika Kelompok K-1
           </span>
