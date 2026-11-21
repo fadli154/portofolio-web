@@ -94,7 +94,19 @@ export function loadCmsStoreClient(): CmsDynamicStore {
     return {
       experiences:
         Array.isArray(parsed.experiences) && parsed.experiences.length > 0
-          ? parsed.experiences
+          ? (() => {
+              const savedList = parsed.experiences as any[];
+              const merged = defaults.experiences.map((def) => {
+                const saved = savedList.find((e) => e.id === def.id || e.company === def.company);
+                return saved ? { ...def, ...saved } : def;
+              });
+              savedList.forEach((s) => {
+                if (!merged.some((m) => m.id === s.id || m.company === s.company)) {
+                  merged.push(s);
+                }
+              });
+              return merged;
+            })()
           : defaults.experiences,
       projects:
         Array.isArray(parsed.projects) && parsed.projects.length > 0

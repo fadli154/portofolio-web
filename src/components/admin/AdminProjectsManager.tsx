@@ -17,19 +17,23 @@ import MagicBento, { type MagicBentoItem } from "@/components/MagicBento";
 import { playMechanicalClick } from "@/lib/audio/sound-effects";
 import { useAdminToast } from "./AdminToastProvider";
 import { AdminConfirmDialog } from "./AdminConfirmDialog";
+import { PaginationIconsOnly } from "@/components/ui/PaginationIconsOnly";
+import { ProjectFormModal } from "./forms/ProjectFormModal";
+
+const FOLDER_MAP: Record<string, string> = {
+  warga: "project-warga", kopmas: "kopmas", fintrack: "fintrack", dispress: "dispress",
+  spp: "project-spp", sign: "sign2speech", travel: "travelease", wedding: "travelease", haji: "hajicare",
+};
 
 function getProjectFolderImage(slug: string): string {
   const clean = slug.toLowerCase();
-  if (clean.includes("warga")) return "/experience-folders/project-warga.png";
-  if (clean.includes("kopmas")) return "/experience-folders/kopmas.png";
-  if (clean.includes("fintrack")) return "/experience-folders/fintrack.png";
-  if (clean.includes("dispress")) return "/experience-folders/dispress.png";
-  if (clean.includes("spp")) return "/experience-folders/project-spp.png";
-  if (clean.includes("sign")) return "/experience-folders/sign2speech.png";
-  if (clean.includes("travel")) return "/experience-folders/travelease.png";
-  if (clean.includes("wedding")) return "/experience-folders/travelease.png";
-  if (clean.includes("haji")) return "/experience-folders/hajicare.png";
-  return `/experience-folders/${slug}.png`;
+  const match = Object.keys(FOLDER_MAP).find((k) => clean.includes(k));
+  return `/experience-folders/${match ? FOLDER_MAP[match] : slug}.png`;
+}
+
+function getPrimaryCategory(cat: string): string {
+  const first = cat.split(/[·•]/)[0]?.trim() || cat;
+  return first.length > 20 ? first.slice(0, 18).trim() + "…" : first;
 }
 
 interface AdminProjectsManagerProps {
@@ -48,6 +52,16 @@ export function AdminProjectsManager({
   const [isCreatingNew, setIsCreatingNew] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(6);
+
+  const totalPages = Math.max(1, Math.ceil(projects.length / pageSize));
+  const safePage = Math.min(Math.max(1, page), totalPages);
+
+  const paginatedProjects = useMemo(() => {
+    const start = (safePage - 1) * pageSize;
+    return projects.slice(start, start + pageSize);
+  }, [projects, safePage, pageSize]);
 
   const handleOpenEdit = (project: ProjectCaseStudy) => {
     playMechanicalClick(720);
@@ -78,23 +92,14 @@ export function AdminProjectsManager({
       problemEn: "User automation needs and operational bottleneck resolution.",
       architectureId: "Desain sistem berlapis dengan Clean Architecture dan RESTful API.",
       architectureEn: "Layered system design with Clean Architecture and RESTful APIs.",
-      tradeoffs: [
-        {
-          decision: "Next.js App Router vs SPA",
-          chosen: "Next.js 15 Server Components",
-          alternative: "Vite React SPA",
-          rationaleId: "Peningkatan performa SEO dan SSR streaming.",
-          rationaleEn: "Improved SEO performance and SSR streaming.",
-        },
-      ],
-      metrics: [
-        {
-          labelId: "Kecepatan Render",
-          labelEn: "Render Speed",
-          value: "60 FPS",
-          delta: "+40%",
-        },
-      ],
+      tradeoffs: [{
+        decision: "Next.js App Router vs SPA",
+        chosen: "Next.js 15 Server Components",
+        alternative: "Vite React SPA",
+        rationaleId: "Peningkatan performa SEO dan SSR streaming.",
+        rationaleEn: "Improved SEO performance and SSR streaming.",
+      }],
+      metrics: [{ labelId: "Kecepatan Render", labelEn: "Render Speed", value: "60 FPS", delta: "+40%" }],
       stack: ["Next.js 15", "TypeScript", "Tailwind CSS", "Supabase"],
       liveUrl: "https://github.com/fadli154",
       repoUrl: "https://github.com/fadli154",
@@ -111,18 +116,14 @@ export function AdminProjectsManager({
     setIsCreatingNew(true);
   };
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!editingProject) return;
+  const handleSaveModal = async (updatedProj: ProjectCaseStudy) => {
     setIsSaving(true);
-    playMechanicalClick(780);
-
-    const success = await onSaveProject(editingProject);
+    const success = await onSaveProject(updatedProj);
     setIsSaving(false);
 
     showToast({
       title: isCreatingNew ? "Studi Kasus Ditambahkan" : "Perubahan Disimpan",
-      description: `Proyek "${editingProject.title}" berhasil disinkronisasi ke katalog CMS.`,
+      description: `Proyek "${updatedProj.title}" berhasil disinkronisasi ke katalog CMS.`,
       variant: success ? "success" : "info",
     });
     setEditingProject(null);
@@ -147,31 +148,34 @@ export function AdminProjectsManager({
   // Adaptive MagicBento items strictly in Black, White, #c4e22e
   const bentoItems: MagicBentoItem[] = useMemo(
     () =>
-      projects.map((proj) => ({
+      paginatedProjects.map((proj) => ({
         id: proj.id,
         colSpan: 1,
         rowSpan: 1,
         onClick: () => handleOpenEdit(proj),
         content: (
           <div className="flex flex-col justify-between h-full w-full">
-            <div className="space-y-3">
-              {/* Header Badges */}
-              <div className="flex items-center justify-between">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#c4e22e]/30 bg-[#c4e22e]/10 px-2.5 py-0.5 font-mono text-[10px] font-bold text-[#c4e22e]">
-                  {proj.category}
+            <div className="space-y-2.5">
+              {/* Header Badges with Clean Bounded Pills */}
+              <div className="flex items-center justify-between gap-2">
+                <span className="inline-flex items-center gap-1.5 rounded-lg border border-[#c4e22e]/30 bg-[#c4e22e]/10 px-2 py-0.5 font-mono text-[10px] font-bold text-[#c4e22e] tracking-tight">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#c4e22e] shrink-0" />
+                  <span className="truncate max-w-[150px]">{getPrimaryCategory(proj.category)}</span>
                 </span>
                 {proj.featured ? (
-                  <span className="inline-flex items-center gap-1 font-mono text-[10px] font-bold text-[#c4e22e]">
-                    <Star className="h-3 w-3 fill-[#c4e22e]" />
-                    <span>FEATURED</span>
+                  <span className="inline-flex items-center gap-1 shrink-0 rounded-md border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 font-mono text-[10px] font-bold text-amber-300">
+                    <Star className="h-2.5 w-2.5 fill-amber-300" />
+                    <span>Featured</span>
                   </span>
                 ) : (
-                  <span className="font-mono text-xs text-white/50">{proj.year || "2024 - 2026"}</span>
+                  <span className="font-mono text-[11px] text-white/40 shrink-0">
+                    {proj.year?.slice(-4) || "2025"}
+                  </span>
                 )}
               </div>
 
-              {/* Direct Photo Preview of Project */}
-              <div className="relative w-full h-36 rounded-xl overflow-hidden border border-white/10 bg-black/60 group admin-idle-folder-tab">
+              {/* Clean 3D Folder Visual (No Cluttering Overlay) */}
+              <div className="relative w-full h-34 rounded-xl overflow-hidden border border-white/10 bg-black/60 group admin-idle-folder-tab">
                 <img
                   src={getProjectFolderImage(proj.slug)}
                   alt={proj.title}
@@ -184,17 +188,13 @@ export function AdminProjectsManager({
                     else img.src = "/experience-folders/hajicare.png";
                   }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
-                <div className="absolute bottom-2 left-2 flex flex-wrap gap-1">
-                  {proj.stack.slice(0, 3).map((tech) => (
-                    <span
-                      key={tech}
-                      className="rounded bg-black/75 backdrop-blur-sm px-1.5 py-0.5 font-mono text-[9px] text-white/80 border border-white/10"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
+                <div className="admin-idle-foil-sheen" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+                {proj.indexCode && (
+                  <span className="absolute bottom-2 right-2 rounded-md bg-black/85 backdrop-blur-sm px-2 py-0.5 font-mono text-[10px] text-white/70 border border-white/10">
+                    #{proj.indexCode}
+                  </span>
+                )}
               </div>
 
               {/* Concise Typography */}
@@ -205,6 +205,23 @@ export function AdminProjectsManager({
                 <p className="mt-0.5 font-sans text-xs text-white/50 line-clamp-1">
                   {proj.summaryId}
                 </p>
+              </div>
+
+              {/* Tech Stack Pills dengan Batas Rapi (Maks 3) */}
+              <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                {proj.stack.slice(0, 3).map((tech) => (
+                  <span
+                    key={tech}
+                    className="inline-flex items-center rounded-md border border-white/10 bg-white/[0.04] px-2 py-0.5 font-mono text-[10px] text-white/70"
+                  >
+                    {tech}
+                  </span>
+                ))}
+                {proj.stack.length > 3 && (
+                  <span className="rounded-md border border-white/5 bg-white/[0.02] px-1.5 py-0.5 font-mono text-[9px] text-white/40">
+                    +{proj.stack.length - 3}
+                  </span>
+                )}
               </div>
             </div>
 
@@ -257,7 +274,7 @@ export function AdminProjectsManager({
           </div>
         ),
       })),
-    [projects]
+    [projects, paginatedProjects]
   );
 
   return (
@@ -296,161 +313,34 @@ export function AdminProjectsManager({
         clickEffect={true}
         intro={false}
         columns={3}
-        rowHeight={340}
+        rowHeight={355}
         gap={20}
         radius={24}
         items={bentoItems}
       />
 
+      {/* Pagination Controls */}
+      <PaginationIconsOnly
+        currentPage={safePage}
+        pageSize={pageSize}
+        totalItems={projects.length}
+        onPageChange={setPage}
+        onPageSizeChange={(sz) => {
+          setPageSize(sz);
+          setPage(1);
+        }}
+        pageSizeOptions={[3, 6, 12, 24]}
+      />
+
       {/* Edit / Create Modal Form */}
-      {editingProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
-          <div className="relative w-full max-w-3xl rounded-2xl border border-white/15 bg-[#0e1014] p-6 shadow-2xl my-8">
-            <div className="flex items-center justify-between border-b border-white/10 pb-4">
-              <div className="flex items-center gap-2">
-                <FolderGit2 className="h-5 w-5 text-[#c4e22e]" />
-                <h3 className="font-display text-lg font-bold text-white">
-                  {isCreatingNew ? "Tambah Studi Kasus Baru" : `Edit: ${editingProject.title}`}
-                </h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setEditingProject(null)}
-                className="rounded-lg p-1.5 text-white/50 hover:bg-white/10 hover:text-white"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-
-            <form onSubmit={handleSave} className="mt-5 space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div>
-                  <label className="block font-mono text-[11px] text-white/60 mb-1">Judul Proyek</label>
-                  <input
-                    type="text"
-                    value={editingProject.title}
-                    onChange={(e) => setEditingProject({ ...editingProject, title: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-sans text-xs text-white focus:border-[#c4e22e] outline-none"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block font-mono text-[11px] text-white/60 mb-1">Kategori</label>
-                  <input
-                    type="text"
-                    value={editingProject.category}
-                    onChange={(e) => setEditingProject({ ...editingProject, category: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-sans text-xs text-white focus:border-[#c4e22e] outline-none"
-                    placeholder="Web Application / Mobile AI"
-                  />
-                </div>
-                <div>
-                  <label className="block font-mono text-[11px] text-white/60 mb-1">Tahun Rilis</label>
-                  <input
-                    type="text"
-                    value={editingProject.year}
-                    onChange={(e) => setEditingProject({ ...editingProject, year: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-mono text-xs text-white focus:border-[#c4e22e] outline-none"
-                    placeholder="2026"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block font-mono text-[11px] text-white/60 mb-1">Ringkasan Eksekutif (ID)</label>
-                <textarea
-                  value={editingProject.summaryId}
-                  onChange={(e) => setEditingProject({ ...editingProject, summaryId: e.target.value })}
-                  rows={2}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-sans text-xs text-white focus:border-[#c4e22e] outline-none"
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-mono text-[11px] text-white/60 mb-1">Klien / Konteks</label>
-                  <input
-                    type="text"
-                    value={editingProject.clientOrContext}
-                    onChange={(e) =>
-                      setEditingProject({ ...editingProject, clientOrContext: e.target.value })
-                    }
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-sans text-xs text-white focus:border-[#c4e22e] outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block font-mono text-[11px] text-white/60 mb-1">Tech Stack (koma terpisah)</label>
-                  <input
-                    type="text"
-                    value={editingProject.stack.join(", ")}
-                    onChange={(e) =>
-                      setEditingProject({
-                        ...editingProject,
-                        stack: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
-                      })
-                    }
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-mono text-xs text-white focus:border-[#c4e22e] outline-none"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-mono text-[11px] text-white/60 mb-1">Live URL (Demo / Production)</label>
-                  <input
-                    type="text"
-                    value={editingProject.liveUrl || ""}
-                    onChange={(e) => setEditingProject({ ...editingProject, liveUrl: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-mono text-xs text-white focus:border-[#c4e22e] outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block font-mono text-[11px] text-white/60 mb-1">Repo URL (GitHub)</label>
-                  <input
-                    type="text"
-                    value={editingProject.repoUrl || ""}
-                    onChange={(e) => setEditingProject({ ...editingProject, repoUrl: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-mono text-xs text-white focus:border-[#c4e22e] outline-none"
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center gap-3 pt-2">
-                <label className="flex items-center gap-2 cursor-pointer font-mono text-xs text-white">
-                  <input
-                    type="checkbox"
-                    checked={editingProject.featured}
-                    onChange={(e) =>
-                      setEditingProject({ ...editingProject, featured: e.target.checked })
-                    }
-                    className="rounded border-white/20 bg-white/5 text-[#c4e22e] focus:ring-[#c4e22e]"
-                  />
-                  <span>Tandai sebagai Featured Project (Beranda Utama)</span>
-                </label>
-              </div>
-
-              <div className="mt-6 flex justify-end gap-3 pt-3 border-t border-white/10">
-                <button
-                  type="button"
-                  onClick={() => setEditingProject(null)}
-                  className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 font-mono text-xs text-white/70 hover:bg-white/10 hover:text-white"
-                >
-                  Batal
-                </button>
-                <button
-                  type="submit"
-                  disabled={isSaving}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#c4e22e] px-5 py-2 font-mono text-xs font-bold text-[#111213] shadow-lg shadow-[#c4e22e]/20 hover:bg-[#d6f53b]"
-                >
-                  <Save className="h-4 w-4" />
-                  <span>{isSaving ? "Menyimpan..." : "Simpan Proyek"}</span>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <ProjectFormModal
+        isOpen={editingProject !== null}
+        project={editingProject}
+        isCreatingNew={isCreatingNew}
+        onClose={() => setEditingProject(null)}
+        onSave={handleSaveModal}
+        isSaving={isSaving}
+      />
 
       {/* Delete Confirmation SweetAlert Modal */}
       <AdminConfirmDialog

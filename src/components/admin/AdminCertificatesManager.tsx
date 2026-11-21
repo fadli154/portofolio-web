@@ -16,6 +16,8 @@ import MagicBento, { type MagicBentoItem } from "@/components/MagicBento";
 import { playMechanicalClick } from "@/lib/audio/sound-effects";
 import { useAdminToast } from "./AdminToastProvider";
 import { AdminConfirmDialog } from "./AdminConfirmDialog";
+import { PaginationIconsOnly } from "@/components/ui/PaginationIconsOnly";
+import { CertificateFormModal } from "./forms/CertificateFormModal";
 
 interface AdminCertificatesManagerProps {
   certificates: CertificateItem[];
@@ -33,6 +35,16 @@ export function AdminCertificatesManager({
   const [isCreatingNew, setIsCreatingNew] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(6);
+
+  const totalPages = Math.max(1, Math.ceil(certificates.length / pageSize));
+  const safePage = Math.min(Math.max(1, page), totalPages);
+
+  const paginatedCertificates = useMemo(() => {
+    const start = (safePage - 1) * pageSize;
+    return certificates.slice(start, start + pageSize);
+  }, [certificates, safePage, pageSize]);
 
   const handleOpenEdit = (cert: CertificateItem) => {
     playMechanicalClick(720);
@@ -50,8 +62,8 @@ export function AdminCertificatesManager({
       issueDate: "2026",
       credentialId: `REG-${Date.now().toString().slice(-6)}`,
       category: "Kompetensi",
-      imageUrl: "/certificates/default-cert.png",
-      fileUrl: "/certificates/default-cert.pdf",
+      imageUrl: "",
+      fileUrl: "",
       verifyUrl: "https://kemenag.go.id",
       summaryId: "Sertifikasi resmi keahlian teknologi dan rekayasa perangkat lunak.",
       summaryEn: "Official technical engineering competency credential.",
@@ -61,18 +73,14 @@ export function AdminCertificatesManager({
     setIsCreatingNew(true);
   };
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!editingCert) return;
+  const handleSaveModal = async (updatedCert: CertificateItem) => {
     setIsSaving(true);
-    playMechanicalClick(780);
-
-    const success = await onSaveCertificate(editingCert);
+    const success = await onSaveCertificate(updatedCert);
     setIsSaving(false);
 
     showToast({
       title: isCreatingNew ? "Sertifikat Ditambahkan" : "Perubahan Disimpan",
-      description: `Kredensial "${editingCert.title}" berhasil diperbarui.`,
+      description: `Kredensial "${updatedCert.title}" berhasil diperbarui.`,
       variant: success ? "success" : "info",
     });
     setEditingCert(null);
@@ -97,7 +105,7 @@ export function AdminCertificatesManager({
   // Adaptive MagicBento items in Black, White, #c4e22e
   const bentoItems: MagicBentoItem[] = useMemo(
     () =>
-      certificates.map((cert) => ({
+      paginatedCertificates.map((cert) => ({
         id: cert.id,
         colSpan: 1,
         rowSpan: 1,
@@ -187,7 +195,7 @@ export function AdminCertificatesManager({
           </div>
         ),
       })),
-    [certificates]
+    [certificates, paginatedCertificates]
   );
 
   return (
@@ -232,138 +240,28 @@ export function AdminCertificatesManager({
         items={bentoItems}
       />
 
+      {/* Pagination Controls */}
+      <PaginationIconsOnly
+        currentPage={safePage}
+        pageSize={pageSize}
+        totalItems={certificates.length}
+        onPageChange={setPage}
+        onPageSizeChange={(sz) => {
+          setPageSize(sz);
+          setPage(1);
+        }}
+        pageSizeOptions={[3, 6, 12, 24]}
+      />
+
       {/* Edit / Create Modal Form */}
-      {editingCert && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
-          <div className="relative w-full max-w-2xl rounded-2xl border border-white/15 bg-[#0e1014] p-6 shadow-2xl my-8">
-            <div className="flex items-center justify-between border-b border-white/10 pb-4">
-              <div className="flex items-center gap-2">
-                <Award className="h-5 w-5 text-[#c4e22e]" />
-                <h3 className="font-display text-lg font-bold text-white">
-                  {isCreatingNew ? "Tambah Sertifikat Baru" : `Edit: ${editingCert.title}`}
-                </h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setEditingCert(null)}
-                className="rounded-lg p-1.5 text-white/50 hover:bg-white/10 hover:text-white"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-
-            <form onSubmit={handleSave} className="mt-5 space-y-4">
-              <div>
-                <label className="block font-mono text-[11px] text-white/60 mb-1">Nama Sertifikat / Piagam</label>
-                <input
-                  type="text"
-                  value={editingCert.title}
-                  onChange={(e) => setEditingCert({ ...editingCert, title: e.target.value })}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-sans text-xs text-white focus:border-[#c4e22e] outline-none"
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-mono text-[11px] text-white/60 mb-1">Lembaga Penerbit</label>
-                  <input
-                    type="text"
-                    value={editingCert.issuer}
-                    onChange={(e) => setEditingCert({ ...editingCert, issuer: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-sans text-xs text-white focus:border-[#c4e22e] outline-none"
-                    placeholder="Kementerian Agama RI / BNSP"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block font-mono text-[11px] text-white/60 mb-1">Tahun / Tanggal Terbit</label>
-                  <input
-                    type="text"
-                    value={editingCert.issueDate}
-                    onChange={(e) => setEditingCert({ ...editingCert, issueDate: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-mono text-xs text-white focus:border-[#c4e22e] outline-none"
-                    placeholder="7 November 2026"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-mono text-[11px] text-white/60 mb-1">Nomor Kredensial / Registrasi</label>
-                  <input
-                    type="text"
-                    value={editingCert.credentialId || ""}
-                    onChange={(e) => setEditingCert({ ...editingCert, credentialId: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-mono text-xs text-white focus:border-[#c4e22e] outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block font-mono text-[11px] text-white/60 mb-1">Kategori Penghargaan</label>
-                  <input
-                    type="text"
-                    value={editingCert.category}
-                    onChange={(e) => setEditingCert({ ...editingCert, category: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-sans text-xs text-white focus:border-[#c4e22e] outline-none"
-                    placeholder="Prestasi Nasional / Sertifikasi Profesi"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block font-mono text-[11px] text-white/60 mb-1">Ringkasan Pencapaian (ID)</label>
-                <textarea
-                  value={editingCert.summaryId}
-                  onChange={(e) => setEditingCert({ ...editingCert, summaryId: e.target.value })}
-                  rows={2}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-sans text-xs text-white focus:border-[#c4e22e] outline-none"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-mono text-[11px] text-white/60 mb-1">URL Gambar Sertifikat</label>
-                  <input
-                    type="text"
-                    value={editingCert.imageUrl || ""}
-                    onChange={(e) => setEditingCert({ ...editingCert, imageUrl: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-mono text-xs text-white focus:border-[#c4e22e] outline-none"
-                    placeholder="/certificates/cert-oase.png"
-                  />
-                </div>
-                <div>
-                  <label className="block font-mono text-[11px] text-white/60 mb-1">Tautan Verifikasi Resmi</label>
-                  <input
-                    type="text"
-                    value={editingCert.verifyUrl || ""}
-                    onChange={(e) => setEditingCert({ ...editingCert, verifyUrl: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-mono text-xs text-white focus:border-[#c4e22e] outline-none"
-                    placeholder="https://..."
-                  />
-                </div>
-              </div>
-
-              <div className="mt-6 flex justify-end gap-3 pt-3 border-t border-white/10">
-                <button
-                  type="button"
-                  onClick={() => setEditingCert(null)}
-                  className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 font-mono text-xs text-white/70 hover:bg-white/10 hover:text-white"
-                >
-                  Batal
-                </button>
-                <button
-                  type="submit"
-                  disabled={isSaving}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#c4e22e] px-5 py-2 font-mono text-xs font-bold text-[#111213] shadow-lg shadow-[#c4e22e]/20 hover:bg-[#d6f53b]"
-                >
-                  <Save className="h-4 w-4" />
-                  <span>{isSaving ? "Menyimpan..." : "Simpan Kredensial"}</span>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <CertificateFormModal
+        isOpen={editingCert !== null}
+        certificate={editingCert}
+        isCreatingNew={isCreatingNew}
+        onClose={() => setEditingCert(null)}
+        onSave={handleSaveModal}
+        isSaving={isSaving}
+      />
 
       {/* Delete Confirmation SweetAlert Modal */}
       <AdminConfirmDialog

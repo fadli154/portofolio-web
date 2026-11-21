@@ -16,6 +16,8 @@ import MagicBento, { type MagicBentoItem } from "@/components/MagicBento";
 import { playMechanicalClick } from "@/lib/audio/sound-effects";
 import { useAdminToast } from "./AdminToastProvider";
 import { AdminConfirmDialog } from "./AdminConfirmDialog";
+import { PaginationIconsOnly } from "@/components/ui/PaginationIconsOnly";
+import { CourseworkFormModal } from "./forms/CourseworkFormModal";
 
 interface AdminCourseworkManagerProps {
   sessions: KwuSessionItem[];
@@ -33,6 +35,16 @@ export function AdminCourseworkManager({
   const [isCreatingNew, setIsCreatingNew] = useState(false);
   const [deleteTargetNumber, setDeleteTargetNumber] = useState<number | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(6);
+
+  const totalPages = Math.max(1, Math.ceil(sessions.length / pageSize));
+  const safePage = Math.min(Math.max(1, page), totalPages);
+
+  const paginatedSessions = useMemo(() => {
+    const start = (safePage - 1) * pageSize;
+    return sessions.slice(start, start + pageSize);
+  }, [sessions, safePage, pageSize]);
 
   const handleOpenEdit = (session: KwuSessionItem) => {
     playMechanicalClick(720);
@@ -61,18 +73,14 @@ export function AdminCourseworkManager({
     setIsCreatingNew(true);
   };
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!editingSession) return;
+  const handleSaveModal = async (updatedSession: KwuSessionItem) => {
     setIsSaving(true);
-    playMechanicalClick(780);
-
-    const success = await onSaveSession(editingSession);
+    const success = await onSaveSession(updatedSession);
     setIsSaving(false);
 
     showToast({
-      title: isCreatingNew ? "Sesi Berhasil Ditambahkan" : "Perubahan Disimpan",
-      description: `Pertemuan ${editingSession.number} berhasil disinkronisasi ke Supabase & CMS.`,
+      title: isCreatingNew ? "Sesi Ditambahkan" : "Perubahan Disimpan",
+      description: `Pertemuan ${updatedSession.number} berhasil diperbarui di Supabase.`,
       variant: success ? "success" : "info",
     });
     setEditingSession(null);
@@ -96,7 +104,7 @@ export function AdminCourseworkManager({
   // Adaptive MagicBento items matching the 3-color palette (Black, White, #c4e22e)
   const bentoItems: MagicBentoItem[] = useMemo(
     () =>
-      sessions.map((s) => ({
+      paginatedSessions.map((s) => ({
         id: s.number,
         colSpan: 1,
         rowSpan: 1,
@@ -178,7 +186,7 @@ export function AdminCourseworkManager({
           </div>
         ),
       })),
-    [sessions]
+    [sessions, paginatedSessions]
   );
 
   return (
@@ -224,178 +232,28 @@ export function AdminCourseworkManager({
         items={bentoItems}
       />
 
+      {/* Pagination Controls */}
+      <PaginationIconsOnly
+        currentPage={safePage}
+        pageSize={pageSize}
+        totalItems={sessions.length}
+        onPageChange={setPage}
+        onPageSizeChange={(sz) => {
+          setPageSize(sz);
+          setPage(1);
+        }}
+        pageSizeOptions={[3, 6, 12, 24]}
+      />
+
       {/* Edit / Create Modal Form */}
-      {editingSession && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
-          <div className="relative w-full max-w-2xl rounded-2xl border border-white/15 bg-[#0e1014] p-6 shadow-2xl my-8">
-            <div className="flex items-center justify-between border-b border-white/10 pb-4">
-              <div className="flex items-center gap-2">
-                <BookOpen className="h-5 w-5 text-[#c4e22e]" />
-                <h3 className="font-display text-lg font-bold text-white">
-                  {isCreatingNew ? "Tambah Sesi Pertemuan Baru" : `Edit Pertemuan ${editingSession.number}`}
-                </h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setEditingSession(null)}
-                className="rounded-lg p-1.5 text-white/50 hover:bg-white/10 hover:text-white"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-
-            <form onSubmit={handleSave} className="mt-5 space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div>
-                  <label className="block font-mono text-[11px] text-white/60 mb-1">Nomor Sesi</label>
-                  <input
-                    type="number"
-                    value={editingSession.number}
-                    onChange={(e) =>
-                      setEditingSession({ ...editingSession, number: parseInt(e.target.value) || 1 })
-                    }
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-mono text-xs text-white focus:border-[#c4e22e] outline-none"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block font-mono text-[11px] text-white/60 mb-1">Kode Sesi</label>
-                  <input
-                    type="text"
-                    value={editingSession.code}
-                    onChange={(e) => setEditingSession({ ...editingSession, code: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-mono text-xs text-white focus:border-[#c4e22e] outline-none"
-                    placeholder="KWU-11"
-                  />
-                </div>
-                <div>
-                  <label className="block font-mono text-[11px] text-white/60 mb-1">Status Kehadiran</label>
-                  <select
-                    value={editingSession.attendanceStatus}
-                    onChange={(e) =>
-                      setEditingSession({
-                        ...editingSession,
-                        attendanceStatus: e.target.value as "Hadir" | "Izin" | "Sakit" | "Belum Dimulai",
-                      })
-                    }
-                    className="w-full rounded-xl border border-white/10 bg-[#16171d] px-3 py-2 font-mono text-xs text-white focus:border-[#c4e22e] outline-none"
-                  >
-                    <option value="Hadir">Hadir ✓</option>
-                    <option value="Izin">Izin</option>
-                    <option value="Sakit">Sakit</option>
-                    <option value="Belum Dimulai">Belum Dimulai</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block font-mono text-[11px] text-white/60 mb-1">Judul Pertemuan (ID)</label>
-                <input
-                  type="text"
-                  value={editingSession.titleId}
-                  onChange={(e) => setEditingSession({ ...editingSession, titleId: e.target.value })}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-sans text-xs text-white focus:border-[#c4e22e] outline-none"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block font-mono text-[11px] text-white/60 mb-1">Deskripsi Pertemuan (ID)</label>
-                <textarea
-                  value={editingSession.descId}
-                  onChange={(e) => setEditingSession({ ...editingSession, descId: e.target.value })}
-                  rows={2}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-sans text-xs text-white focus:border-[#c4e22e] outline-none"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-mono text-[11px] text-white/60 mb-1">URL Bukti Kehadiran / Foto</label>
-                  <input
-                    type="text"
-                    value={editingSession.attendanceProofUrl || ""}
-                    onChange={(e) =>
-                      setEditingSession({ ...editingSession, attendanceProofUrl: e.target.value })
-                    }
-                    placeholder="/coursework/proof-session-11.png"
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-mono text-xs text-white focus:border-[#c4e22e] outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block font-mono text-[11px] text-white/60 mb-1">Status Pengerjaan Tugas</label>
-                  <select
-                    value={editingSession.taskStatus}
-                    onChange={(e) =>
-                      setEditingSession({
-                        ...editingSession,
-                        taskStatus: e.target.value as "Selesai" | "Proses" | "Belum Ada Tugas",
-                      })
-                    }
-                    className="w-full rounded-xl border border-white/10 bg-[#16171d] px-3 py-2 font-mono text-xs text-white focus:border-[#c4e22e] outline-none"
-                  >
-                    <option value="Selesai">Selesai ✓</option>
-                    <option value="Proses">Dalam Pengerjaan</option>
-                    <option value="Belum Ada Tugas">Belum Ada Tugas</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-mono text-[11px] text-white/60 mb-1">Judul Tugas</label>
-                  <input
-                    type="text"
-                    value={editingSession.taskTitle || ""}
-                    onChange={(e) => setEditingSession({ ...editingSession, taskTitle: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-sans text-xs text-white focus:border-[#c4e22e] outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block font-mono text-[11px] text-white/60 mb-1">Tautan Tugas / Google Sites / Docs</label>
-                  <input
-                    type="text"
-                    value={editingSession.taskUrl || ""}
-                    onChange={(e) => setEditingSession({ ...editingSession, taskUrl: e.target.value })}
-                    placeholder="https://sites.google.com/..."
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-mono text-xs text-white focus:border-[#c4e22e] outline-none"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block font-mono text-[11px] text-white/60 mb-1">Rincian / Catatan Tugas</label>
-                <textarea
-                  value={editingSession.taskDescription || ""}
-                  onChange={(e) =>
-                    setEditingSession({ ...editingSession, taskDescription: e.target.value })
-                  }
-                  rows={2}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-sans text-xs text-white focus:border-[#c4e22e] outline-none"
-                />
-              </div>
-
-              <div className="mt-6 flex justify-end gap-3 pt-3 border-t border-white/10">
-                <button
-                  type="button"
-                  onClick={() => setEditingSession(null)}
-                  className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 font-mono text-xs text-white/70 hover:bg-white/10 hover:text-white"
-                >
-                  Batal
-                </button>
-                <button
-                  type="submit"
-                  disabled={isSaving}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#c4e22e] px-5 py-2 font-mono text-xs font-bold text-[#111213] shadow-lg shadow-[#c4e22e]/20 hover:bg-[#d6f53b]"
-                >
-                  <Save className="h-4 w-4" />
-                  <span>{isSaving ? "Menyimpan..." : "Simpan Sesi ke Supabase"}</span>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <CourseworkFormModal
+        isOpen={editingSession !== null}
+        session={editingSession}
+        isCreatingNew={isCreatingNew}
+        onClose={() => setEditingSession(null)}
+        onSave={handleSaveModal}
+        isSaving={isSaving}
+      />
 
       {/* Delete Confirmation SweetAlert Modal */}
       <AdminConfirmDialog

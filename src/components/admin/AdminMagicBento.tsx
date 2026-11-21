@@ -14,6 +14,7 @@ interface AdminMagicBentoProps {
     experiences: number;
     certificates: number;
     educations: number;
+    categories?: number;
     inquiries: number;
   };
   dataSource: "supabase-live" | "local-seed-fallback";

@@ -214,6 +214,70 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb:active,
 }
 
 /* ============================================================================
+   ADMIN COMMAND CENTER & MODAL CUSTOM SCROLLBAR ("SLIDER") SYSTEM
+   Sleek, high-contrast obsidian & lime green (#c4e22e) themed scroll slider
+   ============================================================================ */
+.admin-modal-scroll,
+[data-admin-scroll="true"] {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(196, 226, 46, 0.6) rgba(255, 255, 255, 0.05);
+}
+
+.admin-modal-scroll::-webkit-scrollbar,
+[data-admin-scroll="true"]::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.admin-modal-scroll::-webkit-scrollbar-track,
+[data-admin-scroll="true"]::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 9999px;
+  margin: 6px 0;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.admin-modal-scroll::-webkit-scrollbar-thumb,
+[data-admin-scroll="true"]::-webkit-scrollbar-thumb {
+  background: rgba(196, 226, 46, 0.55);
+  border-radius: 9999px;
+  border: 1.5px solid rgba(14, 16, 20, 0.85);
+  box-shadow: 0 0 8px rgba(196, 226, 46, 0.35);
+  transition: all 0.2s ease;
+}
+
+.admin-modal-scroll::-webkit-scrollbar-thumb:hover,
+[data-admin-scroll="true"]::-webkit-scrollbar-thumb:hover {
+  background: #c4e22e;
+  box-shadow: 0 0 12px rgba(196, 226, 46, 0.7);
+}
+
+.admin-modal-scroll::-webkit-scrollbar-thumb:active,
+[data-admin-scroll="true"]::-webkit-scrollbar-thumb:active {
+  background: #d6f53b;
+  box-shadow: 0 0 16px rgba(196, 226, 46, 0.95);
+}
+
+/* Global scrollbar rules for Admin Command Center workspace */
+[data-admin-root] * {
+  scrollbar-color: rgba(196, 226, 46, 0.5) rgba(255, 255, 255, 0.04);
+}
+
+[data-admin-root] ::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 9999px;
+}
+
+[data-admin-root] ::-webkit-scrollbar-thumb {
+  background: rgba(196, 226, 46, 0.45);
+  border-radius: 9999px;
+}
+
+[data-admin-root] ::-webkit-scrollbar-thumb:hover {
+  background: #c4e22e;
+}
+
+/* ============================================================================
    CLEAN & ELEGANT RANGE SLIDERS (input[type="range"])
    ============================================================================ */
 input[type="range"] {

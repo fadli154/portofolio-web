@@ -39,6 +39,13 @@ import {
   deleteInquiryItem,
   type AdminInquiry,
 } from "@/lib/data/cms-inquiries";
+import {
+  loadCategoriesClient,
+  upsertCategoryItem,
+  deleteCategoryItem,
+} from "@/lib/data/cms-categories";
+import type { CategoryItem } from "@/lib/data/categories";
+import { AdminCategoriesManager } from "@/components/admin/AdminCategoriesManager";
 import { createClient, isSupabaseConfigured } from "@/lib/supabase/client";
 import type {
   CertificateItem,
@@ -64,6 +71,7 @@ function AdminContent({
   const [store, setStore] = useState<CmsDynamicStore>(() => loadCmsStoreClient());
   const [educations, setEducations] = useState<EducationItem[]>(() => loadEducationsClient());
   const [inquiries, setInquiries] = useState<AdminInquiry[]>(() => loadInquiriesClient());
+  const [categories, setCategories] = useState<CategoryItem[]>(() => loadCategoriesClient());
 
   // Check login toast trigger
   useEffect(() => {
@@ -86,6 +94,7 @@ function AdminContent({
       setStore(loadCmsStoreClient());
       setEducations(loadEducationsClient());
       setInquiries(loadInquiriesClient());
+      setCategories(loadCategoriesClient());
     };
     window.addEventListener("fadli-cms-updated", handleCmsUpdate);
     return () => window.removeEventListener("fadli-cms-updated", handleCmsUpdate);
@@ -196,17 +205,31 @@ function AdminContent({
     setInquiries(updated);
   };
 
+  // Categories handlers
+  const handleSaveCategory = async (cat: CategoryItem) => {
+    const res = await upsertCategoryItem(cat);
+    setCategories(res.items);
+    return res.syncedToSupabase;
+  };
+
+  const handleDeleteCategory = async (id: string) => {
+    const res = await deleteCategoryItem(id);
+    setCategories(res.items);
+    return res.syncedToSupabase;
+  };
+
   const counts = {
     coursework: store.courseworkSessions.length,
     projects: store.projects.length,
     experiences: store.experiences.length,
     certificates: store.certificates.length,
     educations: educations.length,
+    categories: categories.length,
     inquiries: inquiries.length,
   };
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-[#090a0d] text-white">
+    <div data-admin-root="true" className="flex flex-col lg:flex-row min-h-screen bg-[#090a0d] text-white">
       {/* Sticky Desktop Sidebar & Mobile Topbar/Drawer */}
       <AdminHeader
         activeTab={activeTab}
@@ -219,7 +242,7 @@ function AdminContent({
       />
 
       {/* Main Workspace Container */}
-      <main className="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-4 lg:py-4 max-w-7xl mx-auto w-full">
+      <main className="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-4 lg:py-4 max-w-7xl mx-auto w-full pb-16 lg:pb-20">
         {activeTab === "bento" && (
           <AdminMagicBento
             onNavigateTab={setActiveTab}
@@ -271,6 +294,17 @@ function AdminContent({
             educations={educations}
             onSaveEducation={handleSaveEducation}
             onDeleteEducation={handleDeleteEducation}
+          />
+        )}
+
+        {activeTab === "categories" && (
+          <AdminCategoriesManager
+            categories={categories}
+            projects={store.projects}
+            certificates={store.certificates}
+            experiences={store.experiences}
+            onSaveCategory={handleSaveCategory}
+            onDeleteCategory={handleDeleteCategory}
           />
         )}
 

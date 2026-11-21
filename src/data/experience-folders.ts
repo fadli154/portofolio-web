@@ -288,4 +288,37 @@ export const EXPERIENCE_FOLDERS: ExperienceFolderData[] = [
     stack: ["Flutter", "Dart", "Material 3", "Provider", "Google Maps", "Firebase"],
     image: "/experience-folders/travelease.png",
   },
+  {
+    id: "exp-09",
+    slug: "wedding-invitation",
+    tab: "WEB-02 · WEDDING",
+    title: "Undangan Pernikahan Digital",
+    subtitle: "Proyek Klien · Interactive RSVP Platform",
+    badge: "CLIENT PROJECT · REALTIME RSVP",
+    year: "2024 - 2025",
+    color: "#2a2825",
+    tabColor: "#1d1b19",
+    accentColor: "#e8f79c",
+    textColor: "#ffffff",
+    summary: "Platform undangan pernikahan digital modern berbasis Next.js 15, personalisasi nama tamu dinamis, audio latar terpadu, dan RSVP real-time.",
+    papers: [
+      {
+        code: "DOC-01",
+        title: "Personalisasi Tamu Dinamis",
+        desc: "URL parameter routing otomatis untuk sapaan tamu khusus tanpa reload",
+      },
+      {
+        code: "DOC-02",
+        title: "RSVP & Buku Doa Real-Time",
+        desc: "Snapshot listener Firebase Firestore untuk kepastian hadir dan ucapan selamat",
+      },
+      {
+        code: "DOC-03",
+        title: "Amplop Digital & Integrasi Kalender",
+        desc: "Salin rekening/QRIS instan, hitung mundur hari-H, dan sinkronisasi Google Calendar",
+      },
+    ],
+    stack: ["Next.js 15", "React", "TypeScript", "Tailwind CSS", "Firebase Firestore", "Web Audio API"],
+    image: "/experience-folders/travelease.png",
+  },
 ];

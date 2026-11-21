@@ -1131,6 +1131,114 @@ export const EXPERIENCES: ExperienceItem[] = [
     ],
     stack: ["Flutter", "Dart", "Firebase", "ESP32-S3", "TensorFlow Lite", "MediaPipe", "YOLOv8", "BLE 5.0"],
   },
+  {
+    id: "exp-04",
+    indexCode: "04",
+    company: "Komunitas Inklusi & Klien Aksesibilitas (Sign2Speech)",
+    roleEn: "Lead Mobile & AI Engineer (Client Project)",
+    roleId: "Lead Mobile & AI Engineer (Proyek Klien)",
+    employmentType: "PROYEK KLIEN (FREELANCE)",
+    location: "Indonesia (Remote)",
+    period: "2025",
+    isCurrent: false,
+    metricsBadge: "Sign2Speech · Flutter, MediaPipe & TFLite",
+    summaryEn:
+      "Engineered universal bidirectional accessibility system between Deaf & Hearing communities using real-time on-device MediaPipe 21 hand-landmark tracking and MotionGRU deep learning classification.",
+    summaryId:
+      "Mengembangkan sistem komunikasi dua arah aksesibilitas universal antara Teman Tuli dan Teman Dengar menggunakan pelacakan 21 titik sendi tangan MediaPipe real-time dan klasifikasi deep learning MotionGRU on-device.",
+    highlightsEn: [
+      "60 FPS Hand-Tracking: Integrated real-time 3D MediaPipe hand-landmarks without latency on mobile devices.",
+      "On-Device Sequential Classification: Deployed MotionGRU TFLite models recognizing BISINDO/SIBI alphabet and phrase gestures offline.",
+      "Voice Synthesis & STT: Built FIFO audio queue (TTS) for natural Indonesian speech output and instant voice-to-text transcription.",
+    ],
+    highlightsId: [
+      "Pelacakan Gerak Tangan 60 FPS: Mengintegrasikan MediaPipe hand-landmarks 3D real-time tanpa latensi di perangkat mobile.",
+      "Klasifikasi Sekuensial On-Device: Mengimplementasikan model MotionGRU TFLite untuk mengenali alfabet & kata BISINDO/SIBI secara offline.",
+      "Sintesis Suara & Speech-to-Text: Membangun pipeline antrean suara FIFO (Text-to-Speech) bahasa Indonesia dan transkripsi suara instan.",
+    ],
+    stack: ["Flutter", "Dart", "GetX", "TensorFlow Lite", "MediaPipe", "TTS & STT", "Computer Vision"],
+  },
+  {
+    id: "exp-05",
+    indexCode: "05",
+    company: "Tata Usaha Instansi / Klien Administrasi Pemerintahan (Dispress)",
+    roleEn: "Fullstack Web Developer (Client Project)",
+    roleId: "Fullstack Web Developer (Proyek Klien)",
+    employmentType: "PROYEK KLIEN",
+    location: "Indonesia",
+    period: "2024 - 2025",
+    isCurrent: false,
+    metricsBadge: "Dispress · Laravel, MySQL & Alur Disposisi",
+    summaryEn:
+      "Built paperless official administrative mail disposition and standardized electronic travel warrant (SPPD) web system for institutional client, optimizing bureaucratic document throughput.",
+    summaryId:
+      "Membangun sistem otomasi persuratan dinas tanpa kertas (paperless) dan pencetakan lembar perjalanan dinas (SPPD) terstandarisasi untuk klien tata usaha instansi, mempercepat siklus disposisi dokumen.",
+    highlightsEn: [
+      "Multi-Role Disposition Flow: Designed incoming/outgoing mail workflows with 3-tier access control (Admin, Officer, Staff).",
+      "Digital Timeline Audit Trail: Implemented document journey tracking across departmental divisions without paper loss.",
+      "Automated SPPD Generation: Automated instant export of standardized travel warrants and official bureaucratic memos.",
+    ],
+    highlightsId: [
+      "Alur Disposisi Bertingkat: Merancang alur persuratan masuk dan keluar dengan hak akses 3 tingkat (Admin, Officer, Staff).",
+      "Pelacakan Linimasa Digital: Menyediakan audit trail dan riwayat perpindahan berkas antar bidang secara transparan.",
+      "Generator Cetak SPPD: Mengotomasi pembuatan lembar disposisi dan surat perintah tugas berformat resmi dinas.",
+    ],
+    stack: ["Laravel", "PHP 8", "MySQL", "Vite", "Stisla Bootstrap", "SweetAlert2", "REST API"],
+  },
+  {
+    id: "exp-06",
+    indexCode: "06",
+    company: "Klien Biro Wisata Nusantara (TravelEase)",
+    roleEn: "Mobile App Developer (Client Project)",
+    roleId: "Mobile App Developer (Proyek Klien)",
+    employmentType: "PROYEK KLIEN (FREELANCE)",
+    location: "Indonesia (Remote)",
+    period: "2025",
+    isCurrent: false,
+    metricsBadge: "TravelEase · Flutter & Google Maps",
+    summaryEn:
+      "Delivered cross-platform mobile tourism guide application featuring native Google Maps interactive routing, tourist reviews, and real-time cloud data synchronization.",
+    summaryId:
+      "Mengembangkan aplikasi mobile panduan destinasi wisata nusantara berbasis Flutter dengan integrasi peta Google Maps interaktif, ulasan wisatawan, dan sinkronisasi cloud real-time.",
+    highlightsEn: [
+      "Native Google Maps Routing: Integrated interactive destination pins, turn-by-turn navigation paths, and distance estimations.",
+      "Tourism Directory & Ratings: Designed rich destination profiles, operating hours, ticket fees, and community reviews.",
+      "Firebase Cloud Sync: Implemented offline-first bookmarks and real-time cloud database synchronization.",
+    ],
+    highlightsId: [
+      "Navigasi Peta Google Maps Native: Mengintegrasikan rute navigasi destinasi, penanda lokasi interaktif, dan estimasi jarak tempuh.",
+      "Katalog Wisata & Rating Ulasan: Menyediakan kurasi objek wisata, rincian harga tiket, dan ulasan terverifikasi dari pengguna.",
+      "Sinkronisasi Firebase Cloud: Menerapkan penyimpanan bookmark offline/online dan sinkronisasi data destinasi real-time.",
+    ],
+    stack: ["Flutter", "Dart", "Google Maps API", "Firebase Firestore", "Provider", "Material 3"],
+  },
+  {
+    id: "exp-07",
+    indexCode: "07",
+    company: "Klien Personal & Wedding Organizer (Platform Undangan)",
+    roleEn: "Fullstack Web Developer (Client Project)",
+    roleId: "Fullstack Web Developer (Proyek Klien)",
+    employmentType: "PROYEK KLIEN (FREELANCE)",
+    location: "Indonesia (Remote)",
+    period: "2024 - 2025",
+    isCurrent: false,
+    metricsBadge: "Wedding Platform · Next.js 15 & Realtime RSVP",
+    summaryEn:
+      "Engineered high-performance interactive digital wedding invitation platform featuring dynamic URL guest personalization, real-time RSVP with guestbook greetings, audio controls, and digital registry.",
+    summaryId:
+      "Membangun platform undangan pernikahan digital interaktif modern berbasis Next.js 15 dengan personalisasi nama tamu dinamis via URL, konfirmasi kehadiran RSVP dan buku tamu real-time, kontrol musik latar, serta amplop digital.",
+    highlightsEn: [
+      "Dynamic URL Guest Personalization: Built URL parameter routing for custom guest greetings without extra server render cycles.",
+      "Real-Time RSVP & Guestbook: Connected Firestore snapshot listeners for live attendee confirmation and interactive greeting feeds.",
+      "Multimedia & Digital Envelope: Integrated user-gesture background audio unlock, event countdown, Google Calendar sync, and instant QRIS/clipboard copy.",
+    ],
+    highlightsId: [
+      "Personalisasi Tamu Dinamis: Membangun sistem URL parameter otomatis untuk sapaan personal setiap undangan tanpa reload halaman.",
+      "RSVP & Buku Doa Real-Time: Mengintegrasikan Firebase Firestore snapshot listener agar ucapan selamat dan kepastian hadir langsung muncul seketika.",
+      "Fitur Multimedia & Amplop Digital: Mengimplementasikan kontrol audio latar terpadu, hitung mundur hari-H, integrasi Google Calendar, dan salin nomor rekening/QRIS instan.",
+    ],
+    stack: ["Next.js 15", "React", "TypeScript", "Tailwind CSS", "Firebase Firestore", "Radix UI", "Web Audio API"],
+  },
 ];
 
 export const EDUCATIONS: EducationItem[] = [

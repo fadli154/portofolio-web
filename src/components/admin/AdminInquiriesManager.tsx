@@ -13,6 +13,7 @@ import MagicBento, { type MagicBentoItem } from "@/components/MagicBento";
 import { playMechanicalClick } from "@/lib/audio/sound-effects";
 import { useAdminToast } from "./AdminToastProvider";
 import { AdminConfirmDialog } from "./AdminConfirmDialog";
+import { PaginationIconsOnly } from "@/components/ui/PaginationIconsOnly";
 
 interface AdminInquiriesManagerProps {
   inquiries: AdminInquiry[];
@@ -27,6 +28,16 @@ export function AdminInquiriesManager({
 }: AdminInquiriesManagerProps) {
   const { showToast } = useAdminToast();
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(6);
+
+  const totalPages = Math.max(1, Math.ceil(inquiries.length / pageSize));
+  const safePage = Math.min(Math.max(1, page), totalPages);
+
+  const paginatedInquiries = useMemo(() => {
+    const start = (safePage - 1) * pageSize;
+    return inquiries.slice(start, start + pageSize);
+  }, [inquiries, safePage, pageSize]);
 
   const handleDeleteConfirm = () => {
     if (!deleteTargetId) return;
@@ -56,7 +67,7 @@ export function AdminInquiriesManager({
   // Adaptive MagicBento items in Black, White, #c4e22e
   const bentoItems: MagicBentoItem[] = useMemo(
     () =>
-      inquiries.map((inq) => {
+      paginatedInquiries.map((inq) => {
         const isUnread = inq.status === "unread";
         return {
           id: inq.id,
@@ -135,7 +146,7 @@ export function AdminInquiriesManager({
           ),
         };
       }),
-    [inquiries]
+    [inquiries, paginatedInquiries]
   );
 
   return (
@@ -170,6 +181,19 @@ export function AdminInquiriesManager({
         gap={20}
         radius={24}
         items={bentoItems}
+      />
+
+      {/* Pagination Controls */}
+      <PaginationIconsOnly
+        currentPage={safePage}
+        pageSize={pageSize}
+        totalItems={inquiries.length}
+        onPageChange={setPage}
+        onPageSizeChange={(sz) => {
+          setPageSize(sz);
+          setPage(1);
+        }}
+        pageSizeOptions={[3, 6, 12, 24]}
       />
 
       <AdminConfirmDialog

@@ -16,6 +16,7 @@ import {
   X,
   PanelLeftClose,
   PanelLeftOpen,
+  Tags,
 } from "lucide-react";
 import BranchedMenu, { type BranchedMenuItem } from "@/components/BranchedMenu";
 import { playMechanicalClick } from "@/lib/audio/sound-effects";
@@ -27,6 +28,7 @@ export type AdminTab =
   | "experiences"
   | "certificates"
   | "educations"
+  | "categories"
   | "inbox";
 
 export interface AdminHeaderProps {
@@ -42,6 +44,7 @@ export interface AdminHeaderProps {
     experiences: number;
     certificates: number;
     educations: number;
+    categories?: number;
     inquiries: number;
   };
 }
@@ -119,6 +122,11 @@ export function AdminHeader({
             icon: <GraduationCap className="h-4 w-4" />,
           },
           {
+            value: "categories",
+            label: `Kategori (${counts.categories ?? 0})`,
+            icon: <Tags className="h-4 w-4" />,
+          },
+          {
             value: "inbox",
             label: `Kotak Masuk (${counts.inquiries})`,
             icon: <Inbox className="h-4 w-4" />,
@@ -161,6 +169,7 @@ export function AdminHeader({
     { id: "experiences", label: "Pengalaman", count: counts.experiences, icon: <Briefcase className="h-4 w-4" /> },
     { id: "certificates", label: "Sertifikat", count: counts.certificates, icon: <Award className="h-4 w-4" /> },
     { id: "educations", label: "Pendidikan", count: counts.educations, icon: <GraduationCap className="h-4 w-4" /> },
+    { id: "categories", label: "Kategori", count: counts.categories ?? 0, icon: <Tags className="h-4 w-4" /> },
     { id: "inbox", label: "Kotak Masuk", count: counts.inquiries, icon: <Inbox className="h-4 w-4" /> },
   ];
 

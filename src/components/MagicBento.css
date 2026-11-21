@@ -1167,7 +1167,7 @@
 
 /* ============================================================
    Bento Glossy Border Sweep Animation (Top-Left to Bottom-Right)
-   Slow, Luxurious & Ultra-Smooth Organic Gleam
+   Slow, Luxurious & Ultra-Smooth Subtle Gleam (Dimmed & Refined)
    ============================================================ */
 .magic-bento__card::after {
   content: '';
@@ -1175,15 +1175,15 @@
   inset: 0;
   z-index: 5;
   border-radius: inherit;
-  padding: 1.5px;
+  padding: 1px;
   background: linear-gradient(
     135deg,
     transparent 0%,
-    transparent 32%,
-    rgba(196, 226, 46, 0.3) 44%,
-    rgba(255, 255, 255, 0.9) 50%,
-    rgba(196, 226, 46, 0.6) 56%,
-    transparent 68%,
+    transparent 36%,
+    rgba(196, 226, 46, 0.12) 45%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(196, 226, 46, 0.22) 55%,
+    transparent 64%,
     transparent 100%
   );
   background-size: 320% 320%;
@@ -1221,14 +1221,14 @@
     background-position: 0% 0%;
     opacity: 0;
   }
-  4% {
-    opacity: 0.9;
+  6% {
+    opacity: 0.45;
   }
-  38% {
+  36% {
     background-position: 100% 100%;
-    opacity: 0.9;
+    opacity: 0.45;
   }
-  44% {
+  42% {
     opacity: 0;
   }
   100% {

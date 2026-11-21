@@ -16,6 +16,8 @@ import MagicBento, { type MagicBentoItem } from "@/components/MagicBento";
 import { playMechanicalClick } from "@/lib/audio/sound-effects";
 import { useAdminToast } from "./AdminToastProvider";
 import { AdminConfirmDialog } from "./AdminConfirmDialog";
+import { PaginationIconsOnly } from "@/components/ui/PaginationIconsOnly";
+import { EducationFormModal } from "./forms/EducationFormModal";
 
 interface AdminEducationManagerProps {
   educations: EducationItem[];
@@ -33,6 +35,16 @@ export function AdminEducationManager({
   const [isCreatingNew, setIsCreatingNew] = useState(false);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(4);
+
+  const totalPages = Math.max(1, Math.ceil(educations.length / pageSize));
+  const safePage = Math.min(Math.max(1, page), totalPages);
+
+  const paginatedEducations = useMemo(() => {
+    const start = (safePage - 1) * pageSize;
+    return educations.slice(start, start + pageSize);
+  }, [educations, safePage, pageSize]);
 
   const handleOpenEdit = (edu: EducationItem) => {
     playMechanicalClick(720);
@@ -60,18 +72,14 @@ export function AdminEducationManager({
     setIsCreatingNew(true);
   };
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!editingEdu) return;
+  const handleSaveModal = async (updatedEdu: EducationItem) => {
     setIsSaving(true);
-    playMechanicalClick(780);
-
-    const success = await onSaveEducation(editingEdu);
+    const success = await onSaveEducation(updatedEdu);
     setIsSaving(false);
 
     showToast({
       title: isCreatingNew ? "Pendidikan Ditambahkan" : "Perubahan Disimpan",
-      description: `Jenjang "${editingEdu.institution}" berhasil diperbarui di CMS.`,
+      description: `Jenjang "${updatedEdu.institution}" berhasil diperbarui di CMS.`,
       variant: success ? "success" : "info",
     });
     setEditingEdu(null);
@@ -96,7 +104,7 @@ export function AdminEducationManager({
   // Adaptive MagicBento items in Black, White, #c4e22e
   const bentoItems: MagicBentoItem[] = useMemo(
     () =>
-      educations.map((edu) => ({
+      paginatedEducations.map((edu) => ({
         id: edu.id,
         colSpan: 1,
         rowSpan: 1,
@@ -165,7 +173,7 @@ export function AdminEducationManager({
           </div>
         ),
       })),
-    [educations]
+    [educations, paginatedEducations]
   );
 
   return (
@@ -210,128 +218,28 @@ export function AdminEducationManager({
         items={bentoItems}
       />
 
+      {/* Pagination Controls */}
+      <PaginationIconsOnly
+        currentPage={safePage}
+        pageSize={pageSize}
+        totalItems={educations.length}
+        onPageChange={setPage}
+        onPageSizeChange={(sz) => {
+          setPageSize(sz);
+          setPage(1);
+        }}
+        pageSizeOptions={[1, 2, 4, 8]}
+      />
+
       {/* Edit / Create Modal Form */}
-      {editingEdu && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md overflow-y-auto">
-          <div className="relative w-full max-w-2xl rounded-2xl border border-white/15 bg-[#0e1014] p-6 shadow-2xl my-8">
-            <div className="flex items-center justify-between border-b border-white/10 pb-4">
-              <div className="flex items-center gap-2">
-                <GraduationCap className="h-5 w-5 text-[#c4e22e]" />
-                <h3 className="font-display text-lg font-bold text-white">
-                  {isCreatingNew ? "Tambah Jenjang Pendidikan" : `Edit: ${editingEdu.institution}`}
-                </h3>
-              </div>
-              <button
-                type="button"
-                onClick={() => setEditingEdu(null)}
-                className="rounded-lg p-1.5 text-white/50 hover:bg-white/10 hover:text-white"
-              >
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-
-            <form onSubmit={handleSave} className="mt-5 space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-mono text-[11px] text-white/60 mb-1">Nama Institusi</label>
-                  <input
-                    type="text"
-                    value={editingEdu.institution}
-                    onChange={(e) => setEditingEdu({ ...editingEdu, institution: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-sans text-xs text-white focus:border-[#c4e22e] outline-none"
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block font-mono text-[11px] text-white/60 mb-1">Program Studi / Jurusan</label>
-                  <input
-                    type="text"
-                    value={editingEdu.degreeId}
-                    onChange={(e) => setEditingEdu({ ...editingEdu, degreeId: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-sans text-xs text-white focus:border-[#c4e22e] outline-none"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div>
-                  <label className="block font-mono text-[11px] text-white/60 mb-1">Periode</label>
-                  <input
-                    type="text"
-                    value={editingEdu.period}
-                    onChange={(e) => setEditingEdu({ ...editingEdu, period: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-mono text-xs text-white focus:border-[#c4e22e] outline-none"
-                    placeholder="2024 - Sekarang"
-                  />
-                </div>
-                <div>
-                  <label className="block font-mono text-[11px] text-white/60 mb-1">Lokasi</label>
-                  <input
-                    type="text"
-                    value={editingEdu.location}
-                    onChange={(e) => setEditingEdu({ ...editingEdu, location: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-sans text-xs text-white focus:border-[#c4e22e] outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block font-mono text-[11px] text-white/60 mb-1">Label Status</label>
-                  <input
-                    type="text"
-                    value={editingEdu.statusLabelId}
-                    onChange={(e) => setEditingEdu({ ...editingEdu, statusLabelId: e.target.value })}
-                    className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-mono text-xs text-white focus:border-[#c4e22e] outline-none"
-                    placeholder="Aktif / Lulus"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block font-mono text-[11px] text-white/60 mb-1">Fokus Pembelajaran (ID)</label>
-                <textarea
-                  value={editingEdu.focusId}
-                  onChange={(e) => setEditingEdu({ ...editingEdu, focusId: e.target.value })}
-                  rows={2}
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-sans text-xs text-white focus:border-[#c4e22e] outline-none"
-                />
-              </div>
-
-              <div>
-                <label className="block font-mono text-[11px] text-white/60 mb-1">Kurikulum Utama (koma terpisah)</label>
-                <input
-                  type="text"
-                  value={editingEdu.curriculumHighlightsId.join(", ")}
-                  onChange={(e) =>
-                    setEditingEdu({
-                      ...editingEdu,
-                      curriculumHighlightsId: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
-                    })
-                  }
-                  className="w-full rounded-xl border border-white/10 bg-white/5 px-3 py-2 font-mono text-xs text-white focus:border-[#c4e22e] outline-none"
-                />
-              </div>
-
-              <div className="mt-6 flex justify-end gap-3 pt-3 border-t border-white/10">
-                <button
-                  type="button"
-                  onClick={() => setEditingEdu(null)}
-                  className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 font-mono text-xs text-white/70 hover:bg-white/10 hover:text-white"
-                >
-                  Batal
-                </button>
-                <button
-                  type="submit"
-                  disabled={isSaving}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#c4e22e] px-5 py-2 font-mono text-xs font-bold text-[#111213] shadow-lg shadow-[#c4e22e]/20 hover:bg-[#d6f53b]"
-                >
-                  <Save className="h-4 w-4" />
-                  <span>{isSaving ? "Menyimpan..." : "Simpan Pendidikan"}</span>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+      <EducationFormModal
+        isOpen={editingEdu !== null}
+        education={editingEdu}
+        isCreatingNew={isCreatingNew}
+        onClose={() => setEditingEdu(null)}
+        onSave={handleSaveModal}
+        isSaving={isSaving}
+      />
 
       {/* Delete Confirmation SweetAlert Modal */}
       <AdminConfirmDialog
