@@ -1189,3 +1189,128 @@ button:hover .arrow-icon {
 .animate-tech-assemble {
   animation: techAssemble 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
+
+/* ============================================================
+   Admin Dashboard Autonomous Idle Animations (Cyber-Clean)
+   ============================================================ */
+
+/* 1. Project & Coursework Cards: Floating Levitation */
+@keyframes admin-folder-levitate {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3.5px);
+  }
+}
+
+.admin-idle-folder-tab {
+  animation: admin-folder-levitate 6.8s ease-in-out infinite;
+  will-change: transform;
+}
+
+.admin-idle-folder-tab:nth-child(2n) {
+  animation-duration: 7.6s;
+  animation-delay: -2.1s;
+}
+
+.admin-idle-folder-tab:nth-child(3n) {
+  animation-duration: 6.1s;
+  animation-delay: -3.8s;
+}
+
+/* 2. Certificate Cards: Holographic Foil Sheen */
+@keyframes admin-foil-sheen {
+  0% {
+    transform: translateX(-150%) skewX(-20deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.35;
+  }
+  26% {
+    transform: translateX(250%) skewX(-20deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(250%) skewX(-20deg);
+    opacity: 0;
+  }
+}
+
+.admin-idle-foil-sheen {
+  position: absolute;
+  inset: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(196, 226, 46, 0.15) 30%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(196, 226, 46, 0.15) 70%,
+    transparent 100%
+  );
+  pointer-events: none;
+  animation: admin-foil-sheen 7.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  will-change: transform;
+}
+
+/* 3. Floating Sidebar & Card Border Gleam (Top-Left to Bottom-Right) */
+@keyframes admin-border-gleam {
+  0% {
+    background-position: 0% 0%;
+    opacity: 0;
+  }
+  4% {
+    opacity: 0.9;
+  }
+  38% {
+    background-position: 100% 100%;
+    opacity: 0.9;
+  }
+  44% {
+    opacity: 0;
+  }
+  100% {
+    background-position: 100% 100%;
+    opacity: 0;
+  }
+}
+
+.admin-shiny-sidebar {
+  /* Positioning context (fixed/sticky) is defined via component Tailwind classes */
+}
+
+.admin-shiny-sidebar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    transparent 32%,
+    rgba(196, 226, 46, 0.3) 44%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(196, 226, 46, 0.6) 56%,
+    transparent 68%,
+    transparent 100%
+  );
+  background-size: 320% 320%;
+  background-position: -120% -120%;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  pointer-events: none;
+  animation: admin-border-gleam 12s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+  animation-delay: 1.5s;
+  z-index: 10;
+  will-change: background-position, opacity;
+}
+

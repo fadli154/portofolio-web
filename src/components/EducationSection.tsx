@@ -16,6 +16,7 @@ import CardSwap, { Card, type CardSwapHandle } from "@/components/CardSwap";
 import FadeContent from "@/components/FadeContent";
 import Scanner from "@/components/Scanner";
 import { EducationDetailModal } from "./education/EducationDetailModal";
+import { MobileEducationView } from "./education/MobileEducationView";
 
 interface EducationSectionProps {
   educations?: EducationItem[];
@@ -64,6 +65,7 @@ export function EducationSection({
 
   // Smooth scroll progress tracking & auto queue sync
   const handleScroll = useCallback(() => {
+    if (typeof window !== "undefined" && window.innerWidth < 1024) return;
     if (!trackRef.current) return;
     const rect = trackRef.current.getBoundingClientRect();
     const trackHeight = rect.height;
@@ -140,10 +142,21 @@ export function EducationSection({
       style={{ scrollMarginTop: 0 }}
       className="scroll-mt-0 relative w-full bg-[#090a0d] text-white"
     >
-      {/* Scroll track (440vh gives ample runway so cards don't rush past) */}
-      <div ref={trackRef} className="relative w-full h-[440vh]">
-        {/* Sticky stage (pinned to viewport as user scrolls) */}
-        <div className="sticky top-0 h-screen w-full flex flex-col justify-center items-center pt-16 sm:pt-20 pb-6 overflow-hidden px-4 sm:px-6 lg:px-10">
+      {/* 1. Mobile & Tablet Responsive HRD View (< 1024px: Natural flow, zero clipping, 100% visible) */}
+      <div className="block lg:hidden w-full relative z-10">
+        <MobileEducationView
+          smkEdu={smkEdu}
+          uinEdu={uinEdu}
+          locale={locale}
+          onOpenDetail={openDetail}
+        />
+      </div>
+
+      {/* 2. Desktop High-End Choreography (>= 1024px: Side-by-Side DitherVeil + CardSwap with scroll runway) */}
+      <div className="hidden lg:block w-full">
+        <div ref={trackRef} className="relative w-full h-[440vh]">
+          {/* Sticky stage (pinned to viewport as user scrolls) */}
+          <div className="sticky top-0 h-screen w-full flex flex-col justify-center items-center pt-16 sm:pt-20 pb-6 overflow-hidden px-4 sm:px-6 lg:px-10">
           {/* Cybernetic Scanner Radar Background from ReactBits */}
           <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none opacity-30 mix-blend-screen">
             <Scanner
@@ -479,6 +492,7 @@ export function EducationSection({
           </div>
         </div>
       </div>
+    </div>
 
       {/* Minimalist Editorial Detail Modal Dialog */}
       <EducationDetailModal

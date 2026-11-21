@@ -115,7 +115,7 @@ export function AdminCertificatesManager({
               </div>
 
               {/* Direct Photo Preview */}
-              <div className="relative w-full h-36 rounded-xl overflow-hidden border border-white/10 bg-black/60 group">
+              <div className="relative w-full h-36 rounded-xl overflow-hidden border border-white/10 bg-black/60 group admin-idle-folder-tab">
                 <img
                   src={cert.imageUrl || "/sertif/oase-juara-2-lit.webp"}
                   alt={cert.title}
@@ -125,6 +125,7 @@ export function AdminCertificatesManager({
                     (e.currentTarget as HTMLImageElement).src = "/sertif/oase-juara-2-lit.webp";
                   }}
                 />
+                <div className="admin-idle-foil-sheen" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
                 <span className="absolute bottom-2 left-2 rounded-md bg-black/75 backdrop-blur-sm px-2 py-0.5 font-mono text-[10px] text-white/80 border border-white/10">
                   {cert.issuer}

@@ -171,7 +171,7 @@ export function AdminProjectsManager({
               </div>
 
               {/* Direct Photo Preview of Project */}
-              <div className="relative w-full h-36 rounded-xl overflow-hidden border border-white/10 bg-black/60 group">
+              <div className="relative w-full h-36 rounded-xl overflow-hidden border border-white/10 bg-black/60 group admin-idle-folder-tab">
                 <img
                   src={getProjectFolderImage(proj.slug)}
                   alt={proj.title}

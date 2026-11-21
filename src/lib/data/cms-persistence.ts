@@ -98,7 +98,13 @@ export function loadCmsStoreClient(): CmsDynamicStore {
           : defaults.experiences,
       projects:
         Array.isArray(parsed.projects) && parsed.projects.length > 0
-          ? parsed.projects
+          ? (() => {
+              const savedList = parsed.projects as any[];
+              return defaults.projects.map((def) => {
+                const saved = savedList.find((p) => p.id === def.id || p.slug === def.slug);
+                return saved ? { ...def, ...saved, clientOrContext: def.clientOrContext, category: def.category } : def;
+              });
+            })()
           : defaults.projects,
       certificates:
         Array.isArray(parsed.certificates) && parsed.certificates.length > 0

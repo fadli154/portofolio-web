@@ -96,7 +96,8 @@ export function AdminInquiriesManager({
                   </button>
                 </div>
 
-                <div className="font-mono text-[11px] text-[#c4e22e]/80">
+                <div className="font-mono text-[11px] text-[#c4e22e]/80 flex items-center gap-1.5">
+                  {isUnread && <span className="h-1.5 w-1.5 rounded-full bg-[#c4e22e]" />}
                   {inq.senderEmail}
                 </div>
 

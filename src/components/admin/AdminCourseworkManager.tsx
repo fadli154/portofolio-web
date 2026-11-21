@@ -113,7 +113,7 @@ export function AdminCourseworkManager({
               </div>
 
               {/* Direct Photo Preview of Attendance Proof */}
-              <div className="relative w-full h-36 rounded-xl overflow-hidden border border-white/10 bg-black/60 group">
+              <div className="relative w-full h-36 rounded-xl overflow-hidden border border-white/10 bg-black/60 group admin-idle-folder-tab">
                 <img
                   src={s.attendanceProofUrl || `/coursework/proof-session-${s.number}.png`}
                   alt={s.titleId}

@@ -219,7 +219,7 @@ function AdminContent({
       />
 
       {/* Main Workspace Container */}
-      <main className="flex-1 min-w-0 px-4 sm:px-6 lg:px-10 py-6 lg:py-10 max-w-7xl mx-auto w-full">
+      <main className="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-4 lg:py-4 max-w-7xl mx-auto w-full">
         {activeTab === "bento" && (
           <AdminMagicBento
             onNavigateTab={setActiveTab}
