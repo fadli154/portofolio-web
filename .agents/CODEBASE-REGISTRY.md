@@ -43,6 +43,12 @@
 | `CardSwap` | `src/components/CardSwap.jsx` | `({ width, height, cardDistance, verticalDistance, depth, skewAmount, visibleCards, delay, draggable, children })` | Komponen 3D stack cards swap/flick resmi ReactBits via shadcn untuk rotasi kartu interaktif. |
 | `EducationSection` | `src/components/EducationSection.tsx` | `({ educations?: EducationItem[] })` | Section linimasa pendidikan dengan ScrollExpand crop frame, DitherVeil WebGL shader, dan 4 CardSwap 3D stack. |
 | `EducationDetailModal` | `src/components/education/EducationDetailModal.tsx` | `({ edu: EducationItem \| null, locale, onClose })` | Modal dialog interaktif Minimalist Editorial Dark untuk kurikulum dan proyek nyata studi. |
+| `SwipeToast` | `src/components/SwipeToast.jsx` | `({ title, description, icon, fuseColor, duration, open, onClose })` | Notifikasi toast interaktif resmi ReactBits via shadcn dengan swipe to dismiss & durasi fuse bar. |
+| `MagicBento` | `src/components/MagicBento.jsx` | `({ items, theme, columns, gap, className })` | Grid bento interaktif resmi ReactBits via shadcn dengan radial glow & spotlight border. |
+| `AdminHeader` | `src/components/admin/AdminHeader.tsx` | `({ activeTab, onTabChange, dataSource, onToggleMobileDrawer, onLogoutClick, counts })` | Header admin responsif dengan Supabase Live badge, desktop tab switch, dan mobile hamburger bar. |
+| `AdminNavDrawer` | `src/components/admin/AdminNavDrawer.tsx` | `({ open, onClose, activeTab, onTabSelect, dataSource, onLogoutClick, counts })` | Drawer navigasi slide-out mobile untuk admin dashboard dengan indikator counter & aksi cepat. |
+| `AdminConfirmDialog` | `src/components/admin/AdminConfirmDialog.tsx` | `({ open, type, title, description, confirmLabel, onConfirm, onCancel })` | Dialog konfirmasi SweetAlert-style untuk logout sesi dan aksi delete permanen dengan backdrop blur. |
+| `AdminMagicBento` | `src/components/admin/AdminMagicBento.tsx` | `({ onNavigateTab, counts, dataSource, onQuickAdd })` | Dashboard utama admin berbasis MagicBento tile analitik sistem, coursework, studi kasus & pesan. |
 
 ---
 
@@ -64,3 +70,5 @@
 | `PortfolioRepository` | `src/lib/data/portfolio-repository.ts` | `getPortfolioSnapshot() -> Promise<PortfolioSnapshot>` | SSOT data portofolio (mengambil dari Supabase live dengan fallback ke data statis). |
 | `CmsPersistence` | `src/lib/data/cms-persistence.ts` | `saveProject(project), deleteProject(id), reorderProjects(ids)` | Service mutasi data admin CMS dengan sinkronisasi ke tabel Supabase. |
 | `CertificatesRepo` | `src/lib/data/certificates.ts` | `mapCertificateRow(row: CertificateRow) -> CertificateItem` | Pemetaan dan normalisasi data sertifikasi dari database relasional Supabase. |
+| `CmsEducation` | `src/lib/data/cms-education.ts` | `loadEducationsClient(), upsertEducationItem(edu), deleteEducationItem(id)` | Service manajemen data linimasa pendidikan dengan sinkronisasi Supabase & Local Cache. |
+| `CmsInquiries` | `src/lib/data/cms-inquiries.ts` | `loadInquiriesClient(), upsertInquiryItem(inq), deleteInquiryItem(id)` | Service manajemen pesan kontak masuk & penawaran kolaborasi dengan status toggle. |
